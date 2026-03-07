@@ -1,5 +1,5 @@
 services:
-  minio:
+  minio-tai:
     image: minio/minio
     container_name: minio-tai
     command: server /data --console-address ":9001"
@@ -11,9 +11,9 @@ services:
       MINIO_ROOT_USER: minio
       MINIO_ROOT_PASSWORD: minio123
 
-      MINIO_NOTIFY_KAFKA_ENABLE: "on"
-      MINIO_NOTIFY_KAFKA_BROKERS: "kafka:9092"
-      MINIO_NOTIFY_KAFKA_TOPIC: "minio-events"
+      MINIO_NOTIFY_KAFKA_ENABLE_MYKAFKA: "on"
+      MINIO_NOTIFY_KAFKA_BROKERS_MYKAFKA: "kafka-tai:9092"  # Port INTERNE
+      MINIO_NOTIFY_KAFKA_TOPIC_MYKAFKA: "minio-events"
     
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
@@ -29,4 +29,4 @@ services:
 
 networks:
   seinentai_net:
-    driver: bridge
+    external: true
