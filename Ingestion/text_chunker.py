@@ -1,7 +1,7 @@
 import logging
 from typing import List, Dict, Any
-from langchain.text_splitter import RecursiveCharacterTextSplitter, CharacterTextSplitter
-from langchain.schema import Document
+from langchain_core.documents import Document
+from langchain_text_splitters import RecursiveCharacterTextSplitter, CharacterTextSplitter
 
 logger = logging.getLogger(__name__)
 
@@ -63,6 +63,11 @@ class TextChunker:
             - text: contenu du chunk
             - start_char: position de début dans le texte original
             - end_char: position de fin dans le texte original
+            - chunk_index: index du chunk dans la liste
+            - total_chunks: nombre total de chunks
+            - doc_id: identifiant du document (sera défini dans chunk_with_metadata)
+            - filename: nom du fichier source (sera défini dans chunk_with_metadata)
+            - metadata: métadonnées supplémentaires
         """
         logger.info(f"🔄 Découpage du texte avec méthode '{method}' (taille: {self.chunk_size}, chevauchement: {self.chunk_overlap})")
 
@@ -98,7 +103,7 @@ class TextChunker:
         # Découpage du document
         langchain_chunks = splitter.split_documents([doc])
 
-        # Conversion en format personnalisé avec métadonnées de position
+        # Conversion en format uniforme avec métadonnées de position
         chunks = []
         current_position = 0
 
@@ -116,7 +121,11 @@ class TextChunker:
                 'text': chunk_text,
                 'start_char': start_char,
                 'end_char': end_char,
-                'chunk_id': i
+                'chunk_index': i,
+                'total_chunks': len(langchain_chunks),
+                'doc_id': None,  # Sera défini dans chunk_with_metadata
+                'filename': None,  # Sera défini dans chunk_with_metadata
+                'metadata': {}  # Sera enrichi dans chunk_with_metadata
             })
 
             # Mise à jour de la position pour le chunk suivant
@@ -140,9 +149,9 @@ class TextChunker:
             metadata: Métadonnées supplémentaires à ajouter
 
         Returns:
-            Liste de chunks enrichis avec métadonnées complètes
+            Liste de chunks enrichis avec métadonnées complètes (format uniforme)
         """
-        # Découpage du texte
+        # Découpage du texte (format de base)
         chunks = self.chunk_text(text)
 
         # Métadonnées de base
@@ -160,13 +169,11 @@ class TextChunker:
         if metadata:
             base_metadata.update(metadata)
 
-        # Ajout des métadonnées à chaque chunk
-        for i, chunk in enumerate(chunks):
-            chunk.update({
-                'chunk_index': i,
-                'total_chunks': len(chunks),
-                'metadata': base_metadata.copy()  # Copie pour éviter les références partagées
-            })
+        # Enrichissement de chaque chunk avec les métadonnées complètes
+        for chunk in chunks:
+            chunk['doc_id'] = doc_id
+            chunk['filename'] = filename
+            chunk['metadata'] = base_metadata.copy()  # Copie pour éviter les références partagées
 
         logger.info(f"📋 Métadonnées ajoutées à {len(chunks)} chunks pour le document '{filename}'")
         return chunks

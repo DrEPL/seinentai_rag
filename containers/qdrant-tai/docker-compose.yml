@@ -1,0 +1,27 @@
+services:
+  qdrant-tai:
+    image: qdrant/qdrant:latest
+    container_name: qdrant-tai
+    ports:
+      - "6333:6333"  # API HTTP
+      - "6334:6334"  # API gRPC (optionnel)
+    volumes:
+      - qdrant_data:/qdrant/storage
+    environment:
+      - QDRANT__SERVICE__GRPC_PORT=6334
+      - QDRANT__LOG_LEVEL=INFO
+    networks:
+      - seinentai_net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 2
+
+volumes:
+  qdrant_data:
+
+networks:
+  seinentai_net:
+    external: true

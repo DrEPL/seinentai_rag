@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 class VectorStore:
     """Stockage vectoriel avec Qdrant"""
     
-    def __init__(self, host: str = "qdrant", port: int = 6333, 
+    def __init__(self, host: str = "localhost", port: int = 6333, 
                  collection_name: str = "documents"):
         self.host = host
         self.port = port
@@ -105,22 +105,25 @@ class VectorStore:
     def search(self, query_embedding: np.ndarray, limit: int = 5) -> List[Dict]:
         """Recherche les documents similaires"""
         try:
-            results = self.client.search(
+            results = self.client.query_points(
+                score_threshold=0.5,
                 collection_name=self.collection_name,
-                query_vector=query_embedding.tolist(),
+                query=query_embedding.tolist(),
                 limit=limit
             )
+
+            documents = []
+            for point in results.points:
+                documents.append({
+                    'id': str(point.id),
+                    'score': point.score,
+                    'text': point.payload.get('text', ''),
+                    'filename': point.payload.get('filename', ''),
+                    'metadata': point.payload
+                })
             
-            return [
-                {
-                    'id': hit.id,
-                    'score': hit.score,
-                    'text': hit.payload.get('text', ''),
-                    'filename': hit.payload.get('filename', ''),
-                    'metadata': hit.payload
-                }
-                for hit in results
-            ]
+            logger.info(f"✅ {len(documents)} résultats trouvés")
+            return documents
             
         except Exception as e:
             logger.error(f"❌ Erreur recherche: {e}")

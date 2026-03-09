@@ -39,7 +39,7 @@ class MinIOService:
         self.create_bucket_if_not_exists(bucket_name)
         self.configure_kafka_notifications(bucket_name, topic_name)
         
-if __name__ == "__main__":
-    # 1️⃣ Configurer MinIO en premier
-    minio_service = MinIOService()
-    minio_service.setup(bucket_name="pdf-bucket", topic_name="minio-events")
+# if __name__ == "__main__":
+#     # 1️⃣ Configurer MinIO en premier
+#     minio_service = MinIOService()
+#     minio_service.setup(bucket_name="pdf-bucket", topic_name="minio-events")
