@@ -8,7 +8,7 @@ import sys
 from minio_service import MinIOService
 
 class KafkaService:
-    def __init__(self, bootstrap_servers="kafka-tai:9092"):
+    def __init__(self, bootstrap_servers="kafka-tai:9091"):
         self.bootstrap_servers = bootstrap_servers
         self.topic_name = "minio-events"
         self.running = True
@@ -153,7 +153,7 @@ if __name__ == "__main__":
         
         # 2️⃣ Configurer Kafka
         print("\n📋 Configuration Kafka...")
-        service = KafkaService(bootstrap_servers="kafka-tai:9092")
+        service = KafkaService(bootstrap_servers="kafka-tai:9091")
         
         # Attendre que Kafka soit prêt
         print("⏳ Attente de Kafka...")

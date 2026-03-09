@@ -12,7 +12,7 @@ services:
       MINIO_ROOT_PASSWORD: minio123
 
       MINIO_NOTIFY_KAFKA_ENABLE_MYKAFKA: "on"
-      MINIO_NOTIFY_KAFKA_BROKERS_MYKAFKA: "kafka-tai:9092"  # Port INTERNE
+      MINIO_NOTIFY_KAFKA_BROKERS_MYKAFKA: "kafka-tai:9091"  # Port INTERNE
       MINIO_NOTIFY_KAFKA_TOPIC_MYKAFKA: "minio-events"
     
     healthcheck:
