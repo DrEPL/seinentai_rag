@@ -1,3 +1,17 @@
+Document source
+      │
+      ▼
+Parsing
+      │
+      ▼
+Chunking
+      │
+      ▼
+Embeddings
+      │
+      ▼
+Indexation vectorielle
+
 # Gestionnaire de Documents RAG
 
 Ce système permet de gérer l'indexation automatique des documents stockés dans MinIO pour un système RAG (Retrieval-Augmented Generation).

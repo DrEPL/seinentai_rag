@@ -30,14 +30,14 @@ class RAGPipeline:
             chunk_size=os.getenv('CHUNK_SIZE', 500),
             chunk_overlap=os.getenv('CHUNK_OVERLAP', 20)
         )
-        self.embedder = EmbeddingGenerator("sentence-transformers/all-MiniLM-L6-v2")
+        self.embedder = EmbeddingGenerator(os.getenv('EMBEDDING_MODEL', 'sentence-transformers/all-MiniLM-L6-v2'))
         self.vector_store = VectorStore()
         
         # MinIO client
         self.minio_client = Minio(
             os.getenv('MINIO_ENDPOINT', 'localhost:9000'),
             access_key= os.environ.get("MINIO_ACCESS_KEY","minio"),
-            secret_key= os.environ.get("MINIO_SECRET_KEY","minio123"),
+            secret_key= os.environ.get("MINIO_SECRET_KEY","minio123"), 
             secure=False
         )
         
