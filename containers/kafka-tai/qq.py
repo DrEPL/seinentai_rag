@@ -1,6 +1,6 @@
 import json
-from kafka import KafkaConsumer, KafkaAdminClient
-from kafka.admin import NewTopic
+from kafka import KafkaConsumer
+from kafka.admin import NewTopic, KafkaAdminClient
 from kafka.errors import NoBrokersAvailable, TopicAlreadyExistsError
 import time
 import signal

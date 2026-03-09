@@ -9,13 +9,10 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # === Config des services Docker Compose ===
 SERVICES = {
     # "mongo": "containers/mongo/docker-compose.yml",
-    # "jupyterhub": "containers/jupiterhub/docker-compose.yml",
-    # "hive": "containers/hive/docker-compose.yml",
     "kafka-tai": "containers/kafka-tai/docker-compose.yml",
-    # "minio-tai": "containers/minio-tai/docker-compose.yml",
+    "minio-tai": "containers/minio-tai/docker-compose.yml",
     # "spark": "containers/spark/docker-compose.yml",
     # "postgres": "containers/postgres/docker-compose.yml",
-    # "redis": "containers/redis/docker-compose.yml",
 }
 
 # === Fonctions de gestion Docker ===
