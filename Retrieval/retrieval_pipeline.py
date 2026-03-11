@@ -6,11 +6,11 @@ from datetime import datetime
 from minio import Minio
 import os
 
-# from .config import Config
-from Retrieval.vector_store import VectorStore
-from document_processor import DocumentProcessor
-from text_chunker import TextChunker
-from embeddings import EmbeddingGenerator
+from hybrid_retriever import HybridRetriever
+from vector_store import VectorStore
+from Ingestion.document_processor import DocumentProcessor
+from Ingestion.text_chunker import TextChunker
+from Ingestion.embeddings import EmbeddingGenerator
 from dotenv import load_dotenv
 
 
@@ -18,8 +18,8 @@ load_dotenv('./.env')
 
 logger = logging.getLogger(__name__)
 
-class RAGPipeline:
-    """Pipeline RAG complet"""
+class RetrieverPipeline:
+    """Pipeline Retriever"""
     
     def __init__(self):
         # self.config = Config()
@@ -31,7 +31,21 @@ class RAGPipeline:
             chunk_overlap=os.getenv('CHUNK_OVERLAP', 20)
         )
         self.embedder = EmbeddingGenerator(os.getenv('EMBEDDING_MODEL', 'sentence-transformers/all-MiniLM-L6-v2'))
-        self.vector_store = VectorStore()
+        # Obtenir la dimension du modèle (test avec un texte exemple)
+        test_embedding = self.embedder.generate_single("test")
+        if test_embedding is not None:
+            self.vector_size = len(test_embedding)
+            
+        # Initialisation du store
+        self.vector_store = VectorStore(host="localhost",
+                            port=6333,
+                            sparse_model_name="Qdrant/bm25",  # ou "prithivida/Splade_PP_en_v1"
+                            collection_name="test_Robert",
+                            vector_size=self.vector_size if self.vector_size else None
+                        )
+        
+        # Initialisation de retrevier
+        self.hybrid_retriever = HybridRetriever(self.vector_store)
         
         # MinIO client
         self.minio_client = Minio(
@@ -46,11 +60,7 @@ class RAGPipeline:
     
     def _init_vector_store(self):
         """Initialise le vector store"""
-        # Obtenir la dimension du modèle (test avec un texte exemple)
-        test_embedding = self.embedder.generate_single("test")
-        if test_embedding is not None:
-            vector_size = len(test_embedding)
-            self.vector_store.create_collection(vector_size=vector_size)
+        self.vector_store.create_collection()
     
     def _generate_doc_id(self, filename: str, content_hash: str) -> str:
         """Génère un ID unique pour un document"""
@@ -127,13 +137,15 @@ class RAGPipeline:
             traceback.print_exc()
             return False
     
-    def search(self, query: str, limit: int = 5) -> list:
+    def search(self, query: str, limit: int = 5, score_threshold: float = 0.0, use_hybrid: float = True) -> list:
         """
         Recherche des documents similaires à une requête
         
         Args:
             query: Texte de la requête
             limit: Nombre de résultats
+            score_threshold: Seuil de score minimal entre 0.0 et 1.0
+            use_hybrid: True = recherche hybride, False = dense only
             
         Returns:
             Liste des documents pertinents
@@ -144,7 +156,7 @@ class RAGPipeline:
             return []
         
         # Rechercher
-        results = self.vector_store.search(query_embedding, limit)
+        results = self.hybrid_retriever.retrieve(query_text=query,query_embedding=query_embedding, limit=limit, score_threshold=score_threshold, use_hybrid=use_hybrid)
         
         logger.info(f"🔍 {len(results)} résultats pour: '{query[:50]}...'")
         return results
@@ -154,7 +166,7 @@ class RAGPipeline:
 def rag_callback(bucket: str, filename: str, event: dict):
     """Callback pour Kafka"""
     logger.info(f"🚀 Déclenchement du pipeline RAG pour {bucket}/{filename}")
-    pipeline = RAGPipeline()
+    pipeline = RetrieverPipeline()
     success = pipeline.process_document(bucket, filename)
     
     if success:

@@ -11,3 +11,4 @@ pypdf==6.8.0
 qdrant-client==1.17.0
 sentence-transformers==5.2.3
 setuptools==65.5.0
+fastembed
