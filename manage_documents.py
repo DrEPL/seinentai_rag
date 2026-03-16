@@ -16,7 +16,7 @@ from pathlib import Path
 # Ajouter le répertoire parent au path pour les imports
 sys.path.append(str(Path(__file__).parent.parent))
 
-from minio_service import MinIOService
+from services.minio_service import MinIOService
 from text_chunker import TextChunker
 from vector_store import VectorStore
 from document_processor import DocumentProcessor
@@ -89,8 +89,8 @@ def index_new_documents(manager: DocumentManager):
 
     report = manager.index_new_documents()
 
-    print("
-✅ Rapport d'indexation:"    print(f"📄 Documents traités: {report['total_files']}")
+    print("✅ Rapport d'indexation:")
+    print(f"📄 Documents traités: {report['total_files']}")
     print(f"✅ Indexés: {report['indexed']}")
     print(f"❌ Erreurs: {report['errors']}")
 
@@ -113,8 +113,8 @@ def reindex_all_documents(manager: DocumentManager):
 
     report = manager.index_all_documents(force_reindex=True)
 
-    print("
-✅ Rapport de réindexation:"    print(f"📄 Documents traités: {report['total_files']}")
+    print("✅ Rapport de réindexation:")
+    print(f"📄 Documents traités: {report['total_files']}")
     print(f"✅ Réindexés: {report['indexed']}")
     print(f"⏭️ Ignorés: {report['skipped']}")
     print(f"❌ Erreurs: {report['errors']}")

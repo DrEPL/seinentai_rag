@@ -8,17 +8,9 @@ Ce script teste les composants principaux :
 - Pipeline Retriever
 """
 
-import logging
 import sys
 from pathlib import Path
-
-# Configuration du logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-
-logger = logging.getLogger(__name__)
+import textwrap
 
 # Ajouter le répertoire parent au path
 sys.path.append(str(Path(__file__).parent))

@@ -28,7 +28,7 @@ class MinIOService:
         
         queue_config = QueueConfig(
             queue=arn,
-            events=["s3:ObjectCreated:*", "s3:ObjectRemoved:*"])
+            events=["s3:ObjectCreated:*"])
         
         notification_cfg = NotificationConfig(queue_config_list=[queue_config])
         self.client.set_bucket_notification(bucket_name, notification_cfg)

@@ -29,7 +29,7 @@ sys.path.append(str(Path(__file__).parent))
 from text_chunker import TextChunker
 from vector_store import VectorStore
 from document_processor import DocumentProcessor
-from rag_pipeline import RAGPipeline
+from Ingestion.ingestion_pipeline import IngestionPipeline
 
 
 
@@ -39,7 +39,7 @@ def test_real_document_processing():
 
     try:
         # Initialisation du pipeline RAG
-        pipeline = RAGPipeline()
+        pipeline = IngestionPipeline()
 
         # Paramètres du document réel
         bucket_name = "pdf-bucket"
@@ -48,9 +48,21 @@ def test_real_document_processing():
         print(f"🔄 Traitement du document: {bucket_name}/{filename}")
 
         # Utiliser la vraie fonction process_document
-        success = pipeline.process_document(bucket_name, filename)
-
-        if success:
+        embeddings, chunks  = pipeline.process_document(bucket_name, filename)
+        
+        if embeddings and chunks :
+            print(f"✅ Succès! {len(chunks)} chunks traités")
+            print(f"   Dimensions embeddings: {len(embeddings[0]) if embeddings else 0}")
+            
+            # Utilisation des résultats
+            for i, (chunk, embedding) in enumerate(zip(chunks, embeddings)):
+                print(f"\nChunk {i+1}:")
+                print(f"  Texte: {chunk['text'][:100]}...")
+                print(f"  Métadonnées: {chunk['metadata']}")
+                print(f"  Embedding shape: {len(embedding)}")
+                
+                # Stockage dans une base vectorielle
+                # vector_store.add(embedding, chunk)
             print(f"✅ Document '{filename}' traité avec succès !")
             return True
         else:
@@ -70,7 +82,7 @@ def test_real_document_search():
 
     try:
         # Initialisation du pipeline RAG
-        pipeline = RAGPipeline()
+        pipeline = IngestionPipeline()
 
         # Test de recherche avec une requête pertinente
         query = "Qui est l'oncle robert ?"
@@ -94,14 +106,14 @@ def test_real_document_search():
 
 def main():
     """Fonction principale de test"""
-    print("🧪 DÉBUT DES TESTS DES COMPOSANTS RAG")
+    print("🧪 DÉBUT DES TESTS DU PIPELINE INGESTION")
     print("=" * 50)
 
     results = {}
 
     # # Tests individuels
     results['document_processing'] = test_real_document_processing()
-    results['real_document_search'] = test_real_document_search()
+    # results['real_document_search'] = test_real_document_search()
 
     # Résumé
     print("\n" + "=" * 50)

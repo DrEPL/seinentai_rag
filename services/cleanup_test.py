@@ -18,8 +18,8 @@ logger = logging.getLogger(__name__)
 # Ajouter le répertoire parent au path
 sys.path.append(str(Path(__file__).parent))
 
-from minio_service import MinIOService
-from vector_store import VectorStore
+from Retrieval.vector_store import VectorStore
+from services.minio_service import MinIOService
 
 
 def cleanup_test_data():

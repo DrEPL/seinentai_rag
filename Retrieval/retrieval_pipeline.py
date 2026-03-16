@@ -1,15 +1,12 @@
 import logging
 import hashlib
-import json
-from typing import Optional
 from datetime import datetime
-from minio import Minio
 import os
 
+from Ingestion.ingestion_pipeline import IngestionPipeline
 from hybrid_retriever import HybridRetriever
+from services.minio_service import MinIOService
 from vector_store import VectorStore
-from Ingestion.document_processor import DocumentProcessor
-from Ingestion.text_chunker import TextChunker
 from Ingestion.embeddings import EmbeddingGenerator
 from dotenv import load_dotenv
 
@@ -22,25 +19,20 @@ class RetrieverPipeline:
     """Pipeline Retriever"""
     
     def __init__(self):
-        # self.config = Config()
-        
-        # Initialiser les composants
-        self.processor = DocumentProcessor()
-        self.chunker = TextChunker(
-            chunk_size=os.getenv('CHUNK_SIZE', 500),
-            chunk_overlap=os.getenv('CHUNK_OVERLAP', 20)
-        )
+
         self.embedder = EmbeddingGenerator(os.getenv('EMBEDDING_MODEL', 'sentence-transformers/all-MiniLM-L6-v2'))
-        # Obtenir la dimension du modèle (test avec un texte exemple)
+        # # Obtenir la dimension du modèle (test avec un texte exemple)
         test_embedding = self.embedder.generate_single("test")
         if test_embedding is not None:
             self.vector_size = len(test_embedding)
-            
+        
+        self.ingestion = IngestionPipeline()
+           
         # Initialisation du store
         self.vector_store = VectorStore(host="localhost",
                             port=6333,
                             sparse_model_name="Qdrant/bm25",  # ou "prithivida/Splade_PP_en_v1"
-                            collection_name="test_Robert",
+                            collection_name="documents",
                             vector_size=self.vector_size if self.vector_size else None
                         )
         
@@ -48,12 +40,7 @@ class RetrieverPipeline:
         self.hybrid_retriever = HybridRetriever(self.vector_store)
         
         # MinIO client
-        self.minio_client = Minio(
-            os.getenv('MINIO_ENDPOINT', 'localhost:9000'),
-            access_key= os.environ.get("MINIO_ACCESS_KEY","minio"),
-            secret_key= os.environ.get("MINIO_SECRET_KEY","minio123"), 
-            secure=False
-        )
+        self.minio_client = MinIOService()
         
         # Créer la collection si nécessaire
         self._init_vector_store()
@@ -61,11 +48,6 @@ class RetrieverPipeline:
     def _init_vector_store(self):
         """Initialise le vector store"""
         self.vector_store.create_collection()
-    
-    def _generate_doc_id(self, filename: str, content_hash: str) -> str:
-        """Génère un ID unique pour un document"""
-        unique_str = f"{filename}_{content_hash}_{datetime.now().isoformat()}"
-        return hashlib.md5(unique_str.encode()).hexdigest()
     
     def process_document(self, bucket: str, filename: str) -> bool:
         """
@@ -81,55 +63,31 @@ class RetrieverPipeline:
         logger.info(f"🔄 Traitement du document: {bucket}/{filename}")
         
         try:
-            # 1. Télécharger depuis MinIO
-            response = self.minio_client.get_object(bucket, filename)
-            content = response.read()
-            response.close()
-            response.release_conn()
+            embeddings, chunks = self.ingestion.process_document()
             
-            # 2. Générer un hash du contenu
-            content_hash = hashlib.md5(content).hexdigest()
-            doc_id = self._generate_doc_id(filename, content_hash)
-            
-            # 3. Parser le document
-            text = self.processor.process(content, filename)
-            if not text:
-                logger.warning(f"⚠️ Document vide ou non traitable: {filename}")
-                return False
-            
-            # 4. Découper en chunks
-            chunks = self.chunker.chunk_with_metadata(
-                text,
-                doc_id=doc_id,
-                filename=filename,
-                metadata={
-                    'bucket': bucket,
-                    'content_hash': content_hash,
-                    'processed_at': datetime.now().isoformat()
-                }
-            )
-            
-            if not chunks:
-                logger.warning(f"⚠️ Aucun chunk généré: {filename}")
-                return False
-            
-            # 5. Générer les embeddings
-            texts = [chunk['text'] for chunk in chunks]
-            embeddings = self.embedder.generate(texts)
-            
-            if not embeddings or len(embeddings) != len(chunks):
-                logger.error(f"❌ Erreur génération embeddings")
-                return False
-            
-            # 6. Indexer dans Qdrant
-            success = self.vector_store.index_documents(chunks, embeddings)
-            
-            if success:
-                logger.info(f"✅ Document traité avec succès: {filename}")
-                return True
+            if embeddings and chunks :
+                print(f"✅ Succès! {len(chunks)} chunks traités")
+                print(f"   Dimensions embeddings: {len(embeddings[0]) if embeddings else 0}")
+                
+                # Utilisation des résultats
+                for i, (chunk, embedding) in enumerate(zip(chunks, embeddings)):
+                    print(f"\nChunk {i+1}:")
+                    print(f"  Texte: {chunk['text'][:50]}...")
+                    print(f"  Métadonnées: {chunk['metadata']}")
+                    print(f"  Embedding shape: {len(embedding)}")
+                    
+                # Stockage dans une base vectorielle (Indexer dans Qdrant)
+                success = self.vector_store.index_documents(chunks, embeddings)
+                logger.info(f"✅ Document '{filename}' traité avec succès !")
+                if success:
+                    logger.info(f"✅ Indexation du Document {filename} traité avec succès ")
+                    return True
+                else:
+                    logger.error(f"❌ Échec indexation: {filename}")
+                    return False
             else:
-                logger.error(f"❌ Échec indexation: {filename}")
-                return False
+                logger.error(f"❌ Échec d'indexation du document '{filename}'")
+                return False   
                 
         except Exception as e:
             logger.error(f"❌ Erreur traitement {filename}: {e}")

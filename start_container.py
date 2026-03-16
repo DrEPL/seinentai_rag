@@ -9,8 +9,8 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # === Config des services Docker Compose ===
 SERVICES = {
     # "mongo": "containers/mongo/docker-compose.yml",
-    # "kafka-tai": "containers/kafka-tai/docker-compose.yml",
-    # "minio-tai": "containers/minio-tai/docker-compose.yml",
+    "kafka-tai": "containers/kafka-tai/docker-compose.yml",
+    "minio-tai": "containers/minio-tai/docker-compose.yml",
     "qdrant-tai": "containers/qdrant-tai/docker-compose.yml",
     # "postgres": "containers/postgres/docker-compose.yml",
 }

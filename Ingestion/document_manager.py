@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import List, Dict, Any, Optional, Set
 from datetime import datetime
 import minio
-from minio_service import MinIOService
+from services.minio_service import MinIOService
 from text_chunker import TextChunker
 from vector_store import VectorStore
 from document_processor import DocumentProcessor
@@ -49,21 +49,21 @@ class DocumentManager:
             Liste des fichiers avec métadonnées (nom, taille, date, hash)
         """
         try:
-            # Utiliser le client MinIO directement pour lister les objets
-            objects = self.minio_service.client.list_objects(self.bucket_name)
+            # Utiliser le service MinIO pour lister les objets
+            objects = self.minio_service.list_objects(self.bucket_name)
 
             files = []
             for obj in objects:
-                if obj.object_name:  # Vérifier que ce n'est pas un dossier
+                if obj['filename']:  # Vérifier que ce n'est pas un dossier
                     # Calculer le hash du fichier pour le suivi des changements
-                    file_hash = self._calculate_file_hash(obj.object_name)
+                    file_hash = self._calculate_file_hash(obj['filename'])
 
                     files.append({
-                        'filename': obj.object_name,
-                        'size': obj.size,
-                        'last_modified': obj.last_modified.isoformat() if obj.last_modified else None,
+                        'filename': obj['filename'],
+                        'size': obj['size'],
+                        'last_modified': obj['last_modified'],
                         'hash': file_hash,
-                        'extension': Path(obj.object_name).suffix.lower()
+                        'extension': Path(obj['filename']).suffix.lower()
                     })
 
             logger.info(f"📁 {len(files)} fichiers trouvés dans le bucket '{self.bucket_name}'")
@@ -278,15 +278,7 @@ class DocumentManager:
         Returns:
             Contenu du fichier en bytes ou None si erreur
         """
-        try:
-            response = self.minio_service.client.get_object(self.bucket_name, filename)
-            content = response.read()
-            response.close()
-            response.release_conn()
-            return content
-        except Exception as e:
-            logger.error(f"❌ Erreur téléchargement {filename}: {e}")
-            return None
+        return self.minio_service.get_object(self.bucket_name, filename)
 
     def _calculate_file_hash(self, filename: str) -> str:
         """

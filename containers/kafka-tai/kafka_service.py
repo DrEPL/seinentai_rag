@@ -5,7 +5,7 @@ from kafka.errors import NoBrokersAvailable, TopicAlreadyExistsError
 import time
 import signal
 import sys
-from minio_service import MinIOService
+from services.minio_service import MinIOService
 
 class KafkaService:
     def __init__(self, bootstrap_servers="kafka-tai:9091"):
