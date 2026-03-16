@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 sys.path.append(str(Path(__file__).parent))
 
 from text_chunker import TextChunker
-from vector_store import VectorStore
+from Ingestion.vector_store2 import VectorStore
 from document_processor import DocumentProcessor
 from Ingestion.ingestion_pipeline import IngestionPipeline
 

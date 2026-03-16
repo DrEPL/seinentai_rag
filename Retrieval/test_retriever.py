@@ -50,7 +50,7 @@ def test_real_document_processing():
         return False
 
 
-def test_real_document_search():
+def search():
     """Test de recherche sur le document réel"""
     print("\n🧪 Test de recherche sur le document réel...")
 
@@ -67,6 +67,7 @@ def test_real_document_search():
             for i, result in enumerate(results, 1):
                 print(f"  {i}. {result['filename']} (score: {result['score']:.3f})")
                 print(f"     \"{result['text']}...\"")
+                print(textwrap.fill(f"Resultat N° {i} : {result}" ))
             return True
         else:
             print("❌ Aucun résultat de recherche trouvé")
@@ -86,8 +87,8 @@ def main():
     results = {}
 
     # # Tests individuels
-    results['document_processing'] = test_real_document_processing()
-    results['real_document_search'] = test_real_document_search()
+    # results['document_processing'] = test_real_document_processing()
+    results['real_document_search'] = search()
 
     # Résumé
     print("\n" + "=" * 50)

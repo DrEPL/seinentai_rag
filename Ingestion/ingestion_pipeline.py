@@ -1,23 +1,20 @@
 import logging
 import hashlib
-import json
-from typing import Optional
 from datetime import datetime
-from minio import Minio
 import os
 
 # from .config import Config
 # from Retrieval.vector_store import VectorStore
-from document_processor import DocumentProcessor
+from Ingestion.document_processor import DocumentProcessor
 from services.minio_service import MinIOService
-from text_chunker import TextChunker
-from embeddings import EmbeddingGenerator
+from Ingestion.text_chunker import TextChunker
+from Ingestion.embeddings import EmbeddingGenerator
 from dotenv import load_dotenv
 
-from utils.utils import generate_doc_id
+from utils.functions import generate_doc_id
 
 
-load_dotenv('./.env')
+load_dotenv('../.env')
 
 logger = logging.getLogger(__name__)
 

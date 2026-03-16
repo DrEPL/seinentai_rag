@@ -8,7 +8,7 @@ from qdrant_client.http.models import Distance, VectorParams, PointStruct
 
 logger = logging.getLogger(__name__)
 
-class VectorStore:
+class VectorStore2:
     """Stockage vectoriel avec Qdrant"""
     
     def __init__(self, host: str = "localhost", port: int = 6333, 

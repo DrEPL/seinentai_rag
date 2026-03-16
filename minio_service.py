@@ -1,27 +1,19 @@
-import logging
-import os
-
 from minio import Minio
 from minio.notificationconfig import NotificationConfig, QueueConfig, TopicConfig
 from typing import List, Dict, Any, Optional, BinaryIO
 from io import BytesIO
-from dotenv import load_dotenv
 
-
-load_dotenv('../.env')
-
-logger = logging.getLogger(__name__)
 
 class MinIOService:
     """Service pour gérer MinIO et ses notifications Kafka"""
     
-    def __init__(self, secure: bool = False):
+    def __init__(self, host: str = "localhost:9000", access_key: str = "minio", 
+                 secret_key: str = "minio123", secure: bool = False):
         """Initialise la connexion à MinIO"""
-        # MinIO client
         self.client = Minio(
-            os.getenv('MINIO_ENDPOINT', 'localhost:9000'),
-            access_key= os.environ.get("MINIO_ACCESS_KEY","minio"),
-            secret_key= os.environ.get("MINIO_SECRET_KEY","minio123"), 
+            host,
+            access_key=access_key,
+            secret_key=secret_key,
             secure=secure
         )
         print("✅ Connecté à MinIO")
@@ -38,7 +30,7 @@ class MinIOService:
         
         queue_config = QueueConfig(
             queue=arn,
-            events=["s3:ObjectCreated:*"])
+            events=["s3:ObjectCreated:*", "s3:ObjectRemoved:*"])
         
         notification_cfg = NotificationConfig(queue_config_list=[queue_config])
         self.client.set_bucket_notification(bucket_name, notification_cfg)
@@ -187,7 +179,7 @@ class MinIOService:
             print(f"❌ Erreur récupération métadonnées {object_name}: {e}")
             return None
         
-# if __name__ == "__main__":
-#     # 1️⃣ Configurer MinIO en premier
-#     minio_service = MinIOService()
-#     minio_service.setup(bucket_name="pdf-bucket", topic_name="minio-events")
+if __name__ == "__main__":
+    # 1️⃣ Configurer MinIO en premier
+    minio_service = MinIOService()
+    minio_service.setup(bucket_name="pdf-bucket", topic_name="minio-events")

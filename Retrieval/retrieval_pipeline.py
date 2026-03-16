@@ -1,17 +1,14 @@
 import logging
-import hashlib
-from datetime import datetime
 import os
-
 from Ingestion.ingestion_pipeline import IngestionPipeline
-from hybrid_retriever import HybridRetriever
+from Retrieval.hybrid_retriever import HybridRetriever
 from services.minio_service import MinIOService
-from vector_store import VectorStore
+from Retrieval.vector_store import VectorStore
 from Ingestion.embeddings import EmbeddingGenerator
 from dotenv import load_dotenv
 
 
-load_dotenv('./.env')
+load_dotenv('../.env')
 
 logger = logging.getLogger(__name__)
 
@@ -63,7 +60,7 @@ class RetrieverPipeline:
         logger.info(f"🔄 Traitement du document: {bucket}/{filename}")
         
         try:
-            embeddings, chunks = self.ingestion.process_document()
+            embeddings, chunks = self.ingestion.process_document(bucket=bucket,filename=filename)
             
             if embeddings and chunks :
                 print(f"✅ Succès! {len(chunks)} chunks traités")

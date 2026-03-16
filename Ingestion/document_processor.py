@@ -1,7 +1,7 @@
 import io
 import logging
 from pathlib import Path
-from typing import Optional, BinaryIO
+from typing import Optional
 import pypdf
 # import docx
 import markdown

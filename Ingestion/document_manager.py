@@ -3,10 +3,9 @@ import hashlib
 from pathlib import Path
 from typing import List, Dict, Any, Optional, Set
 from datetime import datetime
-import minio
 from services.minio_service import MinIOService
 from text_chunker import TextChunker
-from vector_store import VectorStore
+from Ingestion.vector_store2 import VectorStore
 from document_processor import DocumentProcessor
 
 logger = logging.getLogger(__name__)

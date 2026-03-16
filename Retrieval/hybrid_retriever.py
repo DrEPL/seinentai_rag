@@ -1,7 +1,7 @@
 import logging
 import numpy as np
 from typing import List, Dict, Any, Optional
-from vector_store import VectorStore
+from Retrieval.vector_store import VectorStore
 
 logger = logging.getLogger(__name__)
 

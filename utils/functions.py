@@ -12,6 +12,98 @@ import os
 # Configuration du logging
 logger = logging.getLogger(__name__)
 
+PROMPT_TEMPLATES = {
+    "default": """Tu es un assistant IA spécialisé dans la réponse à des questions basées sur des documents fournis.
+    Utilise UNIQUEMENT les informations des documents ci-dessous pour répondre à la question.
+    Si l'information n'est pas présente dans les documents, dis-le honnêtement sans inventer.
+
+    DOCUMENTS CONTEXTUELS:
+    {context}
+
+    QUESTION: {query}
+
+    RÉPONSE (basée uniquement sur les documents fournis):""",
+
+    "concise": """Contexte: {context}
+
+    Question: {query}
+
+    Réponse concise (basée uniquement sur le contexte):""",
+
+    "detailed": """Tu es un expert analyste de documents. Voici des extraits de documents pertinents:
+
+    {context}
+    Sur la base de ces extraits uniquement, réponds à la question suivante de façon détaillée:
+    {query}
+
+    Détaillé ta réponse en citant les parties pertinentes des documents:""",
+}
+
+def get_default_system_prompt() -> str:
+    """Prompt système par défaut"""
+    return """Tu es un assistant IA utile, précis et honnête. 
+            Tu réponds aux questions en te basant UNIQUEMENT sur les informations fournies dans le contexte.
+            Si l'information n'est pas dans le contexte, tu l'admets sans inventer.
+            Tu réponds toujours en français, de façon claire et structurée."""
+            
+def format_context(retrieved_docs: List[Dict[str, Any]]) -> str:
+    """
+    Formate les documents récupérés en contexte pour le LLM
+    
+    Args:
+        retrieved_docs: Liste des documents du retrieveur
+        
+    Returns:
+        Contexte formaté
+    """
+    if not retrieved_docs:
+        return "Aucun document pertinent trouvé."
+    
+    formatted_parts = []
+    
+    for i, doc in enumerate(retrieved_docs, 1):
+        # Extraire les informations
+        text = doc.get('text', doc.get('content', ''))
+        filename = doc.get('filename', doc.get('metadata', {}).get('filename', 'Document inconnu'))
+        score = doc.get('score', 0)
+        chunk_index = doc.get('chunk_index', doc.get('metadata', {}).get('chunk_index', '?'))
+        
+        # Extraction des métadonnées enrichies
+        metadata_deep = doc.get('metadata', {}).get('metadata', {})
+        bucket = metadata_deep.get('bucket', '')
+        total_chunks = doc.get('metadata', {}).get('total_chunks', '?')
+        processed_at = doc.get('metadata', {}).get('processed_at', '')
+        
+        # Formater chaque document
+        doc_part = f"[Document {i}]"
+        doc_part += f"\n📁 Source: {filename} (Partie {chunk_index}/{total_chunks})"
+        doc_part += f"\n🎯 Pertinence: {score:.2f}"
+        doc_part += f"\n📝 Contenu: {text.strip()}"
+        doc_part += "\n" + "-"*50 + "\n"
+        
+        formatted_parts.append(doc_part)
+    
+    return "\n".join(formatted_parts)
+
+def build_prompt(self, query: str, context: str, template_name: Optional[str] = None) -> str:
+    """
+    Construit le prompt complet à partir du template
+    
+    Args:
+        query: Question de l'utilisateur
+        context: Contexte formaté
+        template_name: Nom du template à utiliser (None pour utiliser le défaut) "concise" ou "detailed"
+        
+    Returns:
+        Prompt complet
+    """
+    template = PROMPT_TEMPLATES.get(
+        template_name or self.template_name,
+        PROMPT_TEMPLATES["default"]
+    )
+    
+    return template.format(query=query, context=context)
+
 # ==================== Fonctions de génération d'IDs ====================
 
 def generate_doc_id(filename: str, content_hash: str) -> str:
