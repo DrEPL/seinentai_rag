@@ -1,0 +1,128 @@
+[
+    {
+        "question": "Qui est Nidjay Robert et où vit-il?",
+        "ground_truth": "Nidjay Robert est un oncle qui vit à la campagne avec ses sœurs. Il est perçu comme un sorcier par ses neveux à cause des histoires que leur mère leur racontait depuis l'enfance.",
+        "difficulty": "facile",
+        "category": "personnage"
+    },
+    {
+        "question": "Pourquoi Robert doit-il se rendre en ville?",
+        "ground_truth": "Robert doit se rendre en ville pour se ravitailler. Il n'a nulle part où loger et décide de contacter ses trois neveux qui y habitent.",
+        "difficulty": "facile",
+        "category": "intrigue"
+    },
+    {
+        "question": "Combien de neveux Robert a-t-il en ville et que font-ils?",
+        "ground_truth": "Robert a trois neveux en ville. Le premier est parti suivre la CAN au Maroc avec ses enfants, le deuxième est à Bamako chez sa belle-famille, et le troisième habite à Dakar dans une maison avec de grandes baies vitrées.",
+        "difficulty": "moyen",
+        "category": "personnages"
+    },
+    {
+        "question": "Comment réagit le premier neveu en voyant l'appel de Robert?",
+        "ground_truth": "Le premier neveu boude, se plaint en disant 'Pourquoi il m'appelle ? Pourquoi moi ? Je ne veux pas de problèmes...' Il décroche quand même mais invente une excuse pour ne pas héberger Robert, prétextant qu'il est au Maroc pour suivre la CAN avec ses enfants.",
+        "difficulty": "moyen",
+        "category": "réactions"
+    },
+    {
+        "question": "Quelle est la réaction du deuxième neveu quand Robert l'appelle?",
+        "ground_truth": "Le deuxième neveu sursaute et crie comme s'il avait vu le diable en personne, disant 'Ehhhh ! Le sorcier là m'appelle ? Mais je lui ai fait quoi moi ?' Sa femme le rassure et il décroche, mais invente aussi une excuse en disant qu'il est à Bamako chez sa belle-famille.",
+        "difficulty": "moyen",
+        "category": "réactions"
+    },
+    {
+        "question": "Que fait Robert après que ses deux premiers neveux aient refusé de l'héberger?",
+        "ground_truth": "Robert, énervé, se dit : 'Si j'appelle le troisième, il va me remballer également. Je vais aller sur place.' Il décide donc de se rendre directement chez le troisième neveu sans le prévenir.",
+        "difficulty": "facile",
+        "category": "intrigue"
+    },
+    {
+        "question": "Décrivez la scène quand Robert arrive chez le troisième neveu.",
+        "ground_truth": "Robert arrive à Dakar chez le dernier neveu. La maison a de grandes baies vitrées qui permettent de voir de l'extérieur sans être vu. Robert voit son neveu tranquillement installé devant la télévision en train de suivre un match. Il l'appelle, et malgré la panique du neveu, Robert entre dans la maison, le prenant par surprise.",
+        "difficulty": "difficile",
+        "category": "description"
+    },
+    {
+        "question": "Pendant combien de temps Robert s'installe-t-il chez le troisième neveu et pourquoi ces jours sont-ils particuliers?",
+        "ground_truth": "Robert s'installe pour cinq jours, qui seront les plus longs de la vie du neveu. Le neveu cache à Robert l'existence de ses enfants, de peur que 'ce sorcier' s'en prenne à eux, et vit dans l'angoisse permanente.",
+        "difficulty": "moyen",
+        "category": "intrigue"
+    },
+    {
+        "question": "Que fait le troisième neveu pour protéger ses enfants de Robert?",
+        "ground_truth": "Le neveu cache à Robert l'existence de ses enfants. Il dit à sa femme : 'En aucun cas ce sorcier ne doit savoir qu'on a des enfants.' Les enfants sont enfermés dans une pièce. Il part travailler, inquiet, le téléphone toujours à la main, anticipant un malheur.",
+        "difficulty": "moyen",
+        "category": "actions"
+    },
+    {
+        "question": "Comment Robert découvre-t-il l'existence des enfants?",
+        "ground_truth": "Au troisième jour, les enfants doivent prendre une douche. La femme tente discrètement de les amener à la douche, mais comme dit le narrateur : 'On ne cache pas le cadavre d'un éléphant avec une feuille de bananier.' Robert découvre cette mise en scène et s'écrie : 'Donc vous avez des enfants… et vous me les avez cachés ?'",
+        "difficulty": "difficile",
+        "category": "intrigue"
+    },
+    {
+        "question": "Quel problème survient avec l'enfant après la découverte de Robert?",
+        "ground_truth": "Après la douche, la femme habille les enfants et pose l'un d'eux debout, mais l'enfant tombe. Elle refait le geste et l'enfant tombe encore. L'enfant n'arrive plus à se tenir debout, ce qui panique la mère qui croit que Robert a jeté un sort.",
+        "difficulty": "moyen",
+        "category": "incident"
+    },
+    {
+        "question": "Décrivez la scène du retour précipité du neveu chez lui.",
+        "ground_truth": "Le neveu court chez son supérieur, essoufflé et incohérent, parlant de 'l'oncle' et d'un 'sort'. Il fonce, oublie qu'il a une voiture, prend un taxi, trouve le taxi trop lent, descend et prend une moto, trouve encore le conducteur trop lent, prend le guidon et met même le conducteur sur son dos. Il arrive chez lui, fracasse la porte et assomme son oncle avec un pilon.",
+        "difficulty": "difficile",
+        "category": "description"
+    },
+    {
+        "question": "Que se passe-t-il à l'hôpital?",
+        "ground_truth": "Le neveu crie partout que son oncle a jeté un sort sur son enfant. Le médecin, ne comprenant rien, demande à tout le monde de sortir pour examiner l'enfant. Quelques minutes plus tard, il sort avec l'enfant bien debout sur ses deux pieds.",
+        "difficulty": "moyen",
+        "category": "résolution"
+    },
+    {
+        "question": "Quelle était la véritable cause du problème de l'enfant?",
+        "ground_truth": "Le médecin explique calmement : 'C'est normal. Vous aviez enfilé les deux jambes de l'enfant dans le même côté du pantalon. Comment voulez-vous qu'il tienne debout ?' Ce n'était pas un sort, mais simplement une erreur d'habillage.",
+        "difficulty": "facile",
+        "category": "morale"
+    },
+    {
+        "question": "Quelle est la morale ou la leçon de cette histoire?",
+        "ground_truth": "La leçon est d'appliquer le dixième point de mise en pratique des principes divins dans la vie quotidienne : 'Se conduire avec calme et agir sans précipitation.' L'histoire montre comment la peur et les préjugés peuvent mener à des réactions disproportionnées et à des malentendus.",
+        "difficulty": "difficile",
+        "category": "morale"
+    },
+    {
+        "question": "Comment la mère des enfants avait-elle conditionné ses fils depuis l'enfance?",
+        "ground_truth": "Dès leur plus jeune âge, la mère avait ancré en eux la peur et le réflexe du 'syndrome de l'oncle sorcier'. Elle leur murmurait : 'Tu vois le tonton là ? Ne mange jamais chez lui. S'il te donne quelque chose, refuse. Même s'il te donne de l'eau... refuse.'",
+        "difficulty": "moyen",
+        "category": "contexte"
+    },
+    {
+        "question": "Pourquoi le neveu est-il si inquiet pendant que Robert est chez lui?",
+        "ground_truth": "Le neveu est inquiet car il croit fermement que Robert est un sorcier. Il anticipe constamment un malheur, garde son téléphone à la main, et sursaute à chaque appel, pensant que son oncle a fait du mal à ses enfants.",
+        "difficulty": "moyen",
+        "category": "psychologie"
+    },
+    {
+        "question": "Quelle est l'ironie de la situation où le neveu frappe son oncle?",
+        "ground_truth": "L'ironie est que le neveu frappe son oncle pour protéger son enfant d'un prétendu sort, alors que le vrai problème était simplement un pantalon mal enfilé. La personne qu'il croit être le 'sorcier' est en réalité innocente, et c'est lui qui commet un acte de violence.",
+        "difficulty": "difficile",
+        "category": "analyse"
+    },
+    {
+        "question": "Comment le narrateur est-il impliqué dans l'histoire?",
+        "ground_truth": "Le narrateur affirme être témoin direct de plusieurs scènes. Il dit : 'je vous dis, j'étais là, je voyais tout' quand Robert arrive chez le troisième neveu, et 'ne riez pas, c'est vrai, j'étais là' lors de la scène rocambolesque du retour du neveu.",
+        "difficulty": "moyen",
+        "category": "narration"
+    },
+    {
+        "question": "Quelle est la symbolique du 'grand baobab' dans l'histoire?",
+        "ground_truth": "Le narrateur dit que 'la graine plantée par sa sœur a germé. Elle est devenue un grand baobab.' Cela symbolise comment la peur instillée pendant l'enfance a grandi avec le temps pour devenir une croyance énorme et inébranlable chez les neveux, affectant toutes leurs décisions d'adultes.",
+        "difficulty": "difficile",
+        "category": "analyse"
+    },
+    {
+        "question": "Que fait Robert quand il découvre que ses neveux lui mentent?",
+        "ground_truth": "Quand Robert découvre que ses neveux lui mentent, il réagit avec une certaine résignation et détermination. Après les mensonges des deux premiers, il décide d'aller sur place. Quand il découvre qu'on lui cache les enfants, il retourne simplement sous le manguier sans faire de scandale, montrant une certaine sagesse.",
+        "difficulty": "difficile",
+        "category": "personnage"
+    }
+]

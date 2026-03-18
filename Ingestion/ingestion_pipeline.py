@@ -27,8 +27,8 @@ class IngestionPipeline:
         # Initialiser les composants
         self.processor = DocumentProcessor()
         self.chunker = TextChunker(
-            chunk_size=os.getenv('CHUNK_SIZE', 500),
-            chunk_overlap=os.getenv('CHUNK_OVERLAP', 20)
+            chunk_size=int(os.getenv('CHUNK_SIZE', 500)),
+            chunk_overlap=int(os.getenv('CHUNK_OVERLAP', 50))
         )
         self.embedder = EmbeddingGenerator(os.getenv('EMBEDDING_MODEL', 'sentence-transformers/all-MiniLM-L6-v2'))
         
