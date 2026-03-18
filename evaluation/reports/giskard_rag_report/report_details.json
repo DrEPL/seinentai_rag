@@ -1,0 +1,1 @@
+{"recommendation": "Your RAG system is failing on complex, distracting, and double questions, indicating critical weaknesses in the Generator and Rewriter components. The most important action is to improve the Generator's ability to handle nuanced queries and implement a Rewriter to effectively deconstruct or rephrase complex and multi-part questions."}

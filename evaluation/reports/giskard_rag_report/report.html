@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+
+
+<style>
+    body{
+  background: #18181B;
+}
+
+.main{
+  font-family: "Noto Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  color: #FDFDFD;
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: white;
+}
+
+h3 {
+  font-size: 1.5rem;
+  background: #0c087c;
+  padding: 10px;
+  margin: 0px;
+  border: 1px solid #6b7280;}
+
+.extended-title{
+  width:100%;
+}
+
+#gsk-overview{
+  display:flex;
+}
+
+h4 {
+  font-size: 1rem;
+  background: #27272A;
+  padding: 10px;
+  margin: 0px;
+  border-bottom: 1px solid #6b7280;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-top: 3px;
+  color:#000000;
+}
+
+.header{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.header > * {
+  margin-inline: 20px;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  padding:10px;
+  border: 1px solid #27272A;
+}
+
+.flex-row>div {
+  flex: auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+progress[value] {
+  --background: #6D6D6D;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: none;
+  height: 4px;
+  margin: 0 10px;
+  border-radius: 10em;
+  background: var(--background);
+}
+
+progress[value]::-webkit-progress-bar {
+  border-radius: 10em;
+  background: var(--background);
+}
+
+progress[value]::-webkit-progress-value {
+  border-radius: 10em;
+  background: var(--color);
+}
+
+progress[value]::-moz-progress-bar {
+  border-radius: 10em;
+  background: var(--color);
+}
+
+label {
+  font-size: 20px;
+  font-weight: bold;
+  display: block;
+  margin: 20px 0;
+}
+
+.tab {
+  overflow: hidden;
+  border: 1px solid #27272A;
+  background-color: #27272A;
+}
+
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  color: #ffffff;
+  font-size:1.2rem;
+}
+
+.tab div {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  color: #ffffff;
+  font-size: 1.2rem;
+}
+
+.tab button:hover {
+  background-color: #18181B;
+}
+
+.tab-title{
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom:-5px;
+}
+
+.tab button.active {
+  background-color: #18181B;
+  border-top: 1px solid #6b7280;
+  border-bottom: 1px solid #18181B;
+  border-left: 1px solid #6b7280;
+  border-right: 1px solid #6b7280;
+}
+
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  background: #18181B;
+  border: 1px solid #27272A;
+  border-top: 1px solid #6b7280;
+  margin-top: -2px;
+}
+
+#gsk-advice {
+  display: flex;
+  justify-content: center;
+}
+
+#gsk-metrics{
+  width:100%;
+}
+
+#recommendation {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #e1ce86;
+  color: #27272A;
+  width:95%;
+  box-shadow: 0 4px 8px 0 #000000, 0 6px 20px 0 #000000;
+  font-size: 12pt;
+}
+
+.separator {
+  margin: 20px 0;
+}
+
+.separator-border {
+  margin: 20px 0;
+  border-bottom: 1px solid #6b7280;
+}
+
+#gsk-rag{
+  margin: 32px 28px;
+  padding: 12px 24px;
+  background-color: #111516;
+}
+
+.section-container {
+  margin-bottom: 32px;
+}
+
+  .components-container {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    gap: 0 32px;
+  }
+
+    .component-card {
+      background-color: #14191B;
+      border-radius: 16px;
+      padding: 28px 32px 32px 32px;
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+      margin-top: 32px;
+      flex-grow: 1;
+    }
+
+    .component-title {
+      font-size: 12px;
+      font-weight: 500;
+      color: #B1B1B1;
+      padding-bottom: 8px;
+    }
+
+    .component-value {
+      font-size: 32px;
+      font-weight: 500;
+      padding-bottom: 12px;
+    }
+      
+      .text-green {
+        color: #04B543;
+      }
+      
+      .text-orange {
+        color: #E76E0F;
+      }
+      
+      .text-red {
+        color: #EA3829;
+      }
+
+      .tooltip {
+        position: relative;
+        display: inline-block;
+      }
+
+      .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 120px;
+        background-color: #464646;
+        color: #E6E6E6;
+        text-align: center;
+        border-radius: 6px;
+        position: absolute;
+        z-index: 1;
+        top: 150%;
+        left: 50%;
+        margin-left: -60px;
+        font-size: 12px;
+        padding: 12px;
+      }
+      
+      .tooltip .tooltiptext::after {
+        content: "";
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent transparent black transparent;
+      }
+      
+      .tooltip:hover .tooltiptext {
+        visibility: visible;
+      }
+
+    .overall-card {
+      background-color: #026836;
+      border-radius: 16px;
+      padding: 28px 32px 32px 32px;
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: 32px;
+      flex-grow: 1;
+    }
+  
+    .overall-title {
+      font-size: 12px;
+      font-weight: 500;
+      color: #E6E6E6;
+      padding: 14px 0 8px 0;
+      text-transform: uppercase;
+     }
+  
+    .overall-value {
+      font-size: 32px;
+      font-weight: 500;
+      padding-bottom: 12px;
+      color: #E6E6E6;
+    }
+
+.section-title {
+  font-size: 12px;
+  color: #B1B1B1;
+  margin-bottom: 20px;
+  text-align: left;
+  width: 100%;
+}
+
+.section-content {
+  color: #E6E6E6;
+  font-size: 20px;
+  line-height: 1.5;
+}
+
+.section-card {
+  background-color: #14191B;
+  border-radius: 16px;
+  padding: 28px 32px 32px 32px;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+
+.correctness-indicator{
+  padding: 20px;
+  border-radius: 50px;
+  font-size: 16pt;
+  box-shadow: 0 4px 8px 0 #000000, 0 6px 20px 0 #000000;
+  text-align: center;
+}
+
+.metric-title{
+  margin: -2px;
+  border-bottom: none;
+}
+
+.hist-row {
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  justify-content: space-around;
+  width: 85%;
+}
+
+.hist-row>div {
+  flex: auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-left: 1%;
+  padding-right: 1%;
+}
+
+.tab-row{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#component-table{
+  width:50%;
+  margin-top: 10px;
+}
+
+.green{
+  background-color: #0a980a;
+}
+
+.orange {
+  background-color: #e5b62a;
+}
+
+.red {
+  background-color: #ba0e0e;
+}
+
+.progress-green {
+  --color: #04B543;
+}
+
+.progress-orange {
+  --color: #E76E0F;
+}
+
+.progress-red {
+  --color: #EA3829;
+}
+
+.corr-plot{
+  flex: 1;
+  padding-left: 2%;
+}
+
+.tooltip-text {
+  position: absolute;
+  display: none;
+  visibility: hidden;
+  z-index: 1;
+  top: 100%;
+  left: 0%;
+  width: 100%;
+  color: white;
+  font-size: 12px;
+  background-color: #2d3d4c;
+  border-radius: 10px;
+  padding: 10px 15px 10px 15px;
+}
+
+#fade {
+  opacity: 1;
+  transition: opacity 0.5s;
+}
+
+#delay {
+  opacity: 0;
+  transition: opacity 0.2s;
+  transition-delay: 1s;
+}
+
+td {
+  position: relative;
+}
+
+tr:hover .tooltip-text {
+  display: block;
+  visibility: visible;
+}
+
+.tr:hover #fade {
+  opacity: 1;
+}
+
+.tr:hover #delay {
+  opacity: 1;
+}
+
+.callout {
+  padding: 0.5rem 1rem 0.5rem 3rem;
+  background: #D9EDF9;
+  border: 3px solid #0088D1;
+  color: #272eb5;
+  position: relative;
+  max-width: 40rem;
+  border-radius: 10px;
+  margin-top: 10%;
+  font-size: 11pt;
+}
+
+.callout-icon {
+  content: "";
+
+  /* SVG via a data URI! */
+  background-size: cover;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: block;
+  position: absolute;
+  left: 0.9rem;
+  top: 1.1rem;
+}
+
+.callout-icon svg{
+  fill: #016ca7;
+}
+.callout p+p {
+  margin-top: 1em;
+}
+
+.callout a {
+  color: #272eb5;
+  font-weight: bold;
+}
+
+#gsk-logo {
+  padding-top: 10px;
+}
+</style>
+<script src="https://cdn.bokeh.org/bokeh/release/bokeh-3.3.4.min.js" integrity="sha384-5QIrjQuyo4I/x6DK/Sau33lcA3hT2TCZGr9vbk+2ebd7Da6FnR1amdM+9B5xOrSf" crossorigin="anonymous"></script>
+<script src="https://cdn.bokeh.org/bokeh/release/bokeh-gl-3.3.4.min.js" integrity="sha384-tXTWPp/bAKa+K9RPuXh7DNvye0Mv+P+6y4rAMVy+pWapsnXg9UG7g20WZ0N4i28A" crossorigin="anonymous"></script>
+
+
+
+
+
+<div class="main">
+    <div id="gsk-rag" class="dark:text-white dark:bg-zinc-800 rounded border border-gray-500">
+        <div class="header border-b border-b-gray-500">
+            
+                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="30" viewBox="0 0 30 15" fill="none" id="gsk-logo">
+                    <path fill="#fff" fill-rule="evenodd"
+                        d="M22.504 1.549a4.196 4.196 0 0 1 2.573-.887v.002a3.783 3.783 0 0 1 2.706 1.086 3.783 3.783 0 0 1 1.126 2.69 3.771 3.771 0 0 1-1.126 2.69 3.77 3.77 0 0 1-2.706 1.085l-4.794.011-2.533 3.467L8.203 15l2.881-3.335a9.829 9.829 0 0 1-4.663-1.68H3.185L0 7.163h3.934C4.263 3.165 8.187 0 12.96 0c2.24 0 4.489.696 6.175 1.909a7.423 7.423 0 0 1 1.882 1.919 4.194 4.194 0 0 1 1.487-2.28ZM7.05 3.249l3.91 3.915h1.505L7.89 2.584a7.773 7.773 0 0 0-.84.665Zm4.079-2.008 5.923 5.923h1.503l-6.086-6.087c-.45.023-.898.078-1.34.164ZM4.574 8.226h-1.77l.784.693h1.584a8.454 8.454 0 0 1-.598-.693Zm9.479 0H5.984c1.469 1.477 3.656 2.377 5.977 2.422l2.092-2.422Zm-2.458 4.472 5.492-1.902 1.878-2.569h-3.508l-3.862 4.47Zm10.361-5.552h3.265a2.714 2.714 0 0 0 1.747-4.648 2.711 2.711 0 0 0-1.888-.773 3.127 3.127 0 0 0-3.123 3.124v2.297Zm3.659-3.73a.677.677 0 1 1-.134 1.348.677.677 0 0 1 .134-1.348Z"
+                        clip-rule="evenodd" />
+                </svg>
+            <h1>RAG Evaluation Toolkit</h1>
+        </div>
+        
+        <div class="section-container">
+            <div class="components-container">
+                
+                <div class="component-card">
+                    <div class="component-title">GENERATOR</div>
+                    <div class="component-value tooltip  text-orange ">
+                        40.0%
+                            <span class="tooltiptext" id="fade">The Generator is the LLM inside the RAG to generate the answers.</span>
+                    </div>
+                    <div class="component-bar">
+                        <progress max="100" value=40.0 class=" progress-orange ">40.0%</progress>
+                    </div>
+                </div>
+                
+                <div class="component-card">
+                    <div class="component-title">RETRIEVER</div>
+                    <div class="component-value tooltip  text-orange ">
+                        50.0%
+                            <span class="tooltiptext" id="fade">The Retriever fetches relevant documents from the knowledge base according to a user query.</span>
+                    </div>
+                    <div class="component-bar">
+                        <progress max="100" value=50.0 class=" progress-orange ">50.0%</progress>
+                    </div>
+                </div>
+                
+                <div class="component-card">
+                    <div class="component-title">REWRITER</div>
+                    <div class="component-value tooltip  text-red ">
+                        0.0%
+                            <span class="tooltiptext" id="fade">The Rewriter modifies the user query to match a predefined format or to include the context from the chat history.</span>
+                    </div>
+                    <div class="component-bar">
+                        <progress max="100" value=0.0 class=" progress-red ">0.0%</progress>
+                    </div>
+                </div>
+                
+                <div class="component-card">
+                    <div class="component-title">ROUTING</div>
+                    <div class="component-value tooltip  text-green ">
+                        100.0%
+                            <span class="tooltiptext" id="fade">The Router filters the query of the user based on his intentions (intentions detection).</span>
+                    </div>
+                    <div class="component-bar">
+                        <progress max="100" value=100.0 class=" progress-green ">100.0%</progress>
+                    </div>
+                </div>
+                
+                <div class="component-card">
+                    <div class="component-title">KNOWLEDGE_BASE</div>
+                    <div class="component-value tooltip  text-green ">
+                        100.0%
+                            <span class="tooltiptext" id="fade">The knowledge base is the set of documents given to the RAG to generate the answers. Its scores is computed differently from the other components: it is the difference between the maximum and minimum correctness score across all the topics of the knowledge base.</span>
+                    </div>
+                    <div class="component-bar">
+                        <progress max="100" value=100.0 class=" progress-green ">100.0%</progress>
+                    </div>
+                </div>
+                
+                <div class="overall-card">
+                    <div class="overall-title">Overall Correctness Score</div>
+                    <div class="overall-value">40%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-container">
+            <div class="section-card">
+                <div class="section-title">RECOMMENDATION</div>
+                <span class="section-content">Your RAG system is failing on complex, distracting, and double questions, indicating critical weaknesses in the Generator and Rewriter components. The most important action is to improve the Generator&#39;s ability to handle nuanced queries and implement a Rewriter to effectively deconstruct or rephrase complex and multi-part questions.</span>
+            </div>
+        </div>
+
+        <div class="section-container">
+            <div class="section-card">
+                <div class="section-title">CORRECTNESS BY TOPIC</div>
+                    <script type="text/javascript">
+        (function() {
+  const fn = function() {
+    Bokeh.safely(function() {
+      (function(root) {
+        function embed_document(root) {
+        const docs_json = '{"70dd144e-71ef-488b-864b-7e250c197634":{"version":"3.4.3","title":"Bokeh Application","roots":[{"type":"object","name":"Figure","id":"p1179","attributes":{"height":350,"width_policy":"max","x_range":{"type":"object","name":"DataRange1d","id":"p1181","attributes":{"start":0}},"y_range":{"type":"object","name":"FactorRange","id":"p1188","attributes":{"factors":["Others"]}},"x_scale":{"type":"object","name":"LinearScale","id":"p1189"},"y_scale":{"type":"object","name":"CategoricalScale","id":"p1190"},"title":{"type":"object","name":"Title","id":"p1186","attributes":{"text_color":"#E0E0E0","text_font":"Helvetica","text_font_size":"14pt"}},"outline_line_color":"#E0E0E0","outline_line_alpha":0.25,"renderers":[{"type":"object","name":"GlyphRenderer","id":"p1208","attributes":{"data_source":{"type":"object","name":"ColumnDataSource","id":"p1176","attributes":{"selected":{"type":"object","name":"Selection","id":"p1177","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1178"},"data":{"type":"map","entries":[["correctness",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAAAAREA="},"shape":[1],"dtype":"float64","order":"little"}],["metadata_values",["Others"]],["colors",["#a50026"]]]}}},"view":{"type":"object","name":"CDSView","id":"p1209","attributes":{"filter":{"type":"object","name":"AllIndices","id":"p1210"}}},"glyph":{"type":"object","name":"HBar","id":"p1205","attributes":{"y":{"type":"field","field":"metadata_values"},"height":{"type":"value","value":0.85},"right":{"type":"field","field":"correctness"},"line_color":{"type":"value","value":"#1f77b4"},"fill_color":{"type":"value","value":"#14191B"}}},"nonselection_glyph":{"type":"object","name":"HBar","id":"p1206","attributes":{"y":{"type":"field","field":"metadata_values"},"height":{"type":"value","value":0.85},"right":{"type":"field","field":"correctness"},"line_color":{"type":"value","value":"#1f77b4"},"line_alpha":{"type":"value","value":0.1},"fill_color":{"type":"value","value":"#14191B"},"fill_alpha":{"type":"value","value":0.1},"hatch_alpha":{"type":"value","value":0.1}}},"muted_glyph":{"type":"object","name":"HBar","id":"p1207","attributes":{"y":{"type":"field","field":"metadata_values"},"height":{"type":"value","value":0.85},"right":{"type":"field","field":"correctness"},"line_color":{"type":"value","value":"#1f77b4"},"line_alpha":{"type":"value","value":0.2},"fill_color":{"type":"value","value":"#14191B"},"fill_alpha":{"type":"value","value":0.2},"hatch_alpha":{"type":"value","value":0.2}}}}},{"type":"object","name":"GlyphRenderer","id":"p1217","attributes":{"data_source":{"id":"p1176"},"view":{"type":"object","name":"CDSView","id":"p1218","attributes":{"filter":{"type":"object","name":"AllIndices","id":"p1219"}}},"glyph":{"type":"object","name":"HBar","id":"p1214","attributes":{"y":{"type":"field","field":"metadata_values"},"height":{"type":"value","value":0.85},"right":{"type":"field","field":"correctness"},"line_color":{"type":"value","value":"white"},"line_width":{"type":"value","value":2},"fill_color":{"type":"value","value":"#78BBFA"},"fill_alpha":{"type":"value","value":0.7}}},"nonselection_glyph":{"type":"object","name":"HBar","id":"p1215","attributes":{"y":{"type":"field","field":"metadata_values"},"height":{"type":"value","value":0.85},"right":{"type":"field","field":"correctness"},"line_color":{"type":"value","value":"white"},"line_alpha":{"type":"value","value":0.1},"line_width":{"type":"value","value":2},"fill_color":{"type":"value","value":"#78BBFA"},"fill_alpha":{"type":"value","value":0.1},"hatch_alpha":{"type":"value","value":0.1}}},"muted_glyph":{"type":"object","name":"HBar","id":"p1216","attributes":{"y":{"type":"field","field":"metadata_values"},"height":{"type":"value","value":0.85},"right":{"type":"field","field":"correctness"},"line_color":{"type":"value","value":"white"},"line_alpha":{"type":"value","value":0.2},"line_width":{"type":"value","value":2},"fill_color":{"type":"value","value":"#78BBFA"},"fill_alpha":{"type":"value","value":0.2},"hatch_alpha":{"type":"value","value":0.2}}}}},{"type":"object","name":"GlyphRenderer","id":"p1227","attributes":{"visible":false,"data_source":{"type":"object","name":"ColumnDataSource","id":"p1221","attributes":{"selected":{"type":"object","name":"Selection","id":"p1222","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1223"},"data":{"type":"map","entries":[["x",[0]],["y",[0]]]}}},"view":{"type":"object","name":"CDSView","id":"p1228","attributes":{"filter":{"type":"object","name":"AllIndices","id":"p1229"}}},"glyph":{"type":"object","name":"Line","id":"p1224","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"#EA3829","line_width":2,"line_dash":[6]}},"nonselection_glyph":{"type":"object","name":"Line","id":"p1225","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"#EA3829","line_alpha":0.1,"line_width":2,"line_dash":[6]}},"muted_glyph":{"type":"object","name":"Line","id":"p1226","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"line_color":"#EA3829","line_alpha":0.2,"line_width":2,"line_dash":[6]}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p1187","attributes":{"tools":[{"type":"object","name":"HoverTool","id":"p1201","attributes":{"renderers":"auto","tooltips":[["topic","@metadata_values"],["Correctness","@correctness{0.00}"]]}}]}},"toolbar_location":null,"left":[{"type":"object","name":"CategoricalAxis","id":"p1196","attributes":{"ticker":{"type":"object","name":"CategoricalTicker","id":"p1197"},"formatter":{"type":"object","name":"CategoricalTickFormatter","id":"p1198"},"axis_label_standoff":10,"axis_label_text_color":"#E0E0E0","axis_label_text_font":"Helvetica","axis_label_text_font_size":"1.25em","axis_label_text_font_style":"normal","major_label_policy":{"type":"object","name":"AllLabels","id":"p1199"},"major_label_text_color":"#E0E0E0","major_label_text_font":"Helvetica","major_label_text_font_size":"1.025em","axis_line_color":"#E0E0E0","axis_line_alpha":0,"major_tick_line_color":"#E0E0E0","major_tick_line_alpha":0,"minor_tick_line_color":"#E0E0E0","minor_tick_line_alpha":0}}],"below":[{"type":"object","name":"LinearAxis","id":"p1191","attributes":{"ticker":{"type":"object","name":"BasicTicker","id":"p1192","attributes":{"mantissas":[1,2,5]}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1193"},"axis_label":"Correctness (%)","axis_label_standoff":10,"axis_label_text_color":"#E0E0E0","axis_label_text_font":"Helvetica","axis_label_text_font_size":"1.25em","axis_label_text_font_style":"normal","major_label_policy":{"type":"object","name":"AllLabels","id":"p1194"},"major_label_text_color":"#E0E0E0","major_label_text_font":"Helvetica","major_label_text_font_size":"1.025em","axis_line_color":"#E0E0E0","axis_line_alpha":0,"major_tick_line_color":"#E0E0E0","major_tick_line_alpha":0,"minor_tick_line_color":"#E0E0E0","minor_tick_line_alpha":0}}],"center":[{"type":"object","name":"Grid","id":"p1195","attributes":{"axis":{"id":"p1191"},"grid_line_color":"#E0E0E0","grid_line_alpha":0.25}},{"type":"object","name":"Grid","id":"p1200","attributes":{"dimension":1,"axis":{"id":"p1196"},"grid_line_color":"#E0E0E0","grid_line_alpha":0.25}},{"type":"object","name":"Span","id":"p1220","attributes":{"location":40.0,"dimension":"height","line_color":"#EA3829","line_width":2,"line_dash":[6]}},{"type":"object","name":"Legend","id":"p1230","attributes":{"border_line_alpha":0,"background_fill_color":"#111516","background_fill_alpha":0.5,"label_text_color":"#E0E0E0","label_text_font":"Helvetica","label_text_font_size":"1.025em","label_standoff":8,"glyph_width":15,"spacing":8,"items":[{"type":"object","name":"LegendItem","id":"p1231","attributes":{"label":{"type":"value","value":"Correctness on the entire Testset"},"renderers":[{"id":"p1227"}]}}]}}],"background_fill_color":"#14191B","border_fill_color":"#15191C"}}]}}';
+        const render_items = [{"docid":"70dd144e-71ef-488b-864b-7e250c197634","roots":{"p1179":"d8f5ce57-22c4-4fe7-b930-36372c38d07e"},"root_ids":["p1179"]}];
+        root.Bokeh.embed.embed_items(docs_json, render_items);
+        }
+        if (root.Bokeh !== undefined) {
+          embed_document(root);
+        } else {
+          let attempts = 0;
+          const timer = setInterval(function(root) {
+            if (root.Bokeh !== undefined) {
+              clearInterval(timer);
+              embed_document(root);
+            } else {
+              attempts++;
+              if (attempts > 100) {
+                clearInterval(timer);
+                console.log("Bokeh: ERROR: Unable to run BokehJS code because BokehJS library is missing");
+              }
+            }
+          }, 10, root)
+        }
+      })(window);
+    });
+  };
+  if (document.readyState != "loading") fn();
+  else document.addEventListener("DOMContentLoaded", fn);
+})();
+    </script>
+
+                <div id="d8f5ce57-22c4-4fe7-b930-36372c38d07e" data-root-id="p1179" style="display: contents;"></div>
+            </div>
+        </div>
+
+        <div class="section-container">
+            <div class="section-card">
+                <div class="section-title">KNOWLEDGE BASE OVERVIEW</div>
+                    <script type="text/javascript">
+        (function() {
+  const fn = function() {
+    Bokeh.safely(function() {
+      (function(root) {
+        function embed_document(root) {
+        const docs_json = '{"01e5e3b9-2c55-4f37-800e-6cfa0f12734f":{"version":"3.4.3","title":"Bokeh Application","roots":[{"type":"object","name":"Tabs","id":"p1112","attributes":{"sizing_mode":"stretch_width","tabs":[{"type":"object","name":"TabPanel","id":"p1049","attributes":{"title":"Topic exploration","child":{"type":"object","name":"Figure","id":"p1004","attributes":{"sizing_mode":"stretch_width","x_range":{"type":"object","name":"Range1d","id":"p1013","attributes":{"start":11.011838388442992,"end":16.71532783508301}},"y_range":{"type":"object","name":"Range1d","id":"p1014","attributes":{"start":12.512703657150269,"end":18.571962594985962}},"x_scale":{"type":"object","name":"LinearScale","id":"p1015"},"y_scale":{"type":"object","name":"LinearScale","id":"p1016"},"title":{"type":"object","name":"Title","id":"p1011","attributes":{"text_color":"#E0E0E0","text_font":"Helvetica","text_font_size":"14pt"}},"outline_line_color":"#E0E0E0","outline_line_alpha":0.25,"renderers":[{"type":"object","name":"GlyphRenderer","id":"p1044","attributes":{"data_source":{"type":"object","name":"ColumnDataSource","id":"p1001","attributes":{"selected":{"type":"object","name":"Selection","id":"p1002","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1003"},"data":{"type":"map","entries":[["x",{"type":"ndarray","array":{"type":"bytes","data":"XNxKQf8KPEFj11FBBrxCQfyxR0Fq9DJB9NI3QSTPWkGRVWlBoYJpQVGwV0HQj0BB1d1MQYkdVkGkpGRB5UJqQfjTXEE="},"shape":[17],"dtype":"float32","order":"little"}],["y",{"type":"ndarray","array":{"type":"bytes","data":"SwKCQZxfYkEFCnhBmn12QVmzZ0E0FXlB87uDQUh1a0FGOXhBblCEQb6UiEE5eIhBJ3+MQbDoXEF9XFhBJ+hkQaoDfkE="},"shape":[17],"dtype":"float32","order":"little"}],["topic",["Others","Others","Others","Others","Others","Others","Others","Others","Others","Others","Others","Others","Others","Others","Others","Others","Others"]],["id",[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]],["content",["NIDJAY ROBERT \\n \\nEcoutez\\u2026 \\u00e9coutez seulement. Laissez-moi vous raconter une histoire. \\nVous savez, dans certaines familles africaines, il y a toujours un sorcier. \\nToujours. S\\u2019il n\\u2019y en a pas\\u2026 on en fabrique un. \\nEt bizarrement, ce sorcier-l\\u00e0\\u2026 Ce n\\u2019est jamais un \\u00e9tranger. C\\u2019est souvent \\nun oncle ou une tante. Mais surtout\\u2026 un oncle. \\nOn murmure souvent aux enfants, d\\u00e8s l\\u2019enfance : \\n\\u00ab Tu vois le tonton l\\u00e0 ? Ne mange jamais chez lui.","S\\u2019il te donne quelque chose, refuse. M\\u00eame s\\u2019il te donne de l\\u2019eau\\u2026 refuse. \\nJusqu\\u2019au jour o\\u00f9, l\\u2019enfant y crois fermement \\u00bb \\nAujourd\\u2019hui, je vais vous raconter l\\u2019histoire de Nidjay Robert. L\\u2019oncle \\nRobert. Robert vivait \\u00e0 la campagne avec ses s\\u0153urs. L\\u2019une d\\u2019elles avait \\ntrois enfants. D\\u00e8s leur plus jeune \\u00e2ge, elle avait ancr\\u00e9 en eux cette peur, ce \\nr\\u00e9flexe, ce syndrome de \\u201cl\\u2019oncle sorcier\\u201d. Donc, dans la t\\u00eate de ses neveux, \\nNidjay Robert \\u00e9tait comme Harry Poter.","Nidjay Robert \\u00e9tait comme Harry Poter. \\nLes ann\\u00e9es passent. Les enfants grandissent, partent \\u00e9tudier en ville. Le \\ngrand classique hein : on quitte le village pour les \\u00e9tudes, puis on trouve \\ndu travail\\u2026 on se marie et on reste. La vie suit son cours. \\nUn jour, l\\u2019oncle Robert doit se rendre en ville pour se ravitailler. Il n\\u2019a nulle \\npart o\\u00f9 loger. Il se dit : \\u00ab J\\u2019ai trois neveux en ville. \\nJe ne vais quand m\\u00eame pas dormir dehors. \\u00bb","Je ne vais quand m\\u00eame pas dormir dehors. \\u00bb \\nCependant, la graine plant\\u00e9e par sa s\\u0153ur a germ\\u00e9. Elle est devenue un \\ngrand baobab. \\nIl appelle l\\u2019a\\u00een\\u00e9. Le t\\u00e9l\\u00e9phone sonne. \\nDe l\\u2019autre c\\u00f4t\\u00e9 du fil, l\\u2019a\\u00een\\u00e9 regarde le nom s\\u2019afficher \\u00e0 l\\u2019\\u00e9cran : Nidjay \\nRobert. Il boude, se plaint. Pourquoi il m\\u2019appelle ? Pourquoi moi ? Je ne \\nveux pas de probl\\u00e8mes\\u2026  \\nIl d\\u00e9croche quand m\\u00eame. \\n \\n\\u2014 All\\u00f4 Nidjay ! \\n\\u2014 waw Diarbat, Nakamou ? \\n\\u2014 Mangui ci diam \\u2026 sante Yalla boubax. \\n\\u2014 yangui keurgueu ? \\n\\u2014 waw.. waw","\\u2014 yangui keurgueu ? \\n\\u2014 waw.. waw \\n\\u2014 D\\u2019accord. J\\u2019arrive en ville demain et je passerai mon s\\u00e9jour chez toi. \\n \\nPris de panique, il transpire\\u2026 qui peut accepter \\u00e7a ? Jamais, il faut trouver \\nune solution rapide. \\nIl r\\u00e9pond aussit\\u00f4t : \\n\\u2014 Non l\\u2019oncle\\u2026 en fait je suis venu suivre la CAN avec mes enfants au \\nMaroc. \\n\\u2014 D\\u2019accord dis Robert un peu d\\u00e9\\u00e7u, et raccroche. \\n \\nApr\\u00e8s l\\u2019appel, le neveu s\\u2019exclame, soulag\\u00e9 : \\n\\u00ab Sans effet ! Tu ne m\\u2019auras pas. \\u00bb Il fait le signe de la croix : au nom du","P\\u00e8re et du fils... Et Rajoute m\\u00eame un Amen. \\n \\nRobert de son c\\u00f4t\\u00e9, appelle le deuxi\\u00e8me fils. \\n \\nLe deuxi\\u00e8me voit le nom\\u2026 \\nCelui-ci sursaute et crie, comme s\\u2019il avait vu le diable en personne. \\n\\u00ab Ehhhh ! Le sorcier l\\u00e0 m\\u2019appelle ? Mais je lui ai fait quoi moi ? \\u00bb \\nIl appelle sa femme et lui montre l\\u2019\\u00e9cran : \\n\\u2014 Regarde, c\\u2019est l\\u2019oncle-l\\u00e0 qui m\\u2019appelle ! \\n\\u2014 Mais, d\\u00e9croche et \\u00e9coute, lui key !  Peut-\\u00eatre qu\\u2019il veut juste te souhaite \\nbonne f\\u00eate, dit-elle.  \\n \\nRassur\\u00e9 par sa femme, il d\\u00e9croche.","Rassur\\u00e9 par sa femme, il d\\u00e9croche. \\n \\n\\u2014 waw diarbat, naka Dakar ? \\n\\u2014 ci diam, nidiay. Ana wa deuk beu ? \\n\\u2014 Mangui ci diam tamitt, yangui keurgueu ? \\n\\u2014 waw.. waw ! \\n\\u2014 Je serai en ville demain et je passerai mon s\\u00e9jour chez toi. \\nDans sa t\\u00eate, il devait absolument \\u00e9viter \\u00e7a. \\n\\u2014 Non mon oncle\\u2026 je ne suis pas \\u00e0 Dakar. \\nSa femme lui regarde avec des gros yeux mais ce n\\u2019est pas son probl\\u00e8me. \\nIl continue. \\n\\u2014 En r\\u00e9alit\\u00e9, je suis \\u00e0 Bamako chez ma belle-famille.","Robert cette fois franchement agac\\u00e9, raccroche, sans dire mot. \\n \\nLe deuxi\\u00e8me neveu soupire, Huff! soulag\\u00e9, dit : \\u00ab Tu es vaincu. \\u00bb \\n \\nRobert, \\u00e9nerv\\u00e9, se dit : \\n\\u00ab Si j\\u2019appelle le troisi\\u00e8me, il va me remballer \\u00e9galement. Je vais aller sur \\nplace. \\u00bb \\n \\nIl prend la route et arrive Dakar, chez le dernier neveu.  La maison avait de \\ngrandes baies vitr\\u00e9es. Le jour, on voit dehors sans \\u00eatre vu. La nuit, de \\nl\\u2019ext\\u00e9rieur on y voyait tout de l\\u2019ext\\u00e9rieur. L\\u2019oncle voit son neveu","tranquillement install\\u00e9 devant la t\\u00e9l\\u00e9vision entrain de suivre le match. Il \\ncompose son num\\u00e9ro. M\\u00eame r\\u00e9action de panique. Il fait des siennes avant \\nde r\\u00e9pondre, je vous dis, j\\u2019\\u00e9tais l\\u00e0, je voyais tout. \\n \\n\\u2014 All\\u00f4 nidjay, nodef ana wa deuk ba ? \\n\\u2014 \\u00c7a va. Je suis en ville et je passerai mon s\\u00e9jour chez toi. \\n\\u2014 Euh\\u2026 d\\u00e9d\\u00e9t nidjay, dama toukhou. Je suis dans un quartier inaccessible. \\n\\u2014 Mangui ci eute bi, mangui lay  guiss. \\n\\u2014 Justement, nidjay\\u2026  locataire bou  bess bi niro nagn d\\u00e9. T\\u00e9 wate na ni","yor\\u00e9 na t\\u00e9l\\u00e9phone \\u00e0 l\\u2019oreille ni may wax ak yaw.  \\n \\nRobert, furieux, entre dans la maison. \\n \\nLe neveu reste bouche b\\u00e9e comme une statue. \\n\\u2014 Gne\\u2026 Gne\\u2026 Gneuw nga, nidjay ? \\n\\u2014 Mais oui, c\\u2019est ce que je te disais depuis tout \\u00e0 l\\u2019heure. \\n \\nLe neveu est coinc\\u00e9. Robert s\\u2019installe pour cinq jours. Cinq jours qui vont \\n\\u00eatre les plus longs de sa vie. \\n \\n\\u2014 Tu as une belle maison, dit l\\u2019oncle. \\n \\nAu fond de lui, le neveu r\\u00e9p\\u00e8te : \\u00ab Rien, tu ne m\\u2019auras pas. \\u00bb","Il cache \\u00e0 Robert l\\u2019existence de ses enfants. Il dit \\u00e0 sa femme : \\n\\u00ab En aucun cas ce sorcier ne doit savoir qu\\u2019on a des enfants. \\u00bb De peur qu\\u2019il \\ns\\u2019en prenne \\u00e0 eux. \\n \\nIl part travailler, inquiet, le t\\u00e9l\\u00e9phone toujours \\u00e0 la main. Il anticipe un \\nmalheur qui n\\u2019existe pas. A midi, son t\\u00e9l\\u00e9phone sonne. \\n \\n\\u2014 All\\u00f4 ! Il a fait quoi ?! \\nC\\u2019est comme s\\u2019il attendais ce moment toute sa vie. \\n\\u2014 Non rien, je t\\u2019appelle juste pour te rappeler de payer la facture \\nd\\u2019internet en rentrant.","d\\u2019internet en rentrant. \\nSoulagement. D\\u2019accord. \\n \\nLes enfants sont enferm\\u00e9s dans une pi\\u00e8ce . Le t roisi\\u00e8me jour. Il fallait que \\nles enfa nts prennent une dou che. La femme tente discr\\u00e8tement de les \\namener \\u00e0 la douche. Comme disait un observateur de la vie  : On ne cache \\npas le cad avre d\\u2019un \\u00e9l\\u00e9phant avec une feuille de bananier. L\\u2019oncle Robert \\nd\\u00e9couvre cette mise en sc\\u00e8ne. \\n \\n\\u2014 Donc vous avez des enfants\\u2026 et vous me les avez cach\\u00e9s ? S\\u2019\\u00e9cria-t-il.","Silence total. Robert retourna sous le manguier vaquer \\u00e0 ses occupations. \\n \\nApr\\u00e8s la douche des enfants, la femme habille les enfants, soul\\u00e8ve un des \\nenfants, le pose debout. L\\u2019enfant tombe. Elle refait le geste l\\u2019enfant tombe \\nencore. Ah l\\u00e0 \\u00e7a commence \\u00e0 devenir s\\u00e9rieux. Il n\\u2019arrive plus \\u00e0 se tenir \\ndebout. Paniqu\\u00e9e, elle appelle son mari en hurlant : \\nALL\\u00d4 ! C\\u2019EST COMMENC\\u00c9 ! TON ONCLE A AGI ! L\\u2019ENFANT NE TIENT PLUS \\nDEBOUT !","DEBOUT !  \\n \\nLe neveu, comme pr\\u00e9par\\u00e9 \\u00e0 \\u00e7a, court chez son sup\\u00e9rieur. Essouffl\\u00e9 et \\nincoh\\u00e9rent, il dit : \\nChef\\u2026 l\\u2019oncle\\u2026 il a\\u2026 commenc\\u00e9\\u2026 l\\u2019enfant\\u2026 les pieds\\u2026 un sort ! il a \\ncommenc\\u00e9\\u2026 L\\u2019oncle. \\n \\nIl parle, s\\u2019embrouille, personne ne comprend. Se ressaisit et formule une \\nphrase : \\n\\u2014 Excusez-moi, j\\u2019ai une urgence \\u00e0 la maison, je dois partir vite. \\n \\nIl fonce, oublie qu\\u2019il a une voiture, prend un taxi. Il remarque que le taxi","respecte les feux rouges, c\\u2019est trop lent pour lui. Il descend et prends une \\nmoto. Pour lui le conducteur roulait toujours lentement, alors il prend le \\nguidon.  Etonnant n\\u2019est-ce pas ? Ce n\\u2019est pas fini, il met le conducteur pas \\u00e0 \\nl\\u2019arri\\u00e8re mais sur son dos (ne riez pas, c\\u2019est vrai, j\\u2019\\u00e9tais l\\u00e0). Il \\u00e9tait d\\u00e9pass\\u00e9. \\n \\nIl arrive chez lui, fracasse la porte : \\n\\u2014 Il est o\\u00f9 ?! \\n \\nRobert ne comprend rien. Paf ! Il assomme son oncle avec un pilon.","Direction l\\u2019h\\u00f4pital. A l\\u2019h\\u00f4pital un carnage, Il crie partout : \\n\\u2014 DOCTEUR ! L\\u2019ONCLE ! IL A FAIT MON ENFANT\\u2026 ! IL NE TIENT PLUS \\nDEBOUT ! C\\u2019EST UN SORT ! ON A PRI\\u00c9, RIEN N\\u2019A MARCH\\u00c9 ! \\u00bb \\n \\nLe m\\u00e9decin ne comprend rien. \\n\\u2014 Bon, sortez. Laissez-moi avec l\\u2019enfant. Dis le m\\u00e9decin. \\n \\nQuelques minutes plus tard, le m\\u00e9decin sort avec l\\u2019enfant\\u2026 bien debout sur \\nses deux pieds. Ils pleurent, l\\u2019embrassent. \\n\\u2014 Docteur, quelle pri\\u00e8re avez-vous fait ? Sur la route, on a tout essay\\u00e9 !","Le m\\u00e9decin r\\u00e9pond calmement : \\n\\u2014 C\\u2019est normal. Vous aviez enfil\\u00e9 les deux jambes de l\\u2019enfant dans le \\nm\\u00eame c\\u00f4t\\u00e9 du pantalon. Comment voulez-vous qu\\u2019il tienne debout ? \\n \\nC\\u2019\\u00e9tait pour vous inviter \\u00e0 appliquer le dixi\\u00e8me point de mise en pratique \\ndes principes divins dans la vie quotidienne : \\nSe conduire avec calme et agir sans pr\\u00e9cipitation."]],["color",{"type":"ndarray","array":["#999","#999","#999","#999","#999","#999","#999","#999","#999","#999","#999","#999","#999","#999","#999","#999","#999"],"shape":[17],"dtype":"object","order":"little"}]]}}},"view":{"type":"object","name":"CDSView","id":"p1045","attributes":{"filter":{"type":"object","name":"AllIndices","id":"p1046"}}},"glyph":{"type":"object","name":"Scatter","id":"p1041","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"size":{"type":"value","value":6},"line_color":{"type":"field","field":"color"},"line_width":{"type":"value","value":2},"fill_color":{"type":"field","field":"color"},"fill_alpha":{"type":"value","value":0.7},"hatch_color":{"type":"field","field":"color"},"hatch_alpha":{"type":"value","value":0.7}}},"nonselection_glyph":{"type":"object","name":"Scatter","id":"p1042","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"size":{"type":"value","value":6},"line_color":{"type":"field","field":"color"},"line_alpha":{"type":"value","value":0.1},"line_width":{"type":"value","value":2},"fill_color":{"type":"field","field":"color"},"fill_alpha":{"type":"value","value":0.1},"hatch_color":{"type":"field","field":"color"},"hatch_alpha":{"type":"value","value":0.1}}},"muted_glyph":{"type":"object","name":"Scatter","id":"p1043","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"size":{"type":"value","value":6},"line_color":{"type":"field","field":"color"},"line_alpha":{"type":"value","value":0.2},"line_width":{"type":"value","value":2},"fill_color":{"type":"field","field":"color"},"fill_alpha":{"type":"value","value":0.2},"hatch_color":{"type":"field","field":"color"},"hatch_alpha":{"type":"value","value":0.2}}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p1012","attributes":{"logo":"grey","tools":[{"type":"object","name":"HoverTool","id":"p1027","attributes":{"renderers":"auto","tooltips":"\\n    &lt;div style=\\"width:400px;\\"&gt;\\n    &lt;b&gt;Document id:&lt;/b&gt; @id &lt;br&gt;\\n    &lt;b&gt;Topic:&lt;/b&gt; @topic &lt;br&gt;\\n    &lt;b&gt;Document Content:&lt;/b&gt; @content\\n    &lt;/div&gt;\\n    "}},{"type":"object","name":"PanTool","id":"p1028"},{"type":"object","name":"WheelZoomTool","id":"p1029","attributes":{"renderers":"auto"}},{"type":"object","name":"BoxZoomTool","id":"p1030","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p1031","attributes":{"syncable":false,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5}}}},{"type":"object","name":"ResetTool","id":"p1036"},{"type":"object","name":"SaveTool","id":"p1037"}]}},"left":[{"type":"object","name":"LinearAxis","id":"p1022","attributes":{"ticker":{"type":"object","name":"BasicTicker","id":"p1023","attributes":{"mantissas":[1,2,5]}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1024"},"axis_label_standoff":10,"axis_label_text_color":"#E0E0E0","axis_label_text_font":"Helvetica","axis_label_text_font_size":"1.25em","axis_label_text_font_style":"normal","major_label_policy":{"type":"object","name":"AllLabels","id":"p1025"},"major_label_text_color":"#E0E0E0","major_label_text_font":"Helvetica","major_label_text_font_size":"1.025em","axis_line_color":"#E0E0E0","axis_line_alpha":0,"major_tick_line_color":"#E0E0E0","major_tick_line_alpha":0,"minor_tick_line_color":"#E0E0E0","minor_tick_line_alpha":0}}],"below":[{"type":"object","name":"LinearAxis","id":"p1017","attributes":{"ticker":{"type":"object","name":"BasicTicker","id":"p1018","attributes":{"mantissas":[1,2,5]}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1019"},"axis_label_standoff":10,"axis_label_text_color":"#E0E0E0","axis_label_text_font":"Helvetica","axis_label_text_font_size":"1.25em","axis_label_text_font_style":"normal","major_label_policy":{"type":"object","name":"AllLabels","id":"p1020"},"major_label_text_color":"#E0E0E0","major_label_text_font":"Helvetica","major_label_text_font_size":"1.025em","axis_line_color":"#E0E0E0","axis_line_alpha":0,"major_tick_line_color":"#E0E0E0","major_tick_line_alpha":0,"minor_tick_line_color":"#E0E0E0","minor_tick_line_alpha":0}}],"center":[{"type":"object","name":"Grid","id":"p1021","attributes":{"axis":{"id":"p1017"},"grid_line_color":"white","grid_line_alpha":0.25}},{"type":"object","name":"Grid","id":"p1026","attributes":{"dimension":1,"axis":{"id":"p1022"},"grid_line_color":"white","grid_line_alpha":0.25}},{"type":"object","name":"Legend","id":"p1047","attributes":{"title":"Knowledge Base Tospics","title_text_color":"#B1B1B1","title_text_font_style":"bold","border_line_alpha":0,"background_fill_color":"#111516","background_fill_alpha":0.5,"label_text_color":"#E0E0E0","label_text_font":"Helvetica","label_text_font_size":"1.025em","label_standoff":8,"glyph_width":15,"spacing":8,"items":[{"type":"object","name":"LegendItem","id":"p1048","attributes":{"label":{"type":"value","value":"Others"},"renderers":[{"id":"p1044"}],"index":0}}]}}],"background_fill_color":"#14191B","border_fill_color":"#15191C"}}}},{"type":"object","name":"TabPanel","id":"p1111","attributes":{"title":"Failures","child":{"type":"object","name":"Figure","id":"p1054","attributes":{"sizing_mode":"stretch_width","x_range":{"type":"object","name":"Range1d","id":"p1063","attributes":{"start":11.011838388442992,"end":16.71532783508301}},"y_range":{"type":"object","name":"Range1d","id":"p1064","attributes":{"start":12.512703657150269,"end":18.571962594985962}},"x_scale":{"type":"object","name":"LinearScale","id":"p1065"},"y_scale":{"type":"object","name":"LinearScale","id":"p1066"},"title":{"type":"object","name":"Title","id":"p1061","attributes":{"text_color":"#E0E0E0","text_font":"Helvetica","text_font_size":"14pt"}},"outline_line_color":"#E0E0E0","outline_line_alpha":0.25,"renderers":[{"type":"object","name":"GlyphRenderer","id":"p1093","attributes":{"data_source":{"type":"object","name":"ColumnDataSource","id":"p1050","attributes":{"selected":{"type":"object","name":"Selection","id":"p1051","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1052"},"data":{"type":"map","entries":[["x",{"type":"ndarray","array":{"type":"bytes","data":"1d1MQeVCakGJHVZBavQyQZFVaUE="},"shape":[5],"dtype":"float32","order":"little"}],["y",{"type":"ndarray","array":{"type":"bytes","data":"J3+MQSfoZEGw6FxBNBV5QUY5eEE="},"shape":[5],"dtype":"float32","order":"little"}],["topic",["Others","Others","Others","Others","Others"]],["correctness",[true,false,false,true,false]],["questions",["Quel est le probl\\u00e8me de l&#x27;enfant apr\\u00e8s la douche ?","En vous r\\u00e9f\\u00e9rant au document 15, que crie sp\\u00e9cifiquement la personne en arrivant \\u00e0 l&#x27;h\\u00f4pital, et dans quel \\u00e9tat d\\u00e9crit-elle l&#x27;enfant ?","Pourquoi le neveu, apr\\u00e8s avoir re\\u00e7u la visite annonc\\u00e9e de son oncle, doit-il trouver une solution pour \\u00e9viter cette visite le plus rapidement possible ?","Bonjour, je suis en train de relire un passage o\\u00f9 le deuxi\\u00e8me fils, en voyant que Robert l&#x27;appelle, sursaute et crie comme s&#x27;il avait vu le diable. Pouvez-vous me confirmer quelle est sa r\\u00e9action exacte lorsqu&#x27;il voit le nom de son oncle sur l&#x27;\\u00e9cran de son t\\u00e9l\\u00e9phone, alors qu&#x27;il montre anxieusement l&#x27;\\u00e9cran \\u00e0 sa femme ?","Quels sont les moyens de paiement accept\\u00e9s par l&#x27;entreprise et comment puis-je suivre ma commande apr\\u00e8s son exp\\u00e9dition ?"]],["agent_answer",["**Probl\\u00e8me de l&#x27;enfant apr\\u00e8s la douche**  \\nD\\u2019apr\\u00e8s les extraits fournis, apr\\u00e8s que les enfants aient pris la douche, la femme les habille puis l\\u00e8ve un des enfants pour le poser debout. \\u00c0 ce moment-l\\u00e0, l\\u2019enfant tombe. Le probl\\u00e8me identifi\\u00e9 est donc que l\\u2019enfant tombe apr\\u00e8s avoir \\u00e9t\\u00e9 soulev\\u00e9 pour se tenir debout.","**R\\u00e9ponse bas\\u00e9e uniquement sur le document 15 :**\\n\\nLe texte de la partie 15/16 (Document\\u202f3) ne contient pas de passage o\\u00f9 une personne arrive \\u00e0 l\\u2019h\\u00f4pital ni o\\u00f9 elle exprime une plainte ou d\\u00e9crit l\\u2019\\u00e9tat de l\\u2019enfant \\u00e0 ce moment pr\\u00e9cis.  \\nEn l\\u2019absence de cette information dans le document fourni, je ne peux malheureusement pas r\\u00e9pondre \\u00e0 la question.","**R\\u00e9ponse :**\\n\\nD\\u2019apr\\u00e8s les extraits fournis, le neveu est en \\u00e9tat de panique d\\u00e8s que son oncle lui annonce qu\\u2019il viendra le voir.  \\n- Dans le **Document\\u202f2** il est d\\u00e9crit comme \\u00ab\\u202fpris de panique, il transpire\\u2026\\u202f\\u00bb et il r\\u00e9pond \\u00e0 l\\u2019appel de l\\u2019oncle par une fuite (il parle de suivre la CAN, raccroche, puis s\\u2019exclame \\u00ab\\u202fSans effet\\u202f!\\u202fTu ne m\\u2019auras pas\\u202f\\u00bb).  \\n- Dans le **Document\\u202f3** on voit que l\\u2019oncle arrive chez le neveu, ce qui provoque une r\\u00e9action violente (\\u00ab\\u202fIl est o\\u00f9\\u202f!?\\u202f\\u00bb, puis l\\u2019oncle est assomm\\u00e9, l\\u2019incident conduit \\u00e0 l\\u2019h\\u00f4pital).  \\n\\nCes \\u00e9l\\u00e9ments montrent que le neveu per\\u00e7oit la visite de son oncle comme une menace ou une source de danger. Pour \\u00e9viter une confrontation ou un \\u00e9ventuel acte de violence, il cherche donc \\u00e0 trouver rapidement une solution pour repousser ou \\u00e9viter cette visite.","**R\\u00e9action du deuxi\\u00e8me fils (extrait exact du Document\\u202f3)**  \\n\\n&gt; *\\u00ab\\u202fCelui\\u2011ci sursaute et crie, comme s\\u2019il avait vu le diable en personne.\\u202f\\u00bb*  \\n&gt;  \\n&gt; *\\u00ab\\u202fRegarde, c\\u2019est l\\u2019oncle\\u2011l\\u00e0 qui m\\u2019appelle !\\u202f\\u00bb*  \\n\\nAinsi, lorsqu\\u2019il voit le nom de son oncle s\\u2019afficher sur l\\u2019\\u00e9cran de son t\\u00e9l\\u00e9phone, il sursaute, crie comme s\\u2019il avait vu le diable, puis montre anxieusement l\\u2019\\u00e9cran \\u00e0 sa femme.","Les documents fournis (Partie\\u202f15/16, Partie\\u202f4/16 et Partie\\u202f14/16 du fichier *NIDJAY\\u202fROBERT.pdf*) ne contiennent aucune information concernant :\\n\\n- les moyens de paiement accept\\u00e9s par l\\u2019entreprise ;\\n- la proc\\u00e9dure pour suivre une commande apr\\u00e8s son exp\\u00e9dition.\\n\\nPar cons\\u00e9quent, je ne peux pas r\\u00e9pondre \\u00e0 ces questions \\u00e0 partir du contenu disponible."]],["reference_answer",["L&#x27;enfant ne tient plus debout, il tombe chaque fois qu&#x27;on essaie de le mettre debout.","Il crie partout : \\u00ab DOCTEUR ! L\\u2019ONCLE ! IL A FAIT MON ENFANT\\u2026 ! IL NE TIENT PLUS DEBOUT ! C\\u2019EST UN SORT ! ON A PRI\\u00c9, RIEN N\\u2019A MARCH\\u00c9 ! \\u00bb","Il a une urgence \\u00e0 la maison.","Il sursaute et crie, comme s&#x27;il avait vu le diable en personne.","Nous acceptons une vari\\u00e9t\\u00e9 de moyens de paiement, notamment les cartes de cr\\u00e9dit et de d\\u00e9bit majeures, les portefeuilles num\\u00e9riques et les virements bancaires. Une fois votre commande exp\\u00e9di\\u00e9e, vous recevrez un e-mail de confirmation avec un num\\u00e9ro de suivi pour suivre l&#x27;acheminement en temps r\\u00e9el sur notre site web."]],["id",[12,15,13,5,8]],["content",["Silence total. Robert retourna sous le manguier vaquer \\u00e0 ses occupations. \\n \\nApr\\u00e8s la douche des enfants, la femme habille les enfants, soul\\u00e8ve un des \\nenfants, le pose debout. L\\u2019enfant tombe. Elle refait le geste l\\u2019enfant tombe \\nencore. Ah l\\u00e0 \\u00e7a commence \\u00e0 devenir s\\u00e9rieux. Il n\\u2019arrive plus \\u00e0 se tenir \\ndebout. Paniqu\\u00e9e, elle appelle son mari en hurlant : \\nALL\\u00d4 ! C\\u2019EST COMMENC\\u00c9 ! TON ONCLE A AGI ! L\\u2019ENFANT NE TIENT PLUS \\nDEBOUT !","Direction l\\u2019h\\u00f4pital. A l\\u2019h\\u00f4pital un carnage, Il crie partout : \\n\\u2014 DOCTEUR ! L\\u2019ONCLE ! IL A FAIT MON ENFANT\\u2026 ! IL NE TIENT PLUS \\nDEBOUT ! C\\u2019EST UN SORT ! ON A PRI\\u00c9, RIEN N\\u2019A MARCH\\u00c9 ! \\u00bb \\n \\nLe m\\u00e9decin ne comprend rien. \\n\\u2014 Bon, sortez. Laissez-moi avec l\\u2019enfant. Dis le m\\u00e9decin. \\n \\nQuelques minutes plus tard, le m\\u00e9decin sort avec l\\u2019enfant\\u2026 bien debout sur \\nses deux pieds. Ils pleurent, l\\u2019embrassent. \\n\\u2014 Docteur, quelle pri\\u00e8re avez-vous fait ? Sur la route, on a tout essay\\u00e9 !","DEBOUT !  \\n \\nLe neveu, comme pr\\u00e9par\\u00e9 \\u00e0 \\u00e7a, court chez son sup\\u00e9rieur. Essouffl\\u00e9 et \\nincoh\\u00e9rent, il dit : \\nChef\\u2026 l\\u2019oncle\\u2026 il a\\u2026 commenc\\u00e9\\u2026 l\\u2019enfant\\u2026 les pieds\\u2026 un sort ! il a \\ncommenc\\u00e9\\u2026 L\\u2019oncle. \\n \\nIl parle, s\\u2019embrouille, personne ne comprend. Se ressaisit et formule une \\nphrase : \\n\\u2014 Excusez-moi, j\\u2019ai une urgence \\u00e0 la maison, je dois partir vite. \\n \\nIl fonce, oublie qu\\u2019il a une voiture, prend un taxi. Il remarque que le taxi","P\\u00e8re et du fils... Et Rajoute m\\u00eame un Amen. \\n \\nRobert de son c\\u00f4t\\u00e9, appelle le deuxi\\u00e8me fils. \\n \\nLe deuxi\\u00e8me voit le nom\\u2026 \\nCelui-ci sursaute et crie, comme s\\u2019il avait vu le diable en personne. \\n\\u00ab Ehhhh ! Le sorcier l\\u00e0 m\\u2019appelle ? Mais je lui ai fait quoi moi ? \\u00bb \\nIl appelle sa femme et lui montre l\\u2019\\u00e9cran : \\n\\u2014 Regarde, c\\u2019est l\\u2019oncle-l\\u00e0 qui m\\u2019appelle ! \\n\\u2014 Mais, d\\u00e9croche et \\u00e9coute, lui key !  Peut-\\u00eatre qu\\u2019il veut juste te souhaite \\nbonne f\\u00eate, dit-elle.  \\n \\nRassur\\u00e9 par sa femme, il d\\u00e9croche.","tranquillement install\\u00e9 devant la t\\u00e9l\\u00e9vision entrain de suivre le match. Il \\ncompose son num\\u00e9ro. M\\u00eame r\\u00e9action de panique. Il fait des siennes avant \\nde r\\u00e9pondre, je vous dis, j\\u2019\\u00e9tais l\\u00e0, je voyais tout. \\n \\n\\u2014 All\\u00f4 nidjay, nodef ana wa deuk ba ? \\n\\u2014 \\u00c7a va. Je suis en ville et je passerai mon s\\u00e9jour chez toi. \\n\\u2014 Euh\\u2026 d\\u00e9d\\u00e9t nidjay, dama toukhou. Je suis dans un quartier inaccessible. \\n\\u2014 Mangui ci eute bi, mangui lay  guiss. \\n\\u2014 Justement, nidjay\\u2026  locataire bou  bess bi niro nagn d\\u00e9. T\\u00e9 wate na ni"]],["color",["#0a980a","#ba0e0e","#ba0e0e","#0a980a","#ba0e0e"]]]}}},"view":{"type":"object","name":"CDSView","id":"p1094","attributes":{"filter":{"type":"object","name":"AllIndices","id":"p1095"}}},"glyph":{"type":"object","name":"Scatter","id":"p1090","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"size":{"type":"value","value":6},"line_color":{"type":"field","field":"color"},"line_width":{"type":"value","value":2},"fill_color":{"type":"field","field":"color"},"fill_alpha":{"type":"value","value":0.7},"hatch_color":{"type":"field","field":"color"},"hatch_alpha":{"type":"value","value":0.7}}},"nonselection_glyph":{"type":"object","name":"Scatter","id":"p1091","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"size":{"type":"value","value":6},"line_color":{"type":"field","field":"color"},"line_alpha":{"type":"value","value":0.1},"line_width":{"type":"value","value":2},"fill_color":{"type":"field","field":"color"},"fill_alpha":{"type":"value","value":0.1},"hatch_color":{"type":"field","field":"color"},"hatch_alpha":{"type":"value","value":0.1}}},"muted_glyph":{"type":"object","name":"Scatter","id":"p1092","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"size":{"type":"value","value":6},"line_color":{"type":"field","field":"color"},"line_alpha":{"type":"value","value":0.2},"line_width":{"type":"value","value":2},"fill_color":{"type":"field","field":"color"},"fill_alpha":{"type":"value","value":0.2},"hatch_color":{"type":"field","field":"color"},"hatch_alpha":{"type":"value","value":0.2}}}}},{"type":"object","name":"GlyphRenderer","id":"p1108","attributes":{"data_source":{"type":"object","name":"ColumnDataSource","id":"p1099","attributes":{"selected":{"type":"object","name":"Selection","id":"p1100","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1101"},"data":{"type":"map","entries":[["x",{"type":"ndarray","array":{"type":"bytes","data":"XNxKQf8KPEFj11FBBrxCQfyxR0Fq9DJB9NI3QSTPWkGRVWlBoYJpQVGwV0HQj0BB1d1MQYkdVkGkpGRB5UJqQfjTXEE="},"shape":[17],"dtype":"float32","order":"little"}],["y",{"type":"ndarray","array":{"type":"bytes","data":"SwKCQZxfYkEFCnhBmn12QVmzZ0E0FXlB87uDQUh1a0FGOXhBblCEQb6UiEE5eIhBJ3+MQbDoXEF9XFhBJ+hkQaoDfkE="},"shape":[17],"dtype":"float32","order":"little"}]]}}},"view":{"type":"object","name":"CDSView","id":"p1109","attributes":{"filter":{"type":"object","name":"AllIndices","id":"p1110"}}},"glyph":{"type":"object","name":"Scatter","id":"p1105","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"size":{"type":"value","value":6},"line_color":{"type":"value","value":"grey"},"line_alpha":{"type":"value","value":0.2},"fill_color":{"type":"value","value":"grey"},"fill_alpha":{"type":"value","value":0.2},"hatch_color":{"type":"value","value":"grey"},"hatch_alpha":{"type":"value","value":0.2}}},"nonselection_glyph":{"type":"object","name":"Scatter","id":"p1106","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"size":{"type":"value","value":6},"line_color":{"type":"value","value":"grey"},"line_alpha":{"type":"value","value":0.1},"fill_color":{"type":"value","value":"grey"},"fill_alpha":{"type":"value","value":0.1},"hatch_color":{"type":"value","value":"grey"},"hatch_alpha":{"type":"value","value":0.1}}},"muted_glyph":{"type":"object","name":"Scatter","id":"p1107","attributes":{"x":{"type":"field","field":"x"},"y":{"type":"field","field":"y"},"size":{"type":"value","value":6},"line_color":{"type":"value","value":"grey"},"line_alpha":{"type":"value","value":0.2},"fill_color":{"type":"value","value":"grey"},"fill_alpha":{"type":"value","value":0.2},"hatch_color":{"type":"value","value":"grey"},"hatch_alpha":{"type":"value","value":0.2}}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p1062","attributes":{"logo":"grey","tools":[{"type":"object","name":"PanTool","id":"p1077"},{"type":"object","name":"WheelZoomTool","id":"p1078","attributes":{"renderers":"auto"}},{"type":"object","name":"BoxZoomTool","id":"p1079","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p1080","attributes":{"syncable":false,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5}}}},{"type":"object","name":"ResetTool","id":"p1085"},{"type":"object","name":"SaveTool","id":"p1086"},{"type":"object","name":"HoverTool","id":"p1053","attributes":{"renderers":[{"id":"p1093"}],"tooltips":"\\n    &lt;div style=\\"width:400px;\\"&gt;\\n    &lt;b&gt;Document id:&lt;/b&gt; @id &lt;br&gt;\\n    &lt;b&gt;Topic:&lt;/b&gt; @topic &lt;br&gt;\\n    &lt;b&gt;Question:&lt;/b&gt; @questions &lt;br&gt;\\n    &lt;b&gt;agent Answer:&lt;/b&gt; @agent_answer &lt;br&gt;\\n    &lt;b&gt;Reference Answer:&lt;/b&gt; @reference_answer &lt;br&gt;\\n    &lt;b&gt;Correctness:&lt;/b&gt; @correctness &lt;br&gt;\\n    &lt;b&gt;Content:&lt;/b&gt; @content\\n    &lt;/div&gt;\\n    "}}]}},"left":[{"type":"object","name":"LinearAxis","id":"p1072","attributes":{"ticker":{"type":"object","name":"BasicTicker","id":"p1073","attributes":{"mantissas":[1,2,5]}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1074"},"axis_label_standoff":10,"axis_label_text_color":"#E0E0E0","axis_label_text_font":"Helvetica","axis_label_text_font_size":"1.25em","axis_label_text_font_style":"normal","major_label_policy":{"type":"object","name":"AllLabels","id":"p1075"},"major_label_text_color":"#E0E0E0","major_label_text_font":"Helvetica","major_label_text_font_size":"1.025em","axis_line_color":"#E0E0E0","axis_line_alpha":0,"major_tick_line_color":"#E0E0E0","major_tick_line_alpha":0,"minor_tick_line_color":"#E0E0E0","minor_tick_line_alpha":0}}],"below":[{"type":"object","name":"LinearAxis","id":"p1067","attributes":{"ticker":{"type":"object","name":"BasicTicker","id":"p1068","attributes":{"mantissas":[1,2,5]}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1069"},"axis_label_standoff":10,"axis_label_text_color":"#E0E0E0","axis_label_text_font":"Helvetica","axis_label_text_font_size":"1.25em","axis_label_text_font_style":"normal","major_label_policy":{"type":"object","name":"AllLabels","id":"p1070"},"major_label_text_color":"#E0E0E0","major_label_text_font":"Helvetica","major_label_text_font_size":"1.025em","axis_line_color":"#E0E0E0","axis_line_alpha":0,"major_tick_line_color":"#E0E0E0","major_tick_line_alpha":0,"minor_tick_line_color":"#E0E0E0","minor_tick_line_alpha":0}}],"center":[{"type":"object","name":"Grid","id":"p1071","attributes":{"axis":{"id":"p1067"},"grid_line_color":"white","grid_line_alpha":0.25}},{"type":"object","name":"Grid","id":"p1076","attributes":{"dimension":1,"axis":{"id":"p1072"},"grid_line_color":"white","grid_line_alpha":0.25}},{"type":"object","name":"Legend","id":"p1096","attributes":{"title":"Question Correctness","title_text_color":"#B1B1B1","title_text_font_style":"bold","border_line_alpha":0,"background_fill_color":"#111516","background_fill_alpha":0.5,"label_text_color":"#E0E0E0","label_text_font":"Helvetica","label_text_font_size":"1.025em","label_standoff":8,"glyph_width":15,"spacing":8,"items":[{"type":"object","name":"LegendItem","id":"p1097","attributes":{"label":{"type":"value","value":"False"},"renderers":[{"id":"p1093"}],"index":1}},{"type":"object","name":"LegendItem","id":"p1098","attributes":{"label":{"type":"value","value":"True"},"renderers":[{"id":"p1093"}],"index":0}}]}}],"background_fill_color":"#14191B","border_fill_color":"#15191C"}}}}],"tabs_location":"below"}}]}}';
+        const render_items = [{"docid":"01e5e3b9-2c55-4f37-800e-6cfa0f12734f","roots":{"p1112":"b240f18c-8224-4f6c-af3d-919b809864b4"},"root_ids":["p1112"]}];
+        root.Bokeh.embed.embed_items(docs_json, render_items);
+        }
+        if (root.Bokeh !== undefined) {
+          embed_document(root);
+        } else {
+          let attempts = 0;
+          const timer = setInterval(function(root) {
+            if (root.Bokeh !== undefined) {
+              clearInterval(timer);
+              embed_document(root);
+            } else {
+              attempts++;
+              if (attempts > 100) {
+                clearInterval(timer);
+                console.log("Bokeh: ERROR: Unable to run BokehJS code because BokehJS library is missing");
+              }
+            }
+          }, 10, root)
+        }
+      })(window);
+    });
+  };
+  if (document.readyState != "loading") fn();
+  else document.addEventListener("DOMContentLoaded", fn);
+})();
+    </script>
+
+                <div id="b240f18c-8224-4f6c-af3d-919b809864b4" data-root-id="p1112" style="display: contents;"></div>
+            </div>
+        </div>
+
+        <div class="section-container">
+            <div class="section-card">
+
+                <div class="section-title">SELECTED METRICS</div>
+
+                
+
+            </div>
+        </div>
+
+        
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    function opentab(evt, name) {
+    // Declare all variables
+    let i, tabcontent, tablinks;
+
+    // Get all elements with class="tabcontent" and hide them
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+
+    // Get all elements with class="tablinks" and remove the class "active"
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+
+    // Show the current tab, and add an "active" class to the button that opened the tab
+    document.getElementById(name).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+</script>

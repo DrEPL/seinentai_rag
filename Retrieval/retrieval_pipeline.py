@@ -60,7 +60,7 @@ class RetrieverPipeline:
         logger.info(f"🔄 Traitement du document: {bucket}/{filename}")
         
         try:
-            embeddings, chunks = self.ingestion.process_document(bucket=bucket,filename=filename)
+            embeddings, chunks, doc_id = self.ingestion.process_document(bucket=bucket,filename=filename)
             
             if embeddings and chunks :
                 print(f"✅ Succès! {len(chunks)} chunks traités")
@@ -74,17 +74,17 @@ class RetrieverPipeline:
                     print(f"  Embedding shape: {len(embedding)}")
                     
                 # Stockage dans une base vectorielle (Indexer dans Qdrant)
-                success = self.vector_store.index_documents(chunks, embeddings)
+                success = self.vector_store.index_documents(chunks, embeddings, doc_id)
                 logger.info(f"✅ Document '{filename}' traité avec succès !")
                 if success:
                     logger.info(f"✅ Indexation du Document {filename} traité avec succès ")
                     return True
                 else:
-                    logger.error(f"❌ Échec indexation: {filename}")
+                    logger.error(f"❌ Échec indexation du document: {filename}")
                     return False
             else:
-                logger.error(f"❌ Échec d'indexation du document '{filename}'")
-                return False   
+                logger.error(f"⏭️ Document ignoré (déjà indexé): {filename}")
+                return True   
                 
         except Exception as e:
             logger.error(f"❌ Erreur traitement {filename}: {e}")

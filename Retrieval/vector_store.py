@@ -1,3 +1,4 @@
+import hashlib
 import logging
 import uuid
 from typing import List, Dict, Any, Optional, Tuple
@@ -208,7 +209,8 @@ class VectorStore:
     def index_documents(self, 
                        chunks: List[Dict[str, Any]], 
                        embeddings: List[np.ndarray],
-                       generate_sparse: bool = True) -> bool:
+                       generate_sparse: bool = True,
+                       doc_id: str = None) -> bool:
         """
         Indexe des chunks avec leurs embeddings et vecteurs sparse optionnels
         
@@ -227,8 +229,18 @@ class VectorStore:
 
         points = []
         for i, (chunk, embedding) in enumerate(zip(chunks, embeddings)):
-            # ID unique
-            point_id = str(uuid.uuid4())
+            # Utiliser un ID déterministe basé sur doc_id et chunk_index
+            if doc_id:
+                # ID prévisible: hash du doc_id + index
+                point_id = hashlib.md5(f"{doc_id}_{i}".encode()).hexdigest()
+                
+                # Vérifier si ce chunk existe déjà
+                if self._chunk_exists(point_id):
+                    logger.debug(f"⏭️ Chunk {i} existe déjà, ignoré")
+                    continue
+            else:
+                # ID unique
+                point_id = str(uuid.uuid4())
             
             # Préparer les vecteurs
             vector_dict = {
@@ -334,6 +346,17 @@ class VectorStore:
         except Exception as e:
             logger.error(f"❌ Erreur recherche dense: {e}")
             return []
+        
+    def _chunk_exists(self, point_id: str) -> bool:
+        """Vérifie si un chunk existe déjà"""
+        try:
+            self.client.retrieve(
+                collection_name=self.collection_name,
+                ids=[point_id]
+            )
+            return True
+        except:
+            return False
     
     def hybrid_search(self,
                      query_embedding: np.ndarray,

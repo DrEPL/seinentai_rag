@@ -48,7 +48,7 @@ def test_real_document_processing():
         print(f"🔄 Traitement du document: {bucket_name}/{filename}")
 
         # Utiliser la vraie fonction process_document
-        embeddings, chunks  = pipeline.process_document(bucket_name, filename)
+        embeddings, chunks, _  = pipeline.process_document(bucket_name, filename)
         
         if embeddings and chunks :
             print(f"✅ Succès! {len(chunks)} chunks traités")

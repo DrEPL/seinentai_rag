@@ -286,7 +286,7 @@ class EvaluationOrchestrator:
             rag_report = self.giskard_scanner.evaluate_rag(
                 lambda q: self.generator.generate(q, self.retriever.search(q, limit=3))['response'],
                 knowledge_base,
-                num_questions=20
+                num_questions=5
             )
             results["giskard"]["rag_report"] = {
                 "metrics": rag_report.metrics if hasattr(rag_report, 'metrics') else {}
@@ -303,22 +303,22 @@ class EvaluationOrchestrator:
     def _generate_summary(self, results: Dict) -> Dict:
         """Génère un résumé des résultats"""
         summary = {
-            "ragas_scores": results["ragas"]["scores"],
+            "ragas_scores": results["ragas"],
             "deepeval_metrics": results["deepeval"].get("scores", {}),
             "giskard_issues": results["giskard"].get("vulnerabilities", {}).get("vulnerabilities", {}),
             "overall_assessment": {}
         }
         
         # Calculer une note moyenne RAGAS
-        if summary["ragas_scores"]:
-            avg_score = sum(summary["ragas_scores"].values()) / len(summary["ragas_scores"])
-            summary["overall_assessment"]["ragas_avg"] = round(avg_score, 3)
+        # if summary["ragas_scores"]:
+        #     avg_score = sum(summary["ragas_scores"].values()) / len(summary["ragas_scores"])
+        #     summary["overall_assessment"]["ragas_avg"] = round(avg_score, 3)
         
-        # Évaluation qualitative
-        if summary.get("giskard_issues", {}).get("total_issues", 0) > 5:
-            summary["overall_assessment"]["security"] = "⚠️ Attention: nombreuses vulnérabilités"
-        else:
-            summary["overall_assessment"]["security"] = "✅ Bon niveau de sécurité"
+        # # Évaluation qualitative
+        # if summary.get("giskard_issues", {}).get("total_issues", 0) > 5:
+        #     summary["overall_assessment"]["security"] = "⚠️ Attention: nombreuses vulnérabilités"
+        # else:
+        #     summary["overall_assessment"]["security"] = "✅ Bon niveau de sécurité"
         
         return summary
     

@@ -1,0 +1,33 @@
+{
+  "timestamp": "2026-03-18T18:59:13.958316",
+  "model": "gpt-oss:20b-cloud",
+  "ragas": {},
+  "deepeval": {},
+  "giskard": {
+    "vulnerabilities": {
+      "vulnerabilities": [
+        "<Issue group='Hallucination and Misinformation' level='IssueLevel.MAJOR'>",
+        "<Issue group='Sensitive Information Disclosure' level='IssueLevel.MEDIUM'>",
+        "<Issue group='Prompt Injection' level='IssueLevel.MEDIUM'>",
+        "<Issue group='Prompt Injection' level='IssueLevel.MINOR'>",
+        "<Issue group='Prompt Injection' level='IssueLevel.MAJOR'>"
+      ],
+      "report_path": "reports/giskard_scan.html"
+    },
+    "rag_report": {
+      "metrics": {}
+    }
+  },
+  "summary": {
+    "ragas_scores": {},
+    "deepeval_metrics": {},
+    "giskard_issues": [
+      "<Issue group='Hallucination and Misinformation' level='IssueLevel.MAJOR'>",
+      "<Issue group='Sensitive Information Disclosure' level='IssueLevel.MEDIUM'>",
+      "<Issue group='Prompt Injection' level='IssueLevel.MEDIUM'>",
+      "<Issue group='Prompt Injection' level='IssueLevel.MINOR'>",
+      "<Issue group='Prompt Injection' level='IssueLevel.MAJOR'>"
+    ],
+    "overall_assessment": {}
+  }
+}

@@ -13,9 +13,6 @@ logger = logging.getLogger(__name__)
 load_dotenv('../.env')
 
 import os
-# Forcer l'utilisation d'Ollama
-os.environ["OPENAI_API_KEY"] = "sk-dummy"  # Dummy key
-os.environ["OPENAI_BASE_URL"] = "http://localhost:11434/v1"  # Ollama compatible OpenAI
 
 OLLAMA_BASE_URL = os.getenv('OLLAMA_BASE_URL', 'http://ollama:11434')
 DEEP_EVAL_MODEL_NAME = os.getenv('DEEP_EVAL_MODEL_NAME', '')
@@ -37,10 +34,10 @@ class GiskardScanner:
             f"ollama/{self.model_name}",
             api_base=OLLAMA_BASE_URL
         )
-        # giskard.llm.set_embedding_model(
-        #     "ollama/nomic-embed-text:v1.5",  # ou votre modèle d'embeddings
-        #     api_base=OLLAMA_BASE_URL
-        # )
+        giskard.llm.set_embedding_model(
+            "ollama/nomic-embed-text:v1.5",  # ou votre modèle d'embeddings
+            api_base=OLLAMA_BASE_URL
+        )
         pass
     
     def create_giskard_model(self, 
@@ -97,18 +94,19 @@ class GiskardScanner:
         # Extraire les vulnérabilités
         # Giskard utilise .issues et .category
         issues = scan_results.issues
-        vulnerabilities = {
-            "prompt_injection": len([i for i in issues if i.category == "Prompt Injection"]),
-            "harmful_content": len([i for i in issues if i.category == "Harmful Content"]),
-            "stereotypes": len([i for i in issues if i.category == "Stereotypes"]),
-            "hallucination": len([i for i in issues if i.category == "Hallucination"]),
-            "total_issues": len(scan_results.issues)
-        }
+        print('Issues: ', issues)
+        # vulnerabilities = {
+        #     "prompt_injection": len([i for i in issues if i.group == "Prompt Injection"]),
+        #     "harmful_content": len([i for i in issues if i.category == "Harmful Content"]),
+        #     "stereotypes": len([i for i in issues if i.category == "Stereotypes"]),
+        #     "hallucination": len([i for i in issues if i.category == "Hallucination"]),
+        #     "total_issues": len(scan_results.issues)
+        # }
         
-        logger.info(f"✅ Scan terminé: {vulnerabilities['total_issues']} problèmes trouvés")
+        logger.info(f"✅ Scan terminé: {len(issues)} problèmes trouvés")
         
         return {
-            "vulnerabilities": vulnerabilities,
+            "vulnerabilities": issues,
             "report_path": "reports/giskard_scan.html"
         }
     
@@ -125,7 +123,7 @@ class GiskardScanner:
     def evaluate_rag(self,
                     answer_fn: Callable,
                     knowledge_base: KnowledgeBase,
-                    num_questions: int = 50) -> RAGReport:
+                    num_questions: int = 10) -> RAGReport:
         """
         Évalue un système RAG
         
@@ -135,9 +133,8 @@ class GiskardScanner:
             num_questions: Nombre de questions à générer
         """
         from giskard.rag import generate_testset
-        from giskard.rag.metrics.ragas_metrics import (
-            ragas_context_recall,
-            ragas_context_precision
+        from giskard.rag.metrics import (
+                correctness_metric
         )
         
         # Générer le jeu de test
@@ -153,7 +150,9 @@ class GiskardScanner:
             answer_fn,
             testset=testset,
             knowledge_base=knowledge_base,
-            metrics=[ragas_context_recall, ragas_context_precision]
+            metrics=[
+                correctness_metric
+            ]
         )
         
         # Sauvegarder

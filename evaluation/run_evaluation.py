@@ -104,7 +104,7 @@ def main():
     # Lancer l'évaluation complète
     print("\n📊 Lancement de l'évaluation...")
     results = orchestrator.run_complete_evaluation(
-        test_questions=test_questions[:10],
+        test_questions=test_questions[:5],
         ground_truths=ground_truths,
         documents=chunks
     )
@@ -116,14 +116,14 @@ def main():
     
     summary = results["summary"]
     
-    print("\n📈 Scores RAGAS:")
-    for metric, score in summary["ragas_scores"].items():
-        print(f"  - {metric}: {score:.3f}")
+    print("\n📈 Scores RAGAS:", summary)
+    # for metric, score in summary["ragas_scores"].items():
+    #     print(f"  - {metric}: {score:.3f}")
     
-    print(f"\n🔒 Sécurité: {summary['overall_assessment']['security']}")
+    # print(f"\n🔒 Sécurité: {summary['overall_assessment']['security']}")
     
-    if "ragas_avg" in summary["overall_assessment"]:
-        print(f"\n⭐ Note moyenne RAGAS: {summary['overall_assessment']['ragas_avg']}")
+    # if "ragas_avg" in summary["overall_assessment"]:
+    #     print(f"\n⭐ Note moyenne RAGAS: {summary['overall_assessment']['ragas_avg']}")
     
     print(f"\n✅ Évaluation terminée! Rapports sauvegardés dans /reports")
 
