@@ -1,6 +1,7 @@
 # evaluation/run_evaluation.py
 import sys
 import os
+from pathlib import Path
 from Generation.generation import GenerationPipeline
 from Ingestion.document_processor import DocumentProcessor
 from evaluation.load_test_set import load_robert_test_set
@@ -13,7 +14,8 @@ from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from dotenv import load_dotenv
 
-load_dotenv('../.env')
+_ENV_PATH = Path(__file__).resolve().parents[1] / ".env"
+load_dotenv(str(_ENV_PATH))
 
 # Configuration logging
 logging.basicConfig(

@@ -2,6 +2,7 @@
 import logging
 import os
 from dotenv import load_dotenv
+from pathlib import Path
 import pandas as pd
 from typing import Callable, List, Dict
 import giskard
@@ -10,7 +11,8 @@ from giskard.rag import KnowledgeBase, generate_testset, evaluate, RAGReport
 
 logger = logging.getLogger(__name__)
 
-load_dotenv('../.env')
+_ENV_PATH = Path(__file__).resolve().parents[1] / ".env"
+load_dotenv(str(_ENV_PATH))
 
 import os
 

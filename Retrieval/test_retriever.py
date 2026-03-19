@@ -87,8 +87,8 @@ def main():
     results = {}
 
     # # Tests individuels
-    # results['document_processing'] = test_real_document_processing()
-    results['real_document_search'] = search()
+    results['document_processing'] = test_real_document_processing()
+    # results['real_document_search'] = search()
 
     # Résumé
     print("\n" + "=" * 50)

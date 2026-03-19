@@ -8,6 +8,8 @@ from qdrant_client.http import models
 from qdrant_client.http.models import Distance, VectorParams, SparseVectorParams, SparseIndexParams
 from fastembed import SparseTextEmbedding
 
+from utils.functions import generate_chunk_id
+
 logger = logging.getLogger(__name__)
 
 class VectorStore:
@@ -19,7 +21,9 @@ class VectorStore:
                  collection_name: str = "documents",
                  vector_size: int = 384,
                  sparse_vector_name: str = "keywords",
-                 sparse_model_name: str = "Qdrant/bm25"):
+                 sparse_model_name: str = "Qdrant/bm25",
+                 client: Optional[QdrantClient] = None,
+                 sparse_model: Optional[SparseTextEmbedding] = None):
         """
         Args:
             host: Hôte Qdrant
@@ -34,17 +38,29 @@ class VectorStore:
         self.collection_name = collection_name
         self.vector_size = vector_size
         self.sparse_vector_name = sparse_vector_name
-        self.client = None
+        self.client = client
         
         # Initialiser le modèle sparse (optionnel - si tu veux générer ici)
-        try:
-            self.sparse_model = SparseTextEmbedding(sparse_model_name)
-            logger.info(f"✅ Modèle sparse chargé: {sparse_model_name}")
-        except Exception as e:
-            logger.warning(f"⚠️ Modèle sparse non chargé: {e}")
-            self.sparse_model = None
-            
-        self._connect()
+        if sparse_model is not None:
+            self.sparse_model = sparse_model
+        else:
+            try:
+                self.sparse_model = SparseTextEmbedding(sparse_model_name)
+                logger.info(f"✅ Modèle sparse chargé: {sparse_model_name}")
+            except Exception as e:
+                logger.warning(f"⚠️ Modèle sparse non chargé: {e}")
+                self.sparse_model = None
+
+        if self.client is None:
+            self._connect()
+        else:
+            # On suppose que le client est déjà géré par ailleurs (singleton).
+            try:
+                self.client.get_collections()
+                logger.info(f"✅ Client Qdrant injecté {self.host}:{self.port}")
+            except Exception as e:
+                logger.error(f"❌ Erreur connexion Qdrant (client injecté): {e}")
+                raise
     
     def _connect(self):
         """Établit la connexion à Qdrant"""
@@ -232,7 +248,7 @@ class VectorStore:
             # Utiliser un ID déterministe basé sur doc_id et chunk_index
             if doc_id:
                 # ID prévisible: hash du doc_id + index
-                point_id = hashlib.md5(f"{doc_id}_{i}".encode()).hexdigest()
+                point_id = generate_chunk_id(doc_id=doc_id,chunk_index=i)
                 
                 # Vérifier si ce chunk existe déjà
                 if self._chunk_exists(point_id):
@@ -525,27 +541,9 @@ class VectorStore:
         except Exception as e:
             logger.error(f"❌ Erreur search with rerank: {e}")
             return []
+
     
-    # def get_sparse_vector_from_text(self, text: str) -> Dict:
-    #     """
-    #     Convertit un texte en vecteur sparse pour BM25
-    #     À utiliser avec BM25Retriever si tu gardes BM25 séparé
-    #     """
-    #     # Cette fonction serait utilisée si tu génères toi-même les sparse vectors
-    #     # Sinon, Qdrant peut le faire automatiquement avec l'index sparse
-    #     from rank_bm25 import BM25Okapi
-    #     import nltk
-    #     from nltk.tokenize import word_tokenize
-        
-    #     tokens = word_tokenize(text.lower())
-    #     # Construction du vecteur sparse (indices des mots, valeurs TF-IDF)
-    #     # Implémentation simplifiée
-    #     return {
-    #         "indices": list(range(len(tokens))),  # Hash des tokens
-    #         "values": [1.0] * len(tokens)  # Poids
-    #     }
-    
-    def delete_document(self, doc_id: str) -> bool:
+    def delete_document(self, filename: str) -> bool:
         """Supprime tous les chunks d'un document"""
         try:
             self.client.delete(
@@ -553,13 +551,13 @@ class VectorStore:
                 points_selector=models.Filter(
                     must=[
                         models.FieldCondition(
-                            key="doc_id",
-                            match=models.MatchValue(value=doc_id)
+                            key="filename",
+                            match=models.MatchValue(value=filename)
                         )
                     ]
                 )
             )
-            logger.info(f"✅ Document {doc_id} supprimé")
+            logger.info(f"✅ Document {filename} supprimé")
             return True
         except Exception as e:
             logger.error(f"❌ Erreur suppression: {e}")

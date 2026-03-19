@@ -39,15 +39,15 @@ services:
     volumes:
       - kafka_data_1:/var/lib/kafka/data
 
-  kafka-service:
-    build: .
-    container_name: kafka-service
-    depends_on:
-      - kafka-tai
-        # condition: service_healthy
+  # kafka-service:
+  #   build: .
+  #   container_name: kafka-service
+  #   depends_on:
+  #     - kafka-tai
+  #       # condition: service_healthy
 
-    networks:
-    - seinentai_net
+  #   networks:
+  #   - seinentai_net
 
 networks:
   seinentai_net:

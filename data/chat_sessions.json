@@ -1,0 +1,537 @@
+{
+  "45f1d60f-c197-4bd1-9b1d-07fbdda9c5c4": {
+    "session_id": "45f1d60f-c197-4bd1-9b1d-07fbdda9c5c4",
+    "user_id": "396eed34-fe7a-4fe1-9e75-9aefd64938f1",
+    "created_at": "2026-03-19T14:50:16.430974",
+    "updated_at": "2026-03-19T14:50:27.202628",
+    "messages": [
+      {
+        "message_id": "a717344e-8812-48b9-b8e4-8fa07cfe450e",
+        "role": "user",
+        "content": "Quelles sont les activit\u00e9s du groupe ?",
+        "timestamp": "2026-03-19T14:50:16.494198",
+        "sources": [],
+        "metadata": {}
+      },
+      {
+        "message_id": "c9b70a5b-edde-476d-b2e3-8cc5315c1fcd",
+        "role": "assistant",
+        "content": "D'apr\u00e8s les documents fournis, les activit\u00e9s du Groupe des Jeunes de Mahikari s'articulent autour de plusieurs axes fondamentaux, centr\u00e9s sur une dimension spirituelle et collective distincte des simples actions de bienfaisance ou des activit\u00e9s associatives classiques.\n\nLeur engagement repose avant tout sur une **formation spirituelle** visant \u00e0 purifier les membres pour les transformer en *tanebito*, c'est-\u00e0-dire des individus capables de s'\u00e9lever spirituellement et de contribuer au plan divin. Cette formation passe par l'apprentissage d'enseignements qui permettent de se d\u00e9tacher des pens\u00e9es \u00e9gocentriques et de cultiver un amour altruiste, en pla\u00e7ant syst\u00e9matiquement les autres avant soi. Les membres sont ainsi appel\u00e9s \u00e0 servir la soci\u00e9t\u00e9 en incarnant des valeurs de justice, de paix et de s\u00e9curit\u00e9, tout en consid\u00e9rant chaque personne comme un enfant de Dieu et un fr\u00e8re ou une s\u0153ur.\n\nUn autre aspect central des activit\u00e9s du groupe r\u00e9side dans **l'unit\u00e9 et la coh\u00e9sion autour d'un axe spirituel commun**. Les membres sont invit\u00e9s \u00e0 s'unir solidement autour du centre de l'organisation, en \u00e9vitant toute d\u00e9rive individuelle ou toute structure agissant de mani\u00e8re autonome. Cette exigence d'unit\u00e9 s'accompagne d'une prise de conscience de la r\u00e9alit\u00e9 des choses, guid\u00e9e par un ordre rigoureux qui structure leur engagement. Le but ultime est de devenir des exemples pour la soci\u00e9t\u00e9, en alignant leurs actes sur leurs paroles, afin de pouvoir guider les autres par leur comportement.\n\nEnfin, les activit\u00e9s incluent une **dimension relationnelle et p\u00e9dagogique**, notamment dans l'accompagnement des jeunes. Les responsables (*kanbu*) sont charg\u00e9s de stimuler chez eux une mentalit\u00e9 d'acceptation et d'empathie, en \u00e9vitant tout jugement ou accusation. L'objectif est de cr\u00e9er un environnement o\u00f9 chacun peut grandir dans la foi et se rapprocher de Dieu, sans recourir \u00e0 des mesures d'exclusion. Cette approche vise \u00e0 polir l'\u00e2me des membres, comme en t\u00e9moigne le r\u00e9cit d'un participant ayant trouv\u00e9 dans le groupe une voie pour se lib\u00e9rer de modes de pens\u00e9e contraires aux principes divins.",
+        "timestamp": "2026-03-19T14:50:27.202628",
+        "sources": [
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.6794,
+            "chunk_index": 97,
+            "excerpt": "aucun cas, que ce soit une structure s\u00e9par\u00e9e qui agit \u00e0 sa guise. Il ne faut pas perdre l\u2019axe \ncentral de la structure de notre organisation spirituelle. \u2018\u2019Entreprendrez les activit\u00e9s du \ngroupe en vo\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.6252,
+            "chunk_index": 1050,
+            "excerpt": "expulsion du groupe\u2019, il devient alors impossible de faire grandir chez chacun d\u2019eux la foi \npermettant de se diriger vers Dieu. Il vous est demand\u00e9 de guider les jeunes selon l\u2019orientation \ndonn\u00e9e ci\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.5924,
+            "chunk_index": 435,
+            "excerpt": "Les membres du Groupe des Jeunes consid\u00e8rent chaque personne comme un enfant de Dieu, \ncomme un ami. En tant que fr\u00e8res et s\u0153urs, tous les membres du Groupe des Jeunes s\u2019efforcent \nde construire une s\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.5919,
+            "chunk_index": 402,
+            "excerpt": "Le but des activit\u00e9s du groupe des jeunes est de recevoir une formation. A travers la formation, on \nre\u00e7oit des enseignements pour devenir \u2018tanebito\u2019 en se purifiant. Gr\u00e2ce \u00e0 cela, on pourra \u00e9voluer \n\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.5741,
+            "chunk_index": 870,
+            "excerpt": "le Groupe des Jeunes, j'ai trouv\u00e9 petit \u00e0 petit l'attitude d'acceptation. Mon \u00e2me s'est \u00e9chapp\u00e9e d'une \nr\u00e9alit\u00e9 o\u00f9 abondaient des fa\u00e7ons de penser et d'agir, oppos\u00e9s aux principes divins et, il m'a \u00e9t\u2026"
+          }
+        ],
+        "metadata": {}
+      }
+    ]
+  },
+  "fa56fa48-1bc3-4df2-a4c1-f0e7c909bcb9": {
+    "session_id": "fa56fa48-1bc3-4df2-a4c1-f0e7c909bcb9",
+    "user_id": "396eed34-fe7a-4fe1-9e75-9aefd64938f1",
+    "created_at": "2026-03-19T14:50:27.229169",
+    "updated_at": "2026-03-19T14:50:29.790857",
+    "messages": [
+      {
+        "message_id": "194e693e-3ec6-43fa-927d-ea5702d63a30",
+        "role": "user",
+        "content": "Question de test",
+        "timestamp": "2026-03-19T14:50:27.300844",
+        "sources": [],
+        "metadata": {}
+      },
+      {
+        "message_id": "99318b60-9f29-4a0e-9387-816cb7e8f3ba",
+        "role": "assistant",
+        "content": "Je n\u2019ai pas acc\u00e8s \u00e0 cette information, car les documents fournis ne contiennent aucune r\u00e9ponse pertinente \u00e0 une \u00ab question de test \u00bb formul\u00e9e de cette mani\u00e8re. Leur contenu aborde des enseignements spirituels li\u00e9s \u00e0 la pratique de la *Lumi\u00e8re* dans le cadre de la formation *Juntai in*, ainsi qu\u2019un rapport de stage sans lien avec une telle interrogation. Si vous souhaitez une r\u00e9ponse pr\u00e9cise, merci de pr\u00e9ciser le sujet ou le th\u00e8me de votre question.",
+        "timestamp": "2026-03-19T14:50:29.790857",
+        "sources": [
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.3707,
+            "chunk_index": 217,
+            "excerpt": "mental) ne doivent pas recevoir la Lumi\u00e8re au milieu du front (au point n\u00b08). En particulier, elles ne \ndevraient pas faire l\u2019objet d\u2019investigation spirituelle (reisa), et on ne devrait pas engager de\u2026"
+          },
+          {
+            "filename": "Rapport stage DiCentre4AI.pdf",
+            "score": 0.3137,
+            "chunk_index": 3,
+            "excerpt": "Chapitre 2 : Pr\u00e9sentation g\u00e9n\u00e9rale du projet ..................................................... 10 \n1. Description du projet ........................................................................\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.3113,
+            "chunk_index": 418,
+            "excerpt": "enseignements. \nSi on agit ainsi, on va commencer \u00e0 voir les choses sur le plan spirituel. On arrivera \u00e0 analyser la \nsituation en partant d\u2019un point de vue spirituel. Ce qui permet d\u2019aborder diff\u00e9rem\u2026"
+          },
+          {
+            "filename": "Rapport stage DiCentre4AI.pdf",
+            "score": 0.2969,
+            "chunk_index": 2,
+            "excerpt": "Chapitre 1 : Cadre du stage et int\u00e9gration au DiCentre4AI ............................... 6 \n1. Accueil et installation ................................................................................\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.2932,
+            "chunk_index": 204,
+            "excerpt": "de vingt \u00e0 trente centim\u00e8tres du corps de celui qui re\u00e7oit. C\u2019est la directrice de base. \nDe m\u00eame que la patrie la plus chaude est au-del\u00e0 de la pointe de la flamme d\u2019une bougie, lorsque l\u2019on \ntransme\u2026"
+          }
+        ],
+        "metadata": {}
+      }
+    ]
+  },
+  "b2573eec-f341-48d2-8ce5-3768079d3866": {
+    "session_id": "b2573eec-f341-48d2-8ce5-3768079d3866",
+    "user_id": "396eed34-fe7a-4fe1-9e75-9aefd64938f1",
+    "created_at": "2026-03-19T14:50:29.835411",
+    "updated_at": "2026-03-19T14:50:31.345941",
+    "messages": [
+      {
+        "message_id": "4cd97f53-4345-4893-a88f-cc4b2c47e68b",
+        "role": "user",
+        "content": "Test Ollama down",
+        "timestamp": "2026-03-19T14:50:29.908008",
+        "sources": [],
+        "metadata": {}
+      },
+      {
+        "message_id": "6f6788f1-919d-402b-a0dc-7426458721d0",
+        "role": "assistant",
+        "content": "Je n\u2019ai pas acc\u00e8s \u00e0 cette information. Les documents fournis ne contiennent aucune mention relative \u00e0 un test, \u00e0 Ollama ou \u00e0 un \u00e9ventuel dysfonctionnement technique.",
+        "timestamp": "2026-03-19T14:50:31.345941",
+        "sources": [
+          {
+            "filename": "test.txt",
+            "score": 0.2459,
+            "chunk_index": 0,
+            "excerpt": "Hello world\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.2061,
+            "chunk_index": 17,
+            "excerpt": "que nous avons, est connue instantan\u00e9ment par Oshienushisama. \n \nDix jours avant le d\u00e9part de Sukuinushisama, Oshienushisama a re\u00e7u MITAMA de YO. \nOshienushisama a re\u00e7u aussi le v\u00e9ritable OMITAMA de Y\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.2059,
+            "chunk_index": 304,
+            "excerpt": "pratiquer okiyome \u00e0 la r\u00e9gion du point n\u00b04 \u2013 la r\u00e9gion interne des omoplates \u2013 en dirigeant la Lumi\u00e8re \nENSEIGNEMENT DE OSHIENUSHISAMA \nCEREMONIE DE REMERCIEMENT DU MOIS D\u2019OCTOBRE 2019 \nLIVRE DES PRIE\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.1991,
+            "chunk_index": 38,
+            "excerpt": "conf\u00e9rences sur les principes divins, pour le salut de l\u2019humanit\u00e9. Le 23 juin 1974, dans une colonne \nde Lumi\u00e8re, il est retourn\u00e9 dans le monde des esprits divins pour y accomplir sa mission. Du monde\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.199,
+            "chunk_index": 42,
+            "excerpt": "le 3 novembre 1984, jour de l\u2019inauguration de Suza. \nLe 5 octobre 2002, afin de promouvoir l\u2019\u00e9tape suivante du plan divin, Oshienushisama a accord\u00e9 la \nmission de Oshienushisama Odairi (suppl\u00e9ant) \u00e0 K\u2026"
+          }
+        ],
+        "metadata": {}
+      }
+    ]
+  },
+  "82996b54-6ab1-4221-8d8f-4ebcd2dd9712": {
+    "session_id": "82996b54-6ab1-4221-8d8f-4ebcd2dd9712",
+    "user_id": "396eed34-fe7a-4fe1-9e75-9aefd64938f1",
+    "created_at": "2026-03-19T14:50:31.377456",
+    "updated_at": "2026-03-19T14:50:35.965197",
+    "messages": [
+      {
+        "message_id": "45597c15-c7d3-42b3-bea3-f1d5a75adc8c",
+        "role": "user",
+        "content": "Ma premi\u00e8re question",
+        "timestamp": "2026-03-19T14:50:31.422463",
+        "sources": [],
+        "metadata": {}
+      },
+      {
+        "message_id": "590296bd-f730-452a-a627-119ae61f9724",
+        "role": "assistant",
+        "content": "D\u2019apr\u00e8s les documents fournis, il n\u2019est pas possible de r\u00e9pondre pr\u00e9cis\u00e9ment \u00e0 une question aussi g\u00e9n\u00e9rale que *\u00ab Ma premi\u00e8re question \u00bb*, car aucun \u00e9l\u00e9ment contextuel ne permet d\u2019en identifier le sujet ou l\u2019intention.\n\nLes extraits disponibles abordent principalement des enseignements li\u00e9s \u00e0 l\u2019art de Mahikari, \u00e0 des r\u00e9v\u00e9lations spirituelles concernant une figure nomm\u00e9e Sukuinushisama, ainsi qu\u2019\u00e0 des points techniques relatifs \u00e0 la pratique de cet art (comme les points d\u2019*Okiyome* ou les zones du corps \u00e0 traiter). Si votre question porte sur l\u2019un de ces th\u00e8mes, je pourrais vous apporter une r\u00e9ponse cibl\u00e9e. Dans le cas contraire, je ne dispose pas des informations n\u00e9cessaires pour y r\u00e9pondre.\n\nN\u2019h\u00e9sitez pas \u00e0 pr\u00e9ciser votre demande pour que je puisse vous aider de mani\u00e8re pertinente.",
+        "timestamp": "2026-03-19T14:50:35.965197",
+        "sources": [
+          {
+            "filename": "test.txt",
+            "score": 0.2409,
+            "chunk_index": 0,
+            "excerpt": "Hello world\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.2339,
+            "chunk_index": 32,
+            "excerpt": "(R\u00e9v\u00e9lation re\u00e7ue 26 f\u00e9vrier 1961)  \n   \u2018\u2019La mission de Yosuka commence\u2019\u2019. \n \n7. \u2018\u2019Tu es le premier messie pour la prochaine \u00e9poque\u2019\u2019 \n\u2018\u2019Tu es celui qui doit construire Suza\u2019\u2019 \n \n8. \u2018\u2019Tu dois pratique\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.2278,
+            "chunk_index": 441,
+            "excerpt": "(enseignements portant sur la pratique de l\u2019art de Mahikari transmis par Oshienushisama. \n \nNB : Points li\u00e9s \u00e0 l\u2019\u00e9paule et au dos. Ne pas oublier de faire les deux points 5. \n \n \n \n \n \n \n(Voir th\u00e8me 1\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.2266,
+            "chunk_index": 976,
+            "excerpt": "(enseignements portant sur la pratique de l\u2019art de Mahikari transmis par Oshienushisama) \nPage 190/223 \n \nNB : Points d\u2019\u00e9limination (\u00e9monctoires inf\u00e9rieurs). \n \n \n \n \n(Voir th\u00e8me 2) \n \n \n \n \n \n \n \n \n \u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.222,
+            "chunk_index": 641,
+            "excerpt": "(Voir th\u00e8me 2) \n \n \n \n4. Recherche des points d\u2019Okiyome (25 \u2013 27 \u2013 24 \u2013 23) \nSe baser aussi sur les revues d\u2019enseignement des mois d\u2019aout, septembre et octobre 2019 \n(enseignements portant sur la prat\u2026"
+          }
+        ],
+        "metadata": {}
+      }
+    ]
+  },
+  "4f682d73-ecb7-4411-8167-48dfc173212d": {
+    "session_id": "4f682d73-ecb7-4411-8167-48dfc173212d",
+    "user_id": "396eed34-fe7a-4fe1-9e75-9aefd64938f1",
+    "created_at": "2026-03-19T14:50:56.123805",
+    "updated_at": "2026-03-19T14:51:04.289962",
+    "messages": [
+      {
+        "message_id": "5bf9edcf-2c42-42f3-9932-8b310ca34deb",
+        "role": "user",
+        "content": "Quelles sont les activit\u00e9s du groupe ?",
+        "timestamp": "2026-03-19T14:50:56.198090",
+        "sources": [],
+        "metadata": {}
+      },
+      {
+        "message_id": "d3de347e-cd9a-4f80-9e37-53d1f9ff2e5a",
+        "role": "assistant",
+        "content": "D\u2019apr\u00e8s les documents fournis, les activit\u00e9s du Groupe des Jeunes de Mahikari s\u2019inscrivent dans une d\u00e9marche spirituelle et formatrice bien distincte des simples activit\u00e9s de bienfaisance ou des cercles associatifs classiques. Leur finalit\u00e9 premi\u00e8re est avant tout la formation des membres, visant \u00e0 les purifier pour les transformer en *tanebito*, c\u2019est-\u00e0-dire des individus capables d\u2019incarner les principes divins et de contribuer activement au plan spirituel sup\u00e9rieur.\n\nCes activit\u00e9s sont structur\u00e9es autour d\u2019un axe central et rigoureux, exigeant une unit\u00e9 solide autour du c\u0153ur de l\u2019organisation. Les membres sont appel\u00e9s \u00e0 s\u2019engager avec une conscience aigu\u00eb de leur r\u00f4le, en cherchant \u00e0 saisir la r\u00e9alit\u00e9 des choses avec lucidit\u00e9. L\u2019objectif n\u2019est pas seulement de participer \u00e0 des actions collectives, mais de se former pour devenir des exemples pour la soci\u00e9t\u00e9, en alignant leurs actes sur leurs paroles. Ainsi, le groupe vise \u00e0 former des guides, des mod\u00e8les dont le comportement inspire et \u00e9claire les autres.\n\nPar ailleurs, les activit\u00e9s du Groupe des Jeunes reposent sur des valeurs fondamentales telles que l\u2019amour altruiste et le rejet de l\u2019\u00e9gocentrisme. Les membres sont encourag\u00e9s \u00e0 consid\u00e9rer chaque personne comme un enfant de Dieu et \u00e0 cultiver des relations fraternelles, dans le but de construire une soci\u00e9t\u00e9 plus juste et harmonieuse. L\u2019accent est mis sur l\u2019empathie, l\u2019acceptation des autres sans jugement, et une attitude de service envers autrui, en pla\u00e7ant toujours les besoins collectifs avant les int\u00e9r\u00eats personnels. Ces principes guident leurs actions et leurs interactions au sein du groupe comme en dehors.",
+        "timestamp": "2026-03-19T14:51:04.289962",
+        "sources": [
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.6794,
+            "chunk_index": 97,
+            "excerpt": "aucun cas, que ce soit une structure s\u00e9par\u00e9e qui agit \u00e0 sa guise. Il ne faut pas perdre l\u2019axe \ncentral de la structure de notre organisation spirituelle. \u2018\u2019Entreprendrez les activit\u00e9s du \ngroupe en vo\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.6252,
+            "chunk_index": 1050,
+            "excerpt": "expulsion du groupe\u2019, il devient alors impossible de faire grandir chez chacun d\u2019eux la foi \npermettant de se diriger vers Dieu. Il vous est demand\u00e9 de guider les jeunes selon l\u2019orientation \ndonn\u00e9e ci\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.5924,
+            "chunk_index": 435,
+            "excerpt": "Les membres du Groupe des Jeunes consid\u00e8rent chaque personne comme un enfant de Dieu, \ncomme un ami. En tant que fr\u00e8res et s\u0153urs, tous les membres du Groupe des Jeunes s\u2019efforcent \nde construire une s\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.5919,
+            "chunk_index": 402,
+            "excerpt": "Le but des activit\u00e9s du groupe des jeunes est de recevoir une formation. A travers la formation, on \nre\u00e7oit des enseignements pour devenir \u2018tanebito\u2019 en se purifiant. Gr\u00e2ce \u00e0 cela, on pourra \u00e9voluer \n\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.5741,
+            "chunk_index": 870,
+            "excerpt": "le Groupe des Jeunes, j'ai trouv\u00e9 petit \u00e0 petit l'attitude d'acceptation. Mon \u00e2me s'est \u00e9chapp\u00e9e d'une \nr\u00e9alit\u00e9 o\u00f9 abondaient des fa\u00e7ons de penser et d'agir, oppos\u00e9s aux principes divins et, il m'a \u00e9t\u2026"
+          }
+        ],
+        "metadata": {}
+      }
+    ]
+  },
+  "fffccc68-89ec-4c14-af05-7c5f610f2f4a": {
+    "session_id": "fffccc68-89ec-4c14-af05-7c5f610f2f4a",
+    "user_id": "396eed34-fe7a-4fe1-9e75-9aefd64938f1",
+    "created_at": "2026-03-19T14:51:04.319447",
+    "updated_at": "2026-03-19T14:51:07.390092",
+    "messages": [
+      {
+        "message_id": "ccd83413-ea16-4c63-b824-93909363e98e",
+        "role": "user",
+        "content": "Question de test",
+        "timestamp": "2026-03-19T14:51:04.372074",
+        "sources": [],
+        "metadata": {}
+      },
+      {
+        "message_id": "f715d1a0-057f-43d5-b0b6-db5379866a95",
+        "role": "assistant",
+        "content": "Ma base de connaissances ne contient pas d'information permettant de r\u00e9pondre \u00e0 une \u00ab question de test \u00bb dans les documents fournis. Les extraits disponibles abordent des sujets sp\u00e9cifiques li\u00e9s \u00e0 la pratique spirituelle du *Juntai in* (comme la transmission de la Lumi\u00e8re ou les pr\u00e9cautions pour les personnes en \u00e9tat de fragilit\u00e9 mentale) ou des \u00e9l\u00e9ments structurels d\u2019un rapport de stage, mais aucun ne traite d\u2019une question de v\u00e9rification ou de test. Si vous souhaitez une r\u00e9ponse sur un point pr\u00e9cis des documents, merci de pr\u00e9ciser votre demande.",
+        "timestamp": "2026-03-19T14:51:07.390092",
+        "sources": [
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.3707,
+            "chunk_index": 217,
+            "excerpt": "mental) ne doivent pas recevoir la Lumi\u00e8re au milieu du front (au point n\u00b08). En particulier, elles ne \ndevraient pas faire l\u2019objet d\u2019investigation spirituelle (reisa), et on ne devrait pas engager de\u2026"
+          },
+          {
+            "filename": "Rapport stage DiCentre4AI.pdf",
+            "score": 0.3137,
+            "chunk_index": 3,
+            "excerpt": "Chapitre 2 : Pr\u00e9sentation g\u00e9n\u00e9rale du projet ..................................................... 10 \n1. Description du projet ........................................................................\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.3113,
+            "chunk_index": 418,
+            "excerpt": "enseignements. \nSi on agit ainsi, on va commencer \u00e0 voir les choses sur le plan spirituel. On arrivera \u00e0 analyser la \nsituation en partant d\u2019un point de vue spirituel. Ce qui permet d\u2019aborder diff\u00e9rem\u2026"
+          },
+          {
+            "filename": "Rapport stage DiCentre4AI.pdf",
+            "score": 0.2969,
+            "chunk_index": 2,
+            "excerpt": "Chapitre 1 : Cadre du stage et int\u00e9gration au DiCentre4AI ............................... 6 \n1. Accueil et installation ................................................................................\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.2932,
+            "chunk_index": 204,
+            "excerpt": "de vingt \u00e0 trente centim\u00e8tres du corps de celui qui re\u00e7oit. C\u2019est la directrice de base. \nDe m\u00eame que la patrie la plus chaude est au-del\u00e0 de la pointe de la flamme d\u2019une bougie, lorsque l\u2019on \ntransme\u2026"
+          }
+        ],
+        "metadata": {}
+      }
+    ]
+  },
+  "d1792b3e-fa4e-46cf-a303-854687b0c49e": {
+    "session_id": "d1792b3e-fa4e-46cf-a303-854687b0c49e",
+    "user_id": "396eed34-fe7a-4fe1-9e75-9aefd64938f1",
+    "created_at": "2026-03-19T14:51:07.434862",
+    "updated_at": "2026-03-19T14:51:09.400131",
+    "messages": [
+      {
+        "message_id": "4d2dafb9-74b8-4ce8-bfa9-dcc097a3fb5a",
+        "role": "user",
+        "content": "Test Ollama down",
+        "timestamp": "2026-03-19T14:51:07.574123",
+        "sources": [],
+        "metadata": {}
+      },
+      {
+        "message_id": "872bc4f5-162c-4bf8-aeb4-9031eefaf803",
+        "role": "assistant",
+        "content": "Je n\u2019ai pas acc\u00e8s \u00e0 cette information. Les documents fournis ne contiennent aucune mention concernant un \u00e9ventuel dysfonctionnement ou une indisponibilit\u00e9 de *Ollama*.",
+        "timestamp": "2026-03-19T14:51:09.400131",
+        "sources": [
+          {
+            "filename": "test.txt",
+            "score": 0.2459,
+            "chunk_index": 0,
+            "excerpt": "Hello world\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.2061,
+            "chunk_index": 17,
+            "excerpt": "que nous avons, est connue instantan\u00e9ment par Oshienushisama. \n \nDix jours avant le d\u00e9part de Sukuinushisama, Oshienushisama a re\u00e7u MITAMA de YO. \nOshienushisama a re\u00e7u aussi le v\u00e9ritable OMITAMA de Y\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.2059,
+            "chunk_index": 304,
+            "excerpt": "pratiquer okiyome \u00e0 la r\u00e9gion du point n\u00b04 \u2013 la r\u00e9gion interne des omoplates \u2013 en dirigeant la Lumi\u00e8re \nENSEIGNEMENT DE OSHIENUSHISAMA \nCEREMONIE DE REMERCIEMENT DU MOIS D\u2019OCTOBRE 2019 \nLIVRE DES PRIE\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.1991,
+            "chunk_index": 38,
+            "excerpt": "conf\u00e9rences sur les principes divins, pour le salut de l\u2019humanit\u00e9. Le 23 juin 1974, dans une colonne \nde Lumi\u00e8re, il est retourn\u00e9 dans le monde des esprits divins pour y accomplir sa mission. Du monde\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.199,
+            "chunk_index": 42,
+            "excerpt": "le 3 novembre 1984, jour de l\u2019inauguration de Suza. \nLe 5 octobre 2002, afin de promouvoir l\u2019\u00e9tape suivante du plan divin, Oshienushisama a accord\u00e9 la \nmission de Oshienushisama Odairi (suppl\u00e9ant) \u00e0 K\u2026"
+          }
+        ],
+        "metadata": {}
+      }
+    ]
+  },
+  "b569b94d-8ef7-426e-9913-005188002b3c": {
+    "session_id": "b569b94d-8ef7-426e-9913-005188002b3c",
+    "user_id": "396eed34-fe7a-4fe1-9e75-9aefd64938f1",
+    "created_at": "2026-03-19T14:51:09.444195",
+    "updated_at": "2026-03-19T14:51:14.519619",
+    "messages": [
+      {
+        "message_id": "de4c27a7-8cf7-4cd3-8d39-18ac7cd9b1ff",
+        "role": "user",
+        "content": "Ma premi\u00e8re question",
+        "timestamp": "2026-03-19T14:51:09.489958",
+        "sources": [],
+        "metadata": {}
+      },
+      {
+        "message_id": "00032b67-2545-4946-bf79-1f95d8dc3010",
+        "role": "assistant",
+        "content": "D\u2019apr\u00e8s les documents fournis, il n\u2019est pas possible de r\u00e9pondre pr\u00e9cis\u00e9ment \u00e0 une question formul\u00e9e de mani\u00e8re aussi g\u00e9n\u00e9rale que *\u00ab Ma premi\u00e8re question \u00bb*. Les extraits disponibles abordent des th\u00e8mes sp\u00e9cifiques li\u00e9s \u00e0 des enseignements spirituels, notamment ceux de l\u2019art de Mahikari, des r\u00e9v\u00e9lations re\u00e7ues par Sukuinushisama, ou encore des points pratiques li\u00e9s \u00e0 la formation *Juntai in*.\n\nSi votre question porte sur l\u2019un de ces sujets, comme la mission de Yosuka, la construction de *Suza*, l\u2019art de la Lumi\u00e8re de V\u00e9rit\u00e9, ou les techniques d\u2019*Okiyome* (comme les points li\u00e9s \u00e0 la t\u00eate, aux \u00e9paules ou aux \u00e9monctoires), je peux vous fournir des d\u00e9tails en m\u2019appuyant strictement sur les passages cit\u00e9s. Dans le cas contraire, je ne dispose pas des informations n\u00e9cessaires pour y r\u00e9pondre. N\u2019h\u00e9sitez pas \u00e0 pr\u00e9ciser votre demande pour une r\u00e9ponse plus cibl\u00e9e.",
+        "timestamp": "2026-03-19T14:51:14.519619",
+        "sources": [
+          {
+            "filename": "test.txt",
+            "score": 0.2409,
+            "chunk_index": 0,
+            "excerpt": "Hello world\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.2339,
+            "chunk_index": 32,
+            "excerpt": "(R\u00e9v\u00e9lation re\u00e7ue 26 f\u00e9vrier 1961)  \n   \u2018\u2019La mission de Yosuka commence\u2019\u2019. \n \n7. \u2018\u2019Tu es le premier messie pour la prochaine \u00e9poque\u2019\u2019 \n\u2018\u2019Tu es celui qui doit construire Suza\u2019\u2019 \n \n8. \u2018\u2019Tu dois pratique\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.2278,
+            "chunk_index": 441,
+            "excerpt": "(enseignements portant sur la pratique de l\u2019art de Mahikari transmis par Oshienushisama. \n \nNB : Points li\u00e9s \u00e0 l\u2019\u00e9paule et au dos. Ne pas oublier de faire les deux points 5. \n \n \n \n \n \n \n(Voir th\u00e8me 1\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.2266,
+            "chunk_index": 976,
+            "excerpt": "(enseignements portant sur la pratique de l\u2019art de Mahikari transmis par Oshienushisama) \nPage 190/223 \n \nNB : Points d\u2019\u00e9limination (\u00e9monctoires inf\u00e9rieurs). \n \n \n \n \n(Voir th\u00e8me 2) \n \n \n \n \n \n \n \n \n \u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.222,
+            "chunk_index": 641,
+            "excerpt": "(Voir th\u00e8me 2) \n \n \n \n4. Recherche des points d\u2019Okiyome (25 \u2013 27 \u2013 24 \u2013 23) \nSe baser aussi sur les revues d\u2019enseignement des mois d\u2019aout, septembre et octobre 2019 \n(enseignements portant sur la prat\u2026"
+          }
+        ],
+        "metadata": {}
+      }
+    ]
+  },
+  "0b385313-2101-4033-aebc-2a72e335a69d": {
+    "session_id": "0b385313-2101-4033-aebc-2a72e335a69d",
+    "user_id": "396eed34-fe7a-4fe1-9e75-9aefd64938f1",
+    "created_at": "2026-03-19T14:54:09.200399",
+    "updated_at": "2026-03-19T14:54:09.234691",
+    "messages": [
+      {
+        "message_id": "780a1d93-530a-4184-b7c2-68e20e424b65",
+        "role": "user",
+        "content": "Quelles sont les activit\u00e9s du groupe ?",
+        "timestamp": "2026-03-19T14:54:09.218115",
+        "sources": [],
+        "metadata": {}
+      },
+      {
+        "message_id": "9acd0817-8b50-4ce1-9110-e6ec15258039",
+        "role": "assistant",
+        "content": "Le groupe des jeunes se retrouve le samedi pour des activit\u00e9s vari\u00e9es.",
+        "timestamp": "2026-03-19T14:54:09.234691",
+        "sources": [
+          {
+            "filename": "programme.pdf",
+            "score": 0.87,
+            "chunk_index": 0,
+            "excerpt": "Les jeunes se retrouvent chaque samedi pour des activit\u00e9s culturelles.\u2026"
+          }
+        ],
+        "metadata": {}
+      }
+    ]
+  },
+  "10619532-2950-4a99-acb9-88ce6a08fd99": {
+    "session_id": "10619532-2950-4a99-acb9-88ce6a08fd99",
+    "user_id": "396eed34-fe7a-4fe1-9e75-9aefd64938f1",
+    "created_at": "2026-03-19T14:54:09.287038",
+    "updated_at": "2026-03-19T14:54:09.325378",
+    "messages": [
+      {
+        "message_id": "4d141610-3173-476f-bcd5-a4e473b80d57",
+        "role": "user",
+        "content": "Question de test",
+        "timestamp": "2026-03-19T14:54:09.306017",
+        "sources": [],
+        "metadata": {}
+      },
+      {
+        "message_id": "0b4bb4c6-992d-4d1b-9276-5c8ffa5ed69a",
+        "role": "assistant",
+        "content": "Le groupe des jeunes se retrouve le samedi pour des activit\u00e9s vari\u00e9es.",
+        "timestamp": "2026-03-19T14:54:09.325378",
+        "sources": [],
+        "metadata": {}
+      }
+    ]
+  },
+  "fca1425d-6c1d-43c9-a421-ec91223ebb0d": {
+    "session_id": "fca1425d-6c1d-43c9-a421-ec91223ebb0d",
+    "user_id": "396eed34-fe7a-4fe1-9e75-9aefd64938f1",
+    "created_at": "2026-03-19T14:54:09.559797",
+    "updated_at": "2026-03-19T14:54:09.576312",
+    "messages": [
+      {
+        "message_id": "a8e9a2c9-0c65-411e-853b-518dba5f4358",
+        "role": "user",
+        "content": "Test Ollama down",
+        "timestamp": "2026-03-19T14:54:09.576312",
+        "sources": [],
+        "metadata": {}
+      }
+    ]
+  },
+  "9b6613ac-1fae-4ed4-ad0a-a0f9c6724323": {
+    "session_id": "9b6613ac-1fae-4ed4-ad0a-a0f9c6724323",
+    "user_id": "396eed34-fe7a-4fe1-9e75-9aefd64938f1",
+    "created_at": "2026-03-19T14:54:09.641209",
+    "updated_at": "2026-03-19T14:54:09.674611",
+    "messages": [
+      {
+        "message_id": "39c0dd81-bf05-40b2-8598-48a367bff781",
+        "role": "user",
+        "content": "Ma premi\u00e8re question",
+        "timestamp": "2026-03-19T14:54:09.657993",
+        "sources": [],
+        "metadata": {}
+      },
+      {
+        "message_id": "25987ef5-aa8d-40f3-aa01-b021d1cd5976",
+        "role": "assistant",
+        "content": "Le groupe des jeunes se retrouve le samedi pour des activit\u00e9s vari\u00e9es.",
+        "timestamp": "2026-03-19T14:54:09.674611",
+        "sources": [],
+        "metadata": {}
+      }
+    ]
+  }
+}

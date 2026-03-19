@@ -3,6 +3,7 @@ import logging
 import hashlib
 from datetime import datetime
 import os
+from pathlib import Path
 from typing import Optional
 from Ingestion.document_processor import DocumentProcessor
 from services.minio_service import MinIOService
@@ -13,26 +14,39 @@ from dotenv import load_dotenv
 from utils.functions import generate_doc_id
 
 
-load_dotenv('../.env')
+_ENV_PATH = Path(__file__).resolve().parents[1] / ".env"
+load_dotenv(str(_ENV_PATH))
 
 logger = logging.getLogger(__name__)
 
 class IngestionPipeline:
     """Pipeline RAG complet"""
     
-    def __init__(self):
-        # self.config = Config()
-        
-        # Initialiser les composants
-        self.processor = DocumentProcessor()
-        self.chunker = TextChunker(
+    def __init__(
+        self,
+        processor: Optional[DocumentProcessor] = None,
+        chunker: Optional[TextChunker] = None,
+        embedder: Optional[EmbeddingGenerator] = None,
+        minio_client: Optional[MinIOService] = None,
+        vector_store=None,
+    ):
+        # Note: `vector_store` est optionnel mais recommandé pour éviter toute recréation côté Qdrant.
+        self.processor = processor or DocumentProcessor()
+        self.chunker = chunker or TextChunker(
             chunk_size=int(os.getenv('CHUNK_SIZE', 500)),
-            chunk_overlap=int(os.getenv('CHUNK_OVERLAP', 50))
+            chunk_overlap=int(os.getenv('CHUNK_OVERLAP', 50)),
         )
-        self.embedder = EmbeddingGenerator(os.getenv('EMBEDDING_MODEL', 'sentence-transformers/all-MiniLM-L6-v2'))
-        
-        # MinIO client
-        self.minio_client = MinIOService()
+        self.embedder = embedder or EmbeddingGenerator(
+            os.getenv('EMBEDDING_MODEL', 'sentence-transformers/all-MiniLM-L6-v2')
+        )
+
+        self.minio_client = minio_client or MinIOService()
+        self.vector_store = vector_store
+        if self.vector_store is None:
+            # Fallback (non utilisé en production avec lifespan, mais utile pour scripts/tests).
+            from Retrieval.vector_store import VectorStore
+
+            self.vector_store = VectorStore()
     
     def process_document(self, bucket: str, filename: str) -> tuple[list, list, Optional[str]]:
         """
@@ -112,10 +126,8 @@ class IngestionPipeline:
         try:
             # Chercher un point avec ce doc_id dans les métadonnées
             from qdrant_client.http import models
-            from Retrieval.vector_store import VectorStore
-            vector_store = VectorStore()
-            results = vector_store.client.scroll(
-                collection_name=vector_store.collection_name,
+            results = self.vector_store.client.scroll(
+                collection_name=self.vector_store.collection_name,
                 scroll_filter=models.Filter(
                     must=[
                         models.FieldCondition(

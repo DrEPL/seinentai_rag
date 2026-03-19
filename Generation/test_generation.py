@@ -23,10 +23,9 @@ def test_normal_mode(retriever, generator, query: str):
         query=query,
         retriever_pipeline=retriever,
         generation_pipeline=generator,
-        limit=3,
-        score_threshold=0.3,
+        limit=5,
+        score_threshold=0.5,
         use_hybrid=True,
-        template_name="detailed"
     )
     
     elapsed_time = time.time() - start_time
@@ -71,13 +70,12 @@ def test_stream_mode(retriever, generator, query: str):
         query=query,
         retrieved_docs=retriever.search(
             query=query,
-            limit=3,
-            score_threshold=0.3,
+            limit=10,
+            score_threshold=0.5,
             use_hybrid=True
         ),
         stream=True,
-        callback=stream_callback,
-        template_name="detailed"
+        callback=stream_callback
     )
     
     elapsed_time = time.time() - start_time
@@ -125,7 +123,7 @@ def test_stream_with_metadata(retriever, generator, query: str):
     retrieved_docs = retriever.search(
         query=query,
         limit=3,
-        score_threshold=0.3,
+        score_threshold=0.5,
         use_hybrid=True
     )
     print(f"✅ {len(retrieved_docs)} documents récupérés")
@@ -136,8 +134,7 @@ def test_stream_with_metadata(retriever, generator, query: str):
         query=query,
         retrieved_docs=retrieved_docs,
         stream=True,
-        callback=metrics.callback,
-        template_name="detailed"
+        callback=metrics.callback
     )
     
     # Calculer les métriques
@@ -171,9 +168,8 @@ def compare_modes(retriever, generator, query: str):
         retriever_pipeline=retriever,
         generation_pipeline=generator,
         limit=3,
-        score_threshold=0.3,
+        score_threshold=0.5,
         use_hybrid=True,
-        template_name="detailed",
         stream=False
     )
     normal_time = time.time() - start_normal
@@ -189,7 +185,7 @@ def compare_modes(retriever, generator, query: str):
     
     result_stream = generator.generate(
         query=query,
-        retrieved_docs=retriever.search(query=query, limit=3, score_threshold=0.3, use_hybrid=True),
+        retrieved_docs=retriever.search(query=query, limit=3, score_threshold=0.4, use_hybrid=True),
         stream=True,
         callback=measure_first_token,
         template_name="detailed"
@@ -281,7 +277,7 @@ def main():
     print(f"🎯 Modèle utilisé: {generator.model_name}")
     
     # Question de test
-    query = "Qu'est-ce que Robert fait en ville?"
+    query = "C'est quoi la signification de l'uniforme du groupe des jeunes?"
     
     # Menu de test
     print("\n" + "="*80)
@@ -295,7 +291,8 @@ def main():
     print("6. TOUS les tests")
     print("="*80)
     
-    choice = input("\nVotre choix (1-6) [défaut: 4]: ").strip() or "4"
+    # choice = input("\nVotre choix (1-6) [défaut: 4]: ").strip() or "4"
+    choice = "2"
     
     if choice == "1":
         test_normal_mode(retriever, generator, query)

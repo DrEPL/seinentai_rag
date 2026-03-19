@@ -1,14 +1,16 @@
 import logging
 import os
+from pathlib import Path
 
 from minio import Minio
-from minio.notificationconfig import NotificationConfig, QueueConfig, TopicConfig
-from typing import List, Dict, Any, Optional, BinaryIO
+from minio.notificationconfig import NotificationConfig, QueueConfig
+from typing import List, Dict, Any, Optional
 from io import BytesIO
 from dotenv import load_dotenv
 
 
-load_dotenv('../.env')
+_ENV_PATH = Path(__file__).resolve().parents[1] / ".env"
+load_dotenv(str(_ENV_PATH))
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +40,7 @@ class MinIOService:
         
         queue_config = QueueConfig(
             queue=arn,
-            events=["s3:ObjectCreated:*"])
+            events=["s3:ObjectCreated:*", "s3:ObjectRemoved:*"])
         
         notification_cfg = NotificationConfig(queue_config_list=[queue_config])
         self.client.set_bucket_notification(bucket_name, notification_cfg)

@@ -5,10 +5,12 @@ from typing import List, Dict, Any, Optional
 from datetime import datetime
 import requests
 from dotenv import load_dotenv
+from pathlib import Path
 
 from utils.functions import build_prompt, format_context, get_default_system_prompt
 
-load_dotenv('../.env')
+_ENV_PATH = Path(__file__).resolve().parents[1] / ".env"
+load_dotenv(str(_ENV_PATH))
 
 logger = logging.getLogger(__name__)
 

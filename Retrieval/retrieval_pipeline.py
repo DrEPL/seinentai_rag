@@ -1,5 +1,8 @@
 import logging
 import os
+from pathlib import Path
+from typing import Optional
+
 from Ingestion.ingestion_pipeline import IngestionPipeline
 from Retrieval.hybrid_retriever import HybridRetriever
 from services.minio_service import MinIOService
@@ -8,38 +11,58 @@ from Ingestion.embeddings import EmbeddingGenerator
 from dotenv import load_dotenv
 
 
-load_dotenv('../.env')
+_ENV_PATH = Path(__file__).resolve().parents[1] / ".env"
+load_dotenv(str(_ENV_PATH))
 
 logger = logging.getLogger(__name__)
 
 class RetrieverPipeline:
     """Pipeline Retriever"""
     
-    def __init__(self):
+    def __init__(
+        self,
+        embedder: Optional[EmbeddingGenerator] = None,
+        ingestion: Optional[IngestionPipeline] = None,
+        vector_store: Optional[VectorStore] = None,
+        minio_client: Optional[MinIOService] = None,
+    ):
+        # Injecter les dépendances pour éviter la recréation (modèle embeddings / client MinIO / connexion Qdrant).
+        self.minio_client = minio_client or MinIOService()
 
-        self.embedder = EmbeddingGenerator(os.getenv('EMBEDDING_MODEL', 'sentence-transformers/all-MiniLM-L6-v2'))
-        # # Obtenir la dimension du modèle (test avec un texte exemple)
-        test_embedding = self.embedder.generate_single("test")
-        if test_embedding is not None:
-            self.vector_size = len(test_embedding)
-        
-        self.ingestion = IngestionPipeline()
-           
-        # Initialisation du store
-        self.vector_store = VectorStore(host="localhost",
-                            port=6333,
-                            sparse_model_name="Qdrant/bm25",  # ou "prithivida/Splade_PP_en_v1"
-                            collection_name="documents",
-                            vector_size=self.vector_size if self.vector_size else None
-                        )
-        
-        # Initialisation de retrevier
+        if embedder is None:
+            embedder = EmbeddingGenerator(os.getenv('EMBEDDING_MODEL', 'sentence-transformers/all-MiniLM-L6-v2'))
+
+        self.embedder = embedder
+
+        if vector_store is None:
+            # Obtenir la dimension du modèle (test avec un texte exemple)
+            test_embedding = self.embedder.generate_single("test")
+            vector_size = len(test_embedding) if test_embedding is not None else 384
+
+            # Initialisation du store (fallback si pas injecté)
+            vector_store = VectorStore(
+                host="localhost",
+                port=6333,
+                sparse_model_name="Qdrant/bm25",
+                collection_name="documents",
+                vector_size=vector_size,
+            )
+
+        self.vector_store = vector_store
+
+        # Pipeline ingestion (chunking + embeddings côté indexation)
+        if ingestion is None:
+            ingestion = IngestionPipeline(
+                embedder=self.embedder,
+                minio_client=self.minio_client,
+                vector_store=self.vector_store,
+            )
+        self.ingestion = ingestion
+
+        # Initialisation de retriever
         self.hybrid_retriever = HybridRetriever(self.vector_store)
-        
-        # MinIO client
-        self.minio_client = MinIOService()
-        
-        # Créer la collection si nécessaire
+
+        # Créer la collection si nécessaire (une seule fois via singleton)
         self._init_vector_store()
     
     def _init_vector_store(self):
@@ -114,6 +137,7 @@ class RetrieverPipeline:
         results = self.hybrid_retriever.retrieve(query_text=query,query_embedding=query_embedding, limit=limit, score_threshold=score_threshold, use_hybrid=use_hybrid)
         
         logger.info(f"🔍 {len(results)} résultats pour: '{query[:50]}...'")
+        [print(f"[{chunks['chunk_index']}] {chunks['text']}", end="\n\n") for chunks in results]
         return results
 
 

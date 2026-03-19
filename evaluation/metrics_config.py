@@ -1,6 +1,7 @@
 # evaluation/metrics_config.py
 import os
 from dotenv import load_dotenv
+from pathlib import Path
 from langchain_ollama import ChatOllama
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from ragas.llms import LangchainLLMWrapper
@@ -8,7 +9,8 @@ from ragas.embeddings import LangchainEmbeddingsWrapper
 from deepeval.models import DeepEvalBaseLLM
 import logging
 
-load_dotenv('../.env')
+_ENV_PATH = Path(__file__).resolve().parents[1] / ".env"
+load_dotenv(str(_ENV_PATH))
 
 logger = logging.getLogger(__name__)
 

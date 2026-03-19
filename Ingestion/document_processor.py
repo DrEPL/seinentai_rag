@@ -3,7 +3,7 @@ import logging
 from pathlib import Path
 from typing import Optional
 import pypdf
-# import docx
+from docx import Document
 import markdown
 from bs4 import BeautifulSoup
 
@@ -33,8 +33,7 @@ class DocumentProcessor:
         """Extrait le texte d'un DOCX"""
         try:
             docx_file = io.BytesIO(file_content)
-            # doc = docx.Document(docx_file)
-            doc = ""
+            doc = Document(docx_file)
             text = [para.text for para in doc.paragraphs]
             return "\n".join(text)
         except Exception as e:
@@ -82,7 +81,7 @@ class DocumentProcessor:
         processors = {
             '.pdf': self.parse_pdf,
             '.docx': self.parse_docx,
-            '.doc': self.parse_docx,  # .doc non supporté directement
+            # '.doc': self.parse_docx,
             '.md': self.parse_markdown,
             '.markdown': self.parse_markdown,
             '.txt': self.parse_txt,
