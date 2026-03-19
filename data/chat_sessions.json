@@ -533,5 +533,349 @@
         "metadata": {}
       }
     ]
+  },
+  "3aff7a3c-3af2-416d-841f-d71e5eb266e0": {
+    "session_id": "3aff7a3c-3af2-416d-841f-d71e5eb266e0",
+    "user_id": "5a230c17-6868-4c4b-8df8-882bfa17273f",
+    "created_at": "2026-03-19T18:12:55.209266",
+    "updated_at": "2026-03-19T18:13:06.023652",
+    "messages": [
+      {
+        "message_id": "87f3e85d-bd5c-476c-8a50-fedc641b830e",
+        "role": "user",
+        "content": "Quelles sont les valeurs du groupe des jeunes ?",
+        "timestamp": "2026-03-19T18:13:06.003695",
+        "sources": [],
+        "metadata": {}
+      },
+      {
+        "message_id": "c3a4eda6-d272-4db8-871e-5881e57cf4cb",
+        "role": "assistant",
+        "content": "Les valeurs du Groupe des Jeunes de Mahikari, telles qu\u2019expos\u00e9es dans les documents, reposent sur des principes spirituels et moraux visant \u00e0 guider ses membres vers une conduite exemplaire et une contribution active \u00e0 l\u2019\u00e9dification d\u2019une soci\u00e9t\u00e9 harmonieuse. Au c\u0153ur de ces valeurs se trouve l\u2019engagement \u00e0 \u0153uvrer pour la r\u00e9alisation du programme divin sur Terre, en particulier \u00e0 travers l\u2019\u00e9dification de la civilisation du XXI\u1d49 si\u00e8cle sacr\u00e9. Les membres sont appel\u00e9s \u00e0 saisir profond\u00e9ment le sens de leur mission, en consolidant l\u2019unit\u00e9 du groupe et en cultivant un esprit de coh\u00e9sion mutuelle.\n\nUne autre valeur fondamentale est l\u2019altruisme, qui se manifeste par l\u2019abandon de l\u2019amour \u00e9gocentrique au profit de la pratique de l\u2019amour d\u00e9sint\u00e9ress\u00e9. Les membres sont encourag\u00e9s \u00e0 toujours penser aux autres avant eux-m\u00eames, \u00e0 se mettre au service de la soci\u00e9t\u00e9 et \u00e0 consid\u00e9rer chaque personne comme un enfant de Dieu, un ami, ou un fr\u00e8re et une s\u0153ur. Cette approche vise \u00e0 construire une soci\u00e9t\u00e9 juste, rayonnante, fond\u00e9e sur la paix et la s\u00e9curit\u00e9.\n\nLa puret\u00e9 morale et spirituelle occupe \u00e9galement une place centrale. Les membres doivent faire preuve de modestie, respecter les croyances, opinions et m\u0153urs d\u2019autrui, et affronter les difficult\u00e9s avec s\u00e9r\u00e9nit\u00e9, sans se laisser \u00e9branler par les moqueries, les insultes ou les menaces. Leur d\u00e9termination \u00e0 appliquer les principes divins doit rester in\u00e9branlable, afin d\u2019\u00e9viter tout remords futur.\n\nEnfin, le Groupe des Jeunes insiste sur l\u2019importance de la formation et de l\u2019exemplarit\u00e9. Ses activit\u00e9s visent \u00e0 purifier les membres pour les transformer en *tanebito*, des individus capables d\u2019\u00e9voluer spirituellement et de devenir des guides pour la soci\u00e9t\u00e9. L\u2019exemplarit\u00e9 passe par la coh\u00e9rence entre les paroles et les actes, car un membre ne peut guider les autres s\u2019il ne met pas lui-m\u00eame en pratique ce qu\u2019il enseigne. Les responsables (*kanbu*) ont pour mission de stimuler chez les jeunes une mentalit\u00e9 d\u2019empathie, de non-jugement et d\u2019acceptation, afin de favoriser leur croissance spirituelle et leur engagement envers les valeurs du groupe.",
+        "timestamp": "2026-03-19T18:13:06.023652",
+        "sources": [
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.6142,
+            "chunk_index": 107,
+            "excerpt": "vos taches et vos devoirs au sein de la structure unifi\u00e9e du Groupe des Jeunes. Les shirei, les \ntaicho et tous les membres doivent saisir fermement le sens de la mission accord\u00e9e \u00e0 chacun \net consoli\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.611,
+            "chunk_index": 439,
+            "excerpt": "et font des efforts pour accomplir ce devoir. De plus, sans se d\u00e9partir de modestie, ils \nrespectent les croyances *, opinions et m\u0153urs des autres. Sans peur du danger, ils affrontent \nles difficult\u00e9s\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.6104,
+            "chunk_index": 435,
+            "excerpt": "Les membres du Groupe des Jeunes consid\u00e8rent chaque personne comme un enfant de Dieu, \ncomme un ami. En tant que fr\u00e8res et s\u0153urs, tous les membres du Groupe des Jeunes s\u2019efforcent \nde construire une s\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.5933,
+            "chunk_index": 402,
+            "excerpt": "Le but des activit\u00e9s du groupe des jeunes est de recevoir une formation. A travers la formation, on \nre\u00e7oit des enseignements pour devenir \u2018tanebito\u2019 en se purifiant. Gr\u00e2ce \u00e0 cela, on pourra \u00e9voluer \n\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.5897,
+            "chunk_index": 1050,
+            "excerpt": "expulsion du groupe\u2019, il devient alors impossible de faire grandir chez chacun d\u2019eux la foi \npermettant de se diriger vers Dieu. Il vous est demand\u00e9 de guider les jeunes selon l\u2019orientation \ndonn\u00e9e ci\u2026"
+          }
+        ],
+        "metadata": {}
+      }
+    ]
+  },
+  "bee10413-b6a9-444b-96b2-f9b994789521": {
+    "session_id": "bee10413-b6a9-444b-96b2-f9b994789521",
+    "user_id": "5a230c17-6868-4c4b-8df8-882bfa17273f",
+    "created_at": "2026-03-19T18:13:18.237983",
+    "updated_at": "2026-03-19T18:46:45.514853",
+    "messages": [
+      {
+        "message_id": "f4ddb531-c3de-474c-a4f0-7e677c5b209e",
+        "role": "user",
+        "content": "Quelles sont les valeurs du groupe des jeunes ?",
+        "timestamp": "2026-03-19T18:13:18.347838",
+        "sources": [],
+        "metadata": {}
+      },
+      {
+        "message_id": "26bbb354-07f6-4401-81bf-adcb1a46ba4b",
+        "role": "assistant",
+        "content": "Les valeurs du Groupe des Jeunes de Mahikari, telles qu\u2019elles ressortent des documents fournis, s\u2019articulent autour d\u2019une vision spirituelle et collective visant \u00e0 incarner des principes divins au service d\u2019une mission sup\u00e9rieure. Au c\u0153ur de ces valeurs se trouve l\u2019engagement envers l\u2019\u00e9dification d\u2019une civilisation sacr\u00e9e pour le XXI\u1d49 si\u00e8cle, une ambition qui d\u00e9passe les int\u00e9r\u00eats individuels pour s\u2019inscrire dans un dessein universel, celui de r\u00e9aliser sur Terre le programme de Dieu. Cette mission exige de chaque membre une adh\u00e9sion profonde \u00e0 un id\u00e9al de coh\u00e9sion et d\u2019unit\u00e9, o\u00f9 chacun doit saisir le sens de sa t\u00e2che et renforcer l\u2019esprit mutuel qui lie le groupe.\n\nLa puret\u00e9 constitue une autre valeur fondamentale, non seulement au sens moral, mais aussi dans l\u2019attitude face aux \u00e9preuves. Les membres sont appel\u00e9s \u00e0 rester in\u00e9branlables face aux moqueries, aux insultes ou aux menaces, en maintenant une posture de modestie et de respect envers les croyances et les opinions d\u2019autrui. Cette fermet\u00e9 s\u2019accompagne d\u2019une capacit\u00e9 \u00e0 affronter les difficult\u00e9s avec s\u00e9r\u00e9nit\u00e9, sans crainte du danger, et \u00e0 cultiver une r\u00e9silience qui \u00e9vite tout remords ult\u00e9rieur. La force int\u00e9rieure ainsi d\u00e9velopp\u00e9e permet de demeurer fid\u00e8le aux principes divins, quelles que soient les circonstances.\n\nL\u2019altruisme et l\u2019abandon de l\u2019\u00e9gocentrisme sont \u00e9galement centraux. Les membres du Groupe des Jeunes sont invit\u00e9s \u00e0 se d\u00e9tourner de l\u2019amour de soi pour embrasser une pratique de l\u2019amour d\u00e9sint\u00e9ress\u00e9, en pla\u00e7ant syst\u00e9matiquement les autres avant eux-m\u00eames. Cette valeur se traduit par un engagement au service de la soci\u00e9t\u00e9, o\u00f9 chaque personne est consid\u00e9r\u00e9e comme un enfant de Dieu et un fr\u00e8re ou une s\u0153ur. L\u2019objectif est de construire une soci\u00e9t\u00e9 juste, rayonnante et pacifi\u00e9e, fond\u00e9e sur des relations fraternelles et une solidarit\u00e9 active.\n\nEnfin, la formation et l\u2019exemplarit\u00e9 occupent une place pr\u00e9pond\u00e9rante. Le Groupe des Jeunes a pour vocation de se former pour devenir des *tanebito*, des \u00eatres purifi\u00e9s capables d\u2019\u00e9voluer spirituellement et de contribuer au d\u00e9roulement du programme divin. Cette formation passe par l\u2019incarnation de comportements mod\u00e8les, o\u00f9 les paroles et les actes doivent \u00eatre en parfaite harmonie. Les membres sont ainsi appel\u00e9s \u00e0 guider les autres par l\u2019exemple, en devenant des figures inspirantes pour la soci\u00e9t\u00e9, capables d\u2019influencer positivement leur entourage par leur int\u00e9grit\u00e9 et leur d\u00e9vouement.",
+        "timestamp": "2026-03-19T18:13:29.923491",
+        "sources": [
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.6142,
+            "chunk_index": 107,
+            "excerpt": "vos taches et vos devoirs au sein de la structure unifi\u00e9e du Groupe des Jeunes. Les shirei, les \ntaicho et tous les membres doivent saisir fermement le sens de la mission accord\u00e9e \u00e0 chacun \net consoli\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.611,
+            "chunk_index": 439,
+            "excerpt": "et font des efforts pour accomplir ce devoir. De plus, sans se d\u00e9partir de modestie, ils \nrespectent les croyances *, opinions et m\u0153urs des autres. Sans peur du danger, ils affrontent \nles difficult\u00e9s\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.6104,
+            "chunk_index": 435,
+            "excerpt": "Les membres du Groupe des Jeunes consid\u00e8rent chaque personne comme un enfant de Dieu, \ncomme un ami. En tant que fr\u00e8res et s\u0153urs, tous les membres du Groupe des Jeunes s\u2019efforcent \nde construire une s\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.5933,
+            "chunk_index": 402,
+            "excerpt": "Le but des activit\u00e9s du groupe des jeunes est de recevoir une formation. A travers la formation, on \nre\u00e7oit des enseignements pour devenir \u2018tanebito\u2019 en se purifiant. Gr\u00e2ce \u00e0 cela, on pourra \u00e9voluer \n\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.5897,
+            "chunk_index": 1050,
+            "excerpt": "expulsion du groupe\u2019, il devient alors impossible de faire grandir chez chacun d\u2019eux la foi \npermettant de se diriger vers Dieu. Il vous est demand\u00e9 de guider les jeunes selon l\u2019orientation \ndonn\u00e9e ci\u2026"
+          }
+        ],
+        "metadata": {}
+      },
+      {
+        "message_id": "968e6ec3-6cb3-4e00-8f23-ea7be6b60d89",
+        "role": "user",
+        "content": "Quand le groupe des jeunes \u00e0 d\u00e9buter ?",
+        "timestamp": "2026-03-19T18:19:42.064578",
+        "sources": [],
+        "metadata": {}
+      },
+      {
+        "message_id": "4e6637d9-363d-4b49-9745-910c803a4184",
+        "role": "assistant",
+        "content": "",
+        "timestamp": "2026-03-19T18:19:42.083336",
+        "sources": [
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.7164,
+            "chunk_index": 107,
+            "excerpt": "vos taches et vos devoirs au sein de la structure unifi\u00e9e du Groupe des Jeunes. Les shirei, les \ntaicho et tous les membres doivent saisir fermement le sens de la mission accord\u00e9e \u00e0 chacun \net consoli\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.6695,
+            "chunk_index": 435,
+            "excerpt": "Les membres du Groupe des Jeunes consid\u00e8rent chaque personne comme un enfant de Dieu, \ncomme un ami. En tant que fr\u00e8res et s\u0153urs, tous les membres du Groupe des Jeunes s\u2019efforcent \nde construire une s\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.66,
+            "chunk_index": 402,
+            "excerpt": "Le but des activit\u00e9s du groupe des jeunes est de recevoir une formation. A travers la formation, on \nre\u00e7oit des enseignements pour devenir \u2018tanebito\u2019 en se purifiant. Gr\u00e2ce \u00e0 cela, on pourra \u00e9voluer \n\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.6489,
+            "chunk_index": 870,
+            "excerpt": "le Groupe des Jeunes, j'ai trouv\u00e9 petit \u00e0 petit l'attitude d'acceptation. Mon \u00e2me s'est \u00e9chapp\u00e9e d'une \nr\u00e9alit\u00e9 o\u00f9 abondaient des fa\u00e7ons de penser et d'agir, oppos\u00e9s aux principes divins et, il m'a \u00e9t\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.6471,
+            "chunk_index": 83,
+            "excerpt": "feu\u2019\u2019, la temp\u00eate de \u2019\u2019 raruro\u2019\u2019 qui attend l\u2019humanit\u00e9 sur son chemin. \nDepuis lors, le Groupe des Jeunes de Mahikari \u2013 aussi bien les jours de beau temps o\u00f9 le soleil brillait, \nque les jours diffici\u2026"
+          }
+        ],
+        "metadata": {}
+      },
+      {
+        "message_id": "7f5eb763-1b98-40fe-a8e9-b31ccd617170",
+        "role": "user",
+        "content": "Quand le groupe des jeunes \u00e0 d\u00e9buter ?",
+        "timestamp": "2026-03-19T18:21:04.087000",
+        "sources": [],
+        "metadata": {}
+      },
+      {
+        "message_id": "614fc06e-8bfd-446f-9fce-eb47ee55d665",
+        "role": "assistant",
+        "content": "",
+        "timestamp": "2026-03-19T18:21:04.103171",
+        "sources": [
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.7164,
+            "chunk_index": 107,
+            "excerpt": "vos taches et vos devoirs au sein de la structure unifi\u00e9e du Groupe des Jeunes. Les shirei, les \ntaicho et tous les membres doivent saisir fermement le sens de la mission accord\u00e9e \u00e0 chacun \net consoli\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.6695,
+            "chunk_index": 435,
+            "excerpt": "Les membres du Groupe des Jeunes consid\u00e8rent chaque personne comme un enfant de Dieu, \ncomme un ami. En tant que fr\u00e8res et s\u0153urs, tous les membres du Groupe des Jeunes s\u2019efforcent \nde construire une s\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.66,
+            "chunk_index": 402,
+            "excerpt": "Le but des activit\u00e9s du groupe des jeunes est de recevoir une formation. A travers la formation, on \nre\u00e7oit des enseignements pour devenir \u2018tanebito\u2019 en se purifiant. Gr\u00e2ce \u00e0 cela, on pourra \u00e9voluer \n\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.6489,
+            "chunk_index": 870,
+            "excerpt": "le Groupe des Jeunes, j'ai trouv\u00e9 petit \u00e0 petit l'attitude d'acceptation. Mon \u00e2me s'est \u00e9chapp\u00e9e d'une \nr\u00e9alit\u00e9 o\u00f9 abondaient des fa\u00e7ons de penser et d'agir, oppos\u00e9s aux principes divins et, il m'a \u00e9t\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.6471,
+            "chunk_index": 83,
+            "excerpt": "feu\u2019\u2019, la temp\u00eate de \u2019\u2019 raruro\u2019\u2019 qui attend l\u2019humanit\u00e9 sur son chemin. \nDepuis lors, le Groupe des Jeunes de Mahikari \u2013 aussi bien les jours de beau temps o\u00f9 le soleil brillait, \nque les jours diffici\u2026"
+          }
+        ],
+        "metadata": {}
+      },
+      {
+        "message_id": "62eb35a7-92a9-48c2-9e86-51e7b65db613",
+        "role": "user",
+        "content": "Quand le groupe des jeunes \u00e0 d\u00e9buter ?",
+        "timestamp": "2026-03-19T18:21:50.647366",
+        "sources": [],
+        "metadata": {}
+      },
+      {
+        "message_id": "13f4ffb4-4dd0-4999-a97a-54fa53fbd1dc",
+        "role": "assistant",
+        "content": "",
+        "timestamp": "2026-03-19T18:21:50.672952",
+        "sources": [
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.7164,
+            "chunk_index": 107,
+            "excerpt": "vos taches et vos devoirs au sein de la structure unifi\u00e9e du Groupe des Jeunes. Les shirei, les \ntaicho et tous les membres doivent saisir fermement le sens de la mission accord\u00e9e \u00e0 chacun \net consoli\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.6695,
+            "chunk_index": 435,
+            "excerpt": "Les membres du Groupe des Jeunes consid\u00e8rent chaque personne comme un enfant de Dieu, \ncomme un ami. En tant que fr\u00e8res et s\u0153urs, tous les membres du Groupe des Jeunes s\u2019efforcent \nde construire une s\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.66,
+            "chunk_index": 402,
+            "excerpt": "Le but des activit\u00e9s du groupe des jeunes est de recevoir une formation. A travers la formation, on \nre\u00e7oit des enseignements pour devenir \u2018tanebito\u2019 en se purifiant. Gr\u00e2ce \u00e0 cela, on pourra \u00e9voluer \n\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.6489,
+            "chunk_index": 870,
+            "excerpt": "le Groupe des Jeunes, j'ai trouv\u00e9 petit \u00e0 petit l'attitude d'acceptation. Mon \u00e2me s'est \u00e9chapp\u00e9e d'une \nr\u00e9alit\u00e9 o\u00f9 abondaient des fa\u00e7ons de penser et d'agir, oppos\u00e9s aux principes divins et, il m'a \u00e9t\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.6471,
+            "chunk_index": 83,
+            "excerpt": "feu\u2019\u2019, la temp\u00eate de \u2019\u2019 raruro\u2019\u2019 qui attend l\u2019humanit\u00e9 sur son chemin. \nDepuis lors, le Groupe des Jeunes de Mahikari \u2013 aussi bien les jours de beau temps o\u00f9 le soleil brillait, \nque les jours diffici\u2026"
+          }
+        ],
+        "metadata": {}
+      },
+      {
+        "message_id": "064fc4a9-730a-4949-a164-9760bbe9a45f",
+        "role": "user",
+        "content": "Quand le groupe des jeunes \u00e0 d\u00e9buter ?",
+        "timestamp": "2026-03-19T18:43:51.770470",
+        "sources": [],
+        "metadata": {}
+      },
+      {
+        "message_id": "c699ea86-cd30-47b7-ac93-9a884c2bc813",
+        "role": "user",
+        "content": "Quand le groupe des jeunes \u00e0 d\u00e9buter ?",
+        "timestamp": "2026-03-19T18:45:40.476779",
+        "sources": [],
+        "metadata": {}
+      },
+      {
+        "message_id": "c2c81798-20fd-4a3f-b826-7972c8e22035",
+        "role": "user",
+        "content": "Quand le groupe des jeunes \u00e0 d\u00e9buter ?",
+        "timestamp": "2026-03-19T18:46:42.860842",
+        "sources": [],
+        "metadata": {}
+      },
+      {
+        "message_id": "59965171-f91d-4a58-b4d5-a0e30b7eec6f",
+        "role": "assistant",
+        "content": "D'apr\u00e8s les documents fournis, le Groupe des Jeunes de Mahikari a pris son d\u00e9part r\u00e9el \u00e0 partir de la **Constitution du Groupe des Jeunes unifi\u00e9 pour toutes les r\u00e9gions**. Ce moment est pr\u00e9sent\u00e9 comme un point de base fondamental, marqu\u00e9 par la **D\u00e9claration** qui a permis son essor. Cependant, les documents ne pr\u00e9cisent pas de date exacte pour ce commencement.\n\nSi vous cherchez une r\u00e9f\u00e9rence temporelle pr\u00e9cise, je n\u2019ai pas acc\u00e8s \u00e0 cette information dans les extraits partag\u00e9s.",
+        "timestamp": "2026-03-19T18:46:45.514853",
+        "sources": [
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.6092,
+            "chunk_index": 640,
+            "excerpt": "Je vous prie de les pratiquer avec une foi solide et d'en faire le centre de votre vie. Je ne cesserai \njamais de prier pour qu'il vous soit possible de mener une vie heureuse, tout en poursuivant vot\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.6074,
+            "chunk_index": 864,
+            "excerpt": "au tout d\u00e9but, n'\u00e9tait pas dans l'acceptation. Il se souvenait de ces moments en disant :\u00ab Au \ncommencement de la p\u00e9riode de mon entra\u00eenement spirituel, mon \u00e2me n'\u00e9tait pas lisse et \ns\u00e9rique. Elle \u00e9ta\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.5929,
+            "chunk_index": 118,
+            "excerpt": "d\u00e9mon ou de Satan. En vous r\u00e9side le \u2018\u2019destin du Ciel\u2019\u2019, la \u2018\u2019pr\u00e9destination\u2019\u2019 et le \u2018\u2019destin\u2019\u2019  \nde d\u00e9ployer des activit\u00e9s en tant qu\u2019enfants de Dieu formant le Groupe des Jeunes. C\u2019est \u00e0 \npartir de \u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.5815,
+            "chunk_index": 759,
+            "excerpt": "lorsqu'ils comprendront que leur r\u00f4le est de r\u00e9soudre le probl\u00e8me pos\u00e9 par les esprits (reisho). \nL'esprit possesseur de Mitsue s'est s\u00e9par\u00e9 d'elle 7 jours apr\u00e8s avoir re\u00e7u okiyome. Depuis, elle n'a p\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.5723,
+            "chunk_index": 105,
+            "excerpt": "y\u00f4k\u00f4shi, ne constitue- t-il pas pour vous un honneur et une joie extraordinaire ? \nQuand Sukuinushisama a dit : \u2018\u2026 J\u2019ordonne le \u2018\u2019d\u00e9part\u2019\u2019 des activit\u00e9s\u2026 \u2018\u2019, \u00e0 cet instant \npr\u00e9cis s\u2019est ouvert un chem\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.57,
+            "chunk_index": 1050,
+            "excerpt": "expulsion du groupe\u2019, il devient alors impossible de faire grandir chez chacun d\u2019eux la foi \npermettant de se diriger vers Dieu. Il vous est demand\u00e9 de guider les jeunes selon l\u2019orientation \ndonn\u00e9e ci\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.5666,
+            "chunk_index": 429,
+            "excerpt": "Page 83/223 \n \n \n \n \n \n \n \n \n \nLes principes de vie des membres du Groupe des Jeunes sont extr\u00eamement importants et ne doivent \npas \u00eatre pris \u00e0 la l\u00e9g\u00e8re. Les membres du Groupe des Jeunes, ayant pris \u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.5662,
+            "chunk_index": 402,
+            "excerpt": "Le but des activit\u00e9s du groupe des jeunes est de recevoir une formation. A travers la formation, on \nre\u00e7oit des enseignements pour devenir \u2018tanebito\u2019 en se purifiant. Gr\u00e2ce \u00e0 cela, on pourra \u00e9voluer \n\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.5648,
+            "chunk_index": 923,
+            "excerpt": "du c\u0153ur. \nAvant le d\u00e9but de l'organisation, la vie de Sukuinushisama a \u00e9t\u00e9 jalonn\u00e9e de changements drastiques, \nselon des hauts et des bas successifs. Il avait men\u00e9 jusque -l\u00e0 une existence faite de s\u2026"
+          },
+          {
+            "filename": "Recueil d'enseignements pour la formation Juntai in.pdf",
+            "score": 0.5619,
+            "chunk_index": 870,
+            "excerpt": "le Groupe des Jeunes, j'ai trouv\u00e9 petit \u00e0 petit l'attitude d'acceptation. Mon \u00e2me s'est \u00e9chapp\u00e9e d'une \nr\u00e9alit\u00e9 o\u00f9 abondaient des fa\u00e7ons de penser et d'agir, oppos\u00e9s aux principes divins et, il m'a \u00e9t\u2026"
+          }
+        ],
+        "metadata": {}
+      }
+    ]
   }
 }

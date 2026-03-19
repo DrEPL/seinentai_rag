@@ -204,14 +204,44 @@ async def continue_chat(
     conv_context = chat_session_service.build_conversation_context(session_id, max_messages=6)
     enriched_query = f"{conv_context}\n\nNouvelle question : {body.message}" if conv_context else body.message
 
-    docs = rag_service.search(query=enriched_query, limit=5, score_threshold=0.0)
+    docs = rag_service.search(query=body.message, limit=10, score_threshold=0.4)
 
     gen_kwargs = dict(temperature=body.temperature)
+    
+    # 3. Streaming SSE
+    if body.stream:
+        return StreamingResponse(
+            _sse_stream(session_id, body.message, current_user.id, docs, **gen_kwargs),
+            media_type="text/event-stream",
+            headers={
+                "Cache-Control": "no-cache",
+                "X-Session-ID": session_id,
+            },
+        )
 
-    return StreamingResponse(
-        _sse_stream(session_id, body.message, current_user.id, docs, **gen_kwargs),
-        media_type="text/event-stream",
-        headers={"Cache-Control": "no-cache", "X-Session-ID": session_id},
+    # 4. Réponse directe
+    chat_session_service.add_message(session_id, "user", body.message)
+
+    result = rag_service.generate(query=enriched_query, retrieved_docs=docs, **gen_kwargs)
+    if not result.get("success"):
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"Erreur de génération : {result.get('error', 'Ollama indisponible')}",
+        )
+
+    sources = _build_sources(docs)
+    chat_session_service.add_message(session_id, "assistant", result["response"], sources=sources)
+
+    return ChatResponse(
+        session_id=session_id,
+        message_id=str(uuid.uuid4()),
+        response=result["response"],
+        sources=sources,
+        model=result.get("model", "unknown"),
+        generation_time=result.get("generation_time", 0.0),
+        prompt_tokens=result.get("prompt_tokens", 0),
+        completion_tokens=result.get("completion_tokens", 0),
+        timestamp=datetime.utcnow(),
     )
 
 
