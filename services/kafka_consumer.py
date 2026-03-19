@@ -8,6 +8,7 @@ import time, signal, sys, os
 import urllib
 from Retrieval.retrieval_pipeline import RetrieverPipeline
 from Retrieval.vector_store import VectorStore
+from seinentai4us_api.utils.const import SUPPORTED_DOCUMENT_EXTENSIONS
 from services.minio_service import MinIOService
 from dotenv import load_dotenv
 
@@ -197,9 +198,15 @@ def handle_deletion(filename: str, record: dict):
     """Traite la suppression d'un document"""
     print(f"🗑️ Suppression du document: {filename}")
     
+    # Vérification rapide de l'extension
+    ext = Path(filename).suffix.lower()
+    if ext not in SUPPORTED_DOCUMENT_EXTENSIONS:
+        print(f"❌ Extension '{ext}' non prise en charge pour '{filename}'")
+        return
+    
     try:
         vector_store = _vector_store or VectorStore()
-        
+
         resultat = vector_store.delete_document(filename=filename)
         
         if resultat:
@@ -215,6 +222,13 @@ def handle_deletion(filename: str, record: dict):
 def handle_creation(filename: str, record: dict):
     """Traite la création/modification d'un document"""
     print(f"📄 Traitement du nouveau document: {filename}")
+    
+    # Vérification rapide de l'extension
+    ext = Path(filename).suffix.lower()
+    
+    if ext not in SUPPORTED_DOCUMENT_EXTENSIONS:
+        print(f"❌ Extension '{ext}' non prise en charge pour '{filename}'")
+        return
     
     # pipeline RAG
     try:

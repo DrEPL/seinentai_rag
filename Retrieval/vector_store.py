@@ -8,7 +8,7 @@ from qdrant_client.http import models
 from qdrant_client.http.models import Distance, VectorParams, SparseVectorParams, SparseIndexParams
 from fastembed import SparseTextEmbedding
 
-from utils.functions import generate_chunk_id
+from seinentai4us_api.utils.functions import generate_chunk_id
 
 logger = logging.getLogger(__name__)
 

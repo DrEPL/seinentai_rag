@@ -30,6 +30,7 @@ from seinentai4us_api.api.models.schemas import (
     UserProfile,
 )
 from seinentai4us_api.api.services.rag_service import rag_service
+from seinentai4us_api.utils.functions import normalize_filename
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -41,7 +42,7 @@ router = APIRouter()
     "/upload",
     response_model=MessageResponse,
     status_code=status.HTTP_202_ACCEPTED,
-    summary="Upload et indexation d'un document",
+    summary="Upload d'un document",
 )
 async def upload_document(
     background_tasks: BackgroundTasks,
@@ -73,6 +74,8 @@ async def upload_document(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Le fichier est vide.",
         )
+        
+    normalized_filename = normalize_filename(file.filename)
 
     # Upload vers MinIO
     try:
@@ -88,7 +91,7 @@ async def upload_document(
             ".json": "application/json",
         }
         content_type = mime_map.get(ext, "application/octet-stream")
-        ok = minio.put_object(settings.MINIO_BUCKET, file.filename, content, content_type)
+        ok = minio.put_object(settings.MINIO_BUCKET, normalized_filename, content, content_type)
         if not ok:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -110,7 +113,7 @@ async def upload_document(
     # background_tasks.add_task(_index, settings.MINIO_BUCKET, file.filename)
 
     return MessageResponse(
-        message=f"Document '{file.filename}' uploadé. Indexation en cours (vérifier /documents/{file.filename}/status).",
+        message=f"Document '{file.filename}' uploadé.",
     )
 
 

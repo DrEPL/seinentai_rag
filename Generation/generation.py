@@ -7,7 +7,7 @@ import requests
 from dotenv import load_dotenv
 from pathlib import Path
 
-from utils.functions import build_prompt, format_context, get_default_system_prompt
+from seinentai4us_api.utils.functions import build_prompt, format_context, get_default_system_prompt
 
 _ENV_PATH = Path(__file__).resolve().parents[1] / ".env"
 load_dotenv(str(_ENV_PATH))

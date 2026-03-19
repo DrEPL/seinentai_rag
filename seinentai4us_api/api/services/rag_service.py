@@ -6,7 +6,7 @@ Wrapper autour des pipelines existants (Ingestion, Retrieval, Generation).
 import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
-
+from qdrant_client.http import models
 from seinentai4us_api.api.config import settings
 
 logger = logging.getLogger(__name__)
@@ -81,8 +81,6 @@ class RAGService:
     def delete_document(self, filename: str) -> Tuple[bool, str]:
         """Supprime un document de MinIO ET de Qdrant."""
         try:
-            from qdrant_client.http import models
-
             retriever = _get_retriever()
             minio = retriever.minio_client
             vector_store = retriever.vector_store
@@ -181,48 +179,161 @@ class RAGService:
             return {"filename": filename, "status": "error", "error": str(e)}
 
     def reindex_all(self, force: bool = False, filenames: Optional[List[str]] = None) -> Dict[str, Any]:
-        """Réindexe tous les documents (ou une liste)."""
+        """
+        Réindexe les documents selon les paramètres.
+        
+        Args:
+            force: 
+                - False: ne réindexe que les documents non encore indexés
+                - True: supprime les anciennes versions avant réindexation
+            filenames:
+                - None: traite tous les documents du bucket MinIO
+                - Liste: traite uniquement les fichiers spécifiés
+        
+        Returns:
+            Dict contenant les statistiques de l'opération:
+            - total: nombre total de documents traités
+            - success: nombre de documents indexés avec succès
+            - skipped: nombre de documents ignorés
+            - failed: nombre d'échecs
+            - details: liste détaillée par document
+        
+        Examples:
+            >>> # Cas 1: Indexer uniquement les nouveaux documents
+            >>> pipeline.reindex_all()
+            
+            >>> # Cas 2: Réindexation complète (vider puis tout réindexer)
+            >>> pipeline.reindex_all(force=True)
+            
+            >>> # Cas 3: Ajouter des fichiers spécifiques (sans forcer)
+            >>> pipeline.reindex_all(filenames=["doc1.pdf", "doc2.pdf"])
+            
+            >>> # Cas 4: Forcer la mise à jour de fichiers spécifiques
+            >>> pipeline.reindex_all(force=True, filenames=["doc1.pdf"])
+        """
         retriever = _get_retriever()
         minio = retriever.minio_client
-
+        vector_store = retriever.vector_store
+        
+        # Récupération des documents à traiter
         if filenames:
             objects = [{"filename": f} for f in filenames]
         else:
             objects = minio.list_objects(settings.MINIO_BUCKET)
-
+        
         total = len(objects)
         success = skipped = failed = 0
         details = []
-
-        for obj in objects:
+        
+        print(f"🚀 Début de réindexation: {total} documents à traiter (force={force})")
+        
+        # Cas spécial: réindexation complète avec force=True
+        if force and not filenames:
+            print("🗑️ Suppression massive de la collection...")
+            try:
+                vector_store.client.delete(
+                    collection_name=vector_store.collection_name,
+                    points_selector=models.FilterSelector(
+                        filter=models.Filter(must=[])  # Supprime tout
+                    ),
+                )
+                print("✅ Collection vidée avec succès")
+            except Exception as e:
+                print(f"⚠️ Erreur lors du vidage: {e}")
+                # On continue quand même ?
+        
+        for idx, obj in enumerate(objects, 1):
             fname = obj["filename"]
             ext = Path(fname).suffix.lower()
+            
+            print(f"📄 [{idx}/{total}] Traitement de: {fname}")
+            
+            # Vérification extension
             if ext not in settings.SUPPORTED_DOCUMENT_EXTENSIONS:
                 skipped += 1
-                details.append(
-                    {
-                        "filename": fname,
-                        "result": "skipped",
-                        "reason": f"unsupported_extension ({ext})",
-                    }
-                )
+                details.append({
+                    "filename": fname,
+                    "result": "skipped",
+                    "reason": f"unsupported_extension ({ext})",
+                })
+                print(f"   ⏭️ Extension non supportée: {ext}")
                 continue
-
+            
+            # Vérification statut (sauf si force=True)
             if not force:
                 status = self.get_document_status(fname)
                 if status.get("status") == "indexed":
                     skipped += 1
-                    details.append({"filename": fname, "result": "skipped", "reason": "already_indexed"})
+                    details.append({
+                        "filename": fname,
+                        "result": "skipped",
+                        "reason": "already_indexed"
+                    })
+                    print(f"   ⏭️ Déjà indexé (use force=True to reindex)")
                     continue
-
-            ok, msg = self.ingest_document(settings.MINIO_BUCKET, fname)
-            if ok:
-                success += 1
-                details.append({"filename": fname, "result": "success"})
-            else:
+            
+            # Suppression des anciens chunks (sauf si déjà fait en masse)
+            if not (force and not filenames):  # Si pas de suppression massive
+                try:
+                    vector_store.client.delete(
+                        collection_name=vector_store.collection_name,
+                        points_selector=models.FilterSelector(
+                            filter=models.Filter(
+                                must=[
+                                    models.FieldCondition(
+                                        key="filename",
+                                        match=models.MatchValue(value=fname),
+                                    )
+                                ]
+                            )
+                        ),
+                    )
+                    print(f"   🗑️ Anciens chunks supprimés")
+                except Exception as e:
+                    print(f"   ⚠️ Erreur suppression: {e}")
+                    # On continue quand même ?
+            
+            # Ingestion du document
+            try:
+                ok, msg = self.ingest_document(settings.MINIO_BUCKET, fname)
+                if ok:
+                    success += 1
+                    details.append({
+                        "filename": fname,
+                        "result": "success",
+                        "message": msg
+                    })
+                    print(f"   ✅ Succès")
+                else:
+                    failed += 1
+                    details.append({
+                        "filename": fname,
+                        "result": "failed",
+                        "reason": msg
+                    })
+                    print(f"   ❌ Échec: {msg}")
+            except Exception as e:
                 failed += 1
-                details.append({"filename": fname, "result": "failed", "reason": msg})
-
+                details.append({
+                    "filename": fname,
+                    "result": "failed",
+                    "reason": str(e),
+                    "error_type": type(e).__name__
+                })
+                print(f"   ❌ Exception: {e}")
+                import traceback
+                traceback.print_exc()
+        
+        # Résumé final
+        print(f"\n{'='*50}")
+        print(f"📊 RÉSULTATS DE LA RÉINDEXATION")
+        print(f"{'='*50}")
+        print(f"📝 Total: {total}")
+        print(f"✅ Succès: {success}")
+        print(f"⏭️ Ignorés: {skipped}")
+        print(f"❌ Échecs: {failed}")
+        print(f"{'='*50}")
+        
         return {"total": total, "success": success, "skipped": skipped, "failed": failed, "details": details}
 
     # ── Recherche ─────────────────────────────────────────────────────────────
@@ -305,7 +416,7 @@ class RAGService:
     def generate_stream(self, query: str, retrieved_docs: List[Dict[str, Any]], **kwargs):
         """Génère un flux SSE via Ollama en mode streaming direct."""
         import requests
-        from utils.functions import build_prompt, format_context
+        from seinentai4us_api.utils.functions import build_prompt, format_context
 
         generator = _get_generator()
         context = format_context(retrieved_docs)

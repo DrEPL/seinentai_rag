@@ -1,3 +1,0 @@
-# confluent-kafka
-kafka-python
-minio

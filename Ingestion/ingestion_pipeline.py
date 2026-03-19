@@ -11,7 +11,7 @@ from Ingestion.text_chunker import TextChunker
 from Ingestion.embeddings import EmbeddingGenerator
 from dotenv import load_dotenv
 
-from utils.functions import generate_doc_id
+from seinentai4us_api.utils.functions import generate_doc_id
 
 
 _ENV_PATH = Path(__file__).resolve().parents[1] / ".env"

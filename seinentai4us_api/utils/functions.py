@@ -2,42 +2,17 @@
 Fichier de fonctions utilitaires pour le traitement de documents
 """
 
-import hashlib
-import logging
+import hashlib, logging
 from datetime import datetime
 from typing import Optional, Dict, Any, List
-import json
-import os
+import json, os, re
+from pathlib import Path
+import unicodedata
+
+from seinentai4us_api.utils.const import PROMPT_TEMPLATES
 
 # Configuration du logging
 logger = logging.getLogger(__name__)
-
-PROMPT_TEMPLATES = {
-    "default": """Tu es un assistant IA spécialisé dans la réponse à des questions basées sur des documents fournis.
-    Utilise UNIQUEMENT les informations des documents ci-dessous pour répondre à la question.
-    Si l'information n'est pas présente dans les documents, dis-le honnêtement sans inventer.
-
-    DOCUMENTS CONTEXTUELS:
-    {context}
-
-    QUESTION: {query}
-
-    RÉPONSE (basée uniquement sur les documents fournis):""",
-
-    "concise": """Contexte: {context}
-
-    Question: {query}
-
-    Réponse concise (basée uniquement sur le contexte):""",
-
-    "detailed": """Tu es un expert analyste de documents. Voici des extraits de documents pertinents:
-
-    {context}
-    Sur la base de ces extraits uniquement, réponds à la question suivante de façon détaillée:
-    {query}
-
-    Détaillé ta réponse en citant les parties pertinentes des documents:""",
-}
 
 def get_default_system_prompt() -> str:
     """Prompt système par défaut"""
@@ -255,7 +230,25 @@ def save_metadata_to_json(metadata: Dict, output_dir: str, filename: str) -> str
     return json_path
 
 
-# ==================== Initialisation ====================
-
-# Importer traceback pour les logs d'erreur
-import traceback
+def normalize_filename(filename: str) -> str:
+    """
+    Normalise un nom de fichier : 
+    - supprime les accents
+    - remplace les espaces par des underscores
+    - garde uniquement lettres, chiffres, points, tirets et underscores
+    """
+    # Séparer nom et extension
+    path = Path(filename)
+    stem = path.stem
+    suffix = path.suffix
+    
+    # Normaliser le nom (enlever accents)
+    stem = unicodedata.normalize('NFKD', stem).encode('ASCII', 'ignore').decode('ASCII')
+    
+    # Remplacer espaces et caractères spéciaux par underscores
+    stem = re.sub(r'[^\w\-]', '_', stem)
+    
+    # Éviter les underscores multiples
+    stem = re.sub(r'_+', '_', stem)
+    
+    return f"{stem}{suffix}"
