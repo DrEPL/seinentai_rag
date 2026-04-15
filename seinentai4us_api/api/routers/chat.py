@@ -41,7 +41,8 @@ def _build_sources(docs: list) -> list:
             "filename": d.get("filename") or meta.get("filename", "inconnu"),
             "score": round(float(d.get("score", 0)), 4),
             "chunk_index": d.get("chunk_index") or meta.get("chunk_index", 0),
-            "excerpt": (d.get("text", "")[:200] + "…") if d.get("text") else "",
+            "excerpt": d.get("text", "") if d.get("text") else "",
+            # "excerpt": (d.get("text", "")[:200] + "…") if d.get("text") else "",
         })
     return sources
 
@@ -125,7 +126,7 @@ async def new_chat(
         query=body.message,
         limit=body.search_limit,
         score_threshold=body.score_threshold,
-        use_hybrid=False,
+        use_hybrid=True,
     )
 
     gen_kwargs = dict(

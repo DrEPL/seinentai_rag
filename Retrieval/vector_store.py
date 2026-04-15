@@ -1,11 +1,11 @@
-import hashlib
 import logging
 import uuid
-from typing import List, Dict, Any, Optional, Tuple
+from typing import List, Dict, Any, Optional
+import heapq
 import numpy as np
 from qdrant_client import QdrantClient
 from qdrant_client.http import models
-from qdrant_client.http.models import Distance, VectorParams, SparseVectorParams, SparseIndexParams
+from qdrant_client.http.models import Distance
 from fastembed import SparseTextEmbedding
 
 from seinentai4us_api.utils.functions import generate_chunk_id
@@ -193,6 +193,33 @@ class VectorStore:
         except Exception as e:
             logger.error(f"❌ Erreur génération sparse: {e}")
             return None
+
+    def generate_sparse_vectors(self, texts: List[str], top_k: int = 30) -> List[Optional[Dict]]:
+        """Génère des vecteurs sparse en batch pour une liste de textes."""
+        if not texts:
+            return []
+        if not self.sparse_model:
+            return [None] * len(texts)
+
+        sparse_vectors: List[Optional[Dict]] = []
+        try:
+            vectors = list(self.sparse_model.embed(texts))
+            for sparse_vector in vectors:
+                indices = sparse_vector.indices.tolist()
+                values = sparse_vector.values.tolist()
+                if not indices:
+                    sparse_vectors.append(None)
+                    continue
+
+                top_pairs = heapq.nlargest(top_k, zip(values, indices), key=lambda pair: pair[0])
+                sparse_vectors.append({
+                    "indices": [pair[1] for pair in top_pairs],
+                    "values": [pair[0] for pair in top_pairs]
+                })
+            return sparse_vectors
+        except Exception as e:
+            logger.error(f"❌ Erreur génération sparse batch: {e}")
+            return [None] * len(texts)
     
     def _create_payload_indexes(self):
         """Crée des index sur les champs fréquemment utilisés"""
@@ -226,7 +253,9 @@ class VectorStore:
                        chunks: List[Dict[str, Any]], 
                        embeddings: List[np.ndarray],
                        generate_sparse: bool = True,
-                       doc_id: str = None) -> bool:
+                       doc_id: Optional[str] = None,
+                       batch_size: int = 100,
+                       sparse_top_k: int = 30) -> bool:
         """
         Indexe des chunks avec leurs embeddings et vecteurs sparse optionnels
         
@@ -243,19 +272,20 @@ class VectorStore:
             logger.error("❌ Nombre de chunks et d'embeddings différent")
             return False
 
+        chunk_texts = [chunk.get("text", "") for chunk in chunks]
+        sparse_vectors: List[Optional[Dict]] = [None] * len(chunks)
+        if generate_sparse and self.sparse_model:
+            sparse_vectors = self.generate_sparse_vectors(chunk_texts, top_k=sparse_top_k)
+
         points = []
         for i, (chunk, embedding) in enumerate(zip(chunks, embeddings)):
             # Utiliser un ID déterministe basé sur doc_id et chunk_index
-            if doc_id:
-                # ID prévisible: hash du doc_id + index
-                point_id = generate_chunk_id(doc_id=doc_id,chunk_index=i)
-                
-                # Vérifier si ce chunk existe déjà
-                if self._chunk_exists(point_id):
-                    logger.debug(f"⏭️ Chunk {i} existe déjà, ignoré")
-                    continue
+            current_doc_id = chunk.get("doc_id") or doc_id
+            chunk_index = chunk.get("chunk_index", i)
+            if current_doc_id is not None:
+                point_id = generate_chunk_id(doc_id=current_doc_id, chunk_index=chunk_index)
             else:
-                # ID unique
+                # Fallback compatible si doc_id absent
                 point_id = str(uuid.uuid4())
             
             # Préparer les vecteurs
@@ -265,20 +295,35 @@ class VectorStore:
             
             # Générer et ajouter le vecteur sparse si demandé
             if generate_sparse and self.sparse_model:
-                sparse_vector = self.generate_sparse_vector(chunk['text'])
+                sparse_vector = sparse_vectors[i]
                 if sparse_vector:
                     vector_dict[self.sparse_vector_name] = sparse_vector
-                    logger.debug(f"✅ Sparse vector généré pour chunk {i}")
+                    logger.debug(f"✅ Sparse vector généré pour chunk {chunk_index}")
+
+            chunk_metadata = chunk.get('metadata', {})
+            parent_chunk_id = (
+                chunk.get('parent_chunk_id')
+                or chunk_metadata.get('parent_chunk_id')
+                or f"{current_doc_id or chunk.get('filename', 'unknown')}:{chunk_index}"
+            )
+            parent_chunk_text = (
+                chunk.get('parent_text')
+                or chunk_metadata.get('parent_text')
+                or chunk.get('text', '')
+            )
             
             # Préparer les métadonnées
             payload = {
                 'text': chunk['text'],
-                'doc_id': chunk.get('doc_id', 'unknown'),
+                'doc_id': current_doc_id or 'unknown',
                 'filename': chunk.get('filename', 'unknown'),
-                'chunk_index': chunk.get('chunk_index', i),
+                'chunk_index': chunk_index,
                 'total_chunks': chunk.get('total_chunks', 1),
-                'processed_at': chunk.get('metadata', {}).get('processed_at', ''),
-                'metadata': chunk.get('metadata', {})
+                'processed_at': chunk_metadata.get('processed_at', ''),
+                'parent_chunk_id': parent_chunk_id,
+                'parent_chunk_text': parent_chunk_text,
+                'parent_chunk_order': chunk.get('parent_chunk_order', chunk_metadata.get('parent_chunk_order', chunk_index)),
+                'metadata': chunk_metadata
             }
             
             points.append(models.PointStruct(
@@ -289,7 +334,6 @@ class VectorStore:
         
         try:
             # Upload par batch
-            batch_size = 100
             for i in range(0, len(points), batch_size):
                 batch = points[i:i+batch_size]
                 self.client.upsert(
@@ -306,7 +350,7 @@ class VectorStore:
     
     def search(self, 
                query_embedding: np.ndarray,
-               limit: int = 5,
+               limit: int = 20,
                score_threshold: float = 0.2,
                filter_condition: Optional[Dict] = None) -> List[Dict]:
         """
@@ -323,17 +367,7 @@ class VectorStore:
         """
         try:
             # Construire le filtre si nécessaire
-            query_filter = None
-            if filter_condition:
-                must_conditions = []
-                for key, value in filter_condition.items():
-                    must_conditions.append(
-                        models.FieldCondition(
-                            key=key,
-                            match=models.MatchValue(value=value)
-                        )
-                    )
-                query_filter = models.Filter(must=must_conditions)
+            query_filter = self._build_query_filter(filter_condition)
             
             results = self.client.query_points(
                 collection_name=self.collection_name,
@@ -363,21 +397,25 @@ class VectorStore:
             logger.error(f"❌ Erreur recherche dense: {e}")
             return []
         
-    def _chunk_exists(self, point_id: str) -> bool:
-        """Vérifie si un chunk existe déjà"""
-        try:
-            self.client.retrieve(
-                collection_name=self.collection_name,
-                ids=[point_id]
+    def _build_query_filter(self, filter_condition: Optional[Dict]) -> Optional[models.Filter]:
+        """Construit un filtre Qdrant à partir d'un dictionnaire simple."""
+        if not filter_condition:
+            return None
+
+        must_conditions = []
+        for key, value in filter_condition.items():
+            must_conditions.append(
+                models.FieldCondition(
+                    key=key,
+                    match=models.MatchValue(value=value)
+                )
             )
-            return True
-        except:
-            return False
+        return models.Filter(must=must_conditions)
     
     def hybrid_search(self,
                      query_embedding: np.ndarray,
                      query_text: str,
-                     limit: int = 5,
+                     limit: int = 10,
                      dense_limit: int = 20,
                      sparse_limit: int = 20,
                      fusion_method: str = "rrf",
@@ -401,17 +439,7 @@ class VectorStore:
         """
         try:
             # Construire le filtre si nécessaire
-            query_filter = None
-            if filter_condition:
-                must_conditions = []
-                for key, value in filter_condition.items():
-                    must_conditions.append(
-                        models.FieldCondition(
-                            key=key,
-                            match=models.MatchValue(value=value)
-                        )
-                    )
-                query_filter = models.Filter(must=must_conditions)
+            query_filter = self._build_query_filter(filter_condition)
             
             # Préparer les prefetch
             prefetch = []
@@ -477,69 +505,6 @@ class VectorStore:
             
         except Exception as e:
             logger.error(f"❌ Erreur recherche hybride: {e}")
-            return []
-    
-    def search_with_rerank(self,
-                          query_embedding: np.ndarray,
-                          boost_field: str,
-                          boost_value: str,
-                          boost_weight: float = 0.3,
-                          limit: int = 5) -> List[Dict]:
-        """
-        Recherche avec re-ranking par score boosting
-        
-        Exemple: booster les résultats d'un fichier spécifique
-        
-        Args:
-            query_embedding: Vecteur dense
-            boost_field: Champ à booster (ex: "filename")
-            boost_value: Valeur à booster (ex: "NIDJAY ROBERT.pdf")
-            boost_weight: Poids du boost (0-1)
-            limit: Nombre de résultats
-        """
-        try:
-            # Requête avec formula pour boosting
-            results = self.client.query_points(
-                collection_name=self.collection_name,
-                prefetch=models.Prefetch(
-                    query=query_embedding.tolist(),
-                    limit=limit * 3  # Récupérer plus pour rerank
-                ),
-                query=models.Query(
-                    formula=models.Formula(
-                        sum=[
-                            "$score",
-                            models.Formula(
-                                mult=[
-                                    boost_weight,
-                                    models.FieldCondition(
-                                        key=boost_field,
-                                        match=models.MatchValue(value=boost_value)
-                                    )
-                                ]
-                            )
-                        ]
-                    )
-                ),
-                limit=limit,
-                with_payload=True
-            )
-            
-            documents = []
-            for point in results.points:
-                documents.append({
-                    'id': str(point.id),
-                    'score': point.score,
-                    'text': point.payload.get('text', ''),
-                    'filename': point.payload.get('filename', ''),
-                    'metadata': point.payload
-                })
-            
-            logger.info(f"✅ {len(documents)} résultats avec rerank")
-            return documents
-            
-        except Exception as e:
-            logger.error(f"❌ Erreur search with rerank: {e}")
             return []
 
     

@@ -31,8 +31,9 @@ class HybridRetriever:
             use_hybrid: True = recherche hybride, False = dense only
             filter_condition: Filtres optionnels (ex: {"filename": "doc.pdf"})
         """
-        if use_hybrid and sparse_vector:
+        if use_hybrid:
             # Recherche hybride
+            results = self.vector_store.generate_sparse_vectors
             results = self.vector_store.hybrid_search(
                 query_text=query_text,
                 query_embedding=query_embedding,
