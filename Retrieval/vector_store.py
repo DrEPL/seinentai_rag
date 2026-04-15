@@ -473,9 +473,14 @@ class VectorStore:
             else:
                 logger.warning("⚠️ Modèle sparse non disponible")
             
+            fusion_map = {
+                "rrf": models.Fusion.RRF,
+                "dbsf": models.Fusion.DBSF,
+            }
+
             # Fusion (RRF par défaut)
             fusion = models.FusionQuery(
-                fusion=models.Fusion(fusion_method.upper())
+                fusion=fusion_map.get(fusion_method.lower(), models.Fusion.RRF)
             )
             
             # Exécution de la recherche hybride

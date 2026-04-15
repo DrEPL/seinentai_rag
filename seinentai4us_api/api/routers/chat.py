@@ -205,7 +205,12 @@ async def continue_chat(
     conv_context = chat_session_service.build_conversation_context(session_id, max_messages=6)
     enriched_query = f"{conv_context}\n\nNouvelle question : {body.message}" if conv_context else body.message
 
-    docs = rag_service.search(query=body.message, limit=10, score_threshold=0.4)
+    docs = rag_service.search(
+        query=body.message,
+        limit=10,
+        score_threshold=0.4,
+        use_hybrid=True,
+    )
 
     gen_kwargs = dict(temperature=body.temperature)
     

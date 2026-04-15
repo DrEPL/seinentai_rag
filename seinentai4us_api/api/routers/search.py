@@ -70,7 +70,7 @@ async def semantic_search(
         limit=body.limit,
         score_threshold=body.score_threshold,
         filename_filter=body.filename_filter,
-        use_hybrid=False,
+        use_hybrid=body.use_hybrid,
     )
     elapsed = (time.perf_counter() - t0) * 1000
 

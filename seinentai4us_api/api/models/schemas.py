@@ -106,6 +106,7 @@ class SearchRequest(BaseModel):
     limit: int = Field(5, ge=1, le=50)
     score_threshold: float = Field(0.0, ge=0.0, le=1.0)
     filename_filter: Optional[str] = Field(None, description="Filtrer par nom de fichier")
+    use_hybrid: bool = Field(False, description="Activer la recherche hybride (dense + sparse)")
 
     model_config = {"json_schema_extra": {"example": {
         "query": "Quelles sont les activités du groupe des jeunes ?",

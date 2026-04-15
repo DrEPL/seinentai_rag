@@ -1,6 +1,6 @@
 import logging
 import numpy as np
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Optional
 from Retrieval.vector_store import VectorStore
 
 logger = logging.getLogger(__name__)
@@ -23,21 +23,20 @@ class HybridRetriever:
         Méthode principale de retrieval
         
         Args:
-            query_text: Texte de la requête (pour générer le sparse vector)
+            query_text: Texte de la requête (utilisé pour générer le sparse vector côté VectorStore)
             query_embedding: Vecteur dense
-            sparse_vector: Vecteur sparse optionnel
+            sparse_vector: Conservé pour compatibilité (non utilisé)
             limit: Nombre de résultats
             score_threshold: Seuil de score minimal entre 0.0 et 1.0
             use_hybrid: True = recherche hybride, False = dense only
             filter_condition: Filtres optionnels (ex: {"filename": "doc.pdf"})
         """
         if use_hybrid:
-            # Recherche hybride
-            results = self.vector_store.generate_sparse_vectors
+            # Recherche hybride dense + sparse.
+            # Le sparse vector est construit dans VectorStore.hybrid_search à partir de query_text.
             results = self.vector_store.hybrid_search(
                 query_text=query_text,
                 query_embedding=query_embedding,
-                sparse_vector=sparse_vector,
                 limit=limit,
                 score_threshold=score_threshold,
                 filter_condition=filter_condition
