@@ -38,7 +38,7 @@ async def register(body: RegisterRequest):
     - **password** : minimum 8 caractères
     - **full_name** : nom complet
     """
-    user = auth_service.register(body.email, body.password, body.full_name)
+    user = await auth_service.register(body.email, body.password, body.full_name)
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
@@ -60,14 +60,14 @@ async def login(body: LoginRequest):
     Ce token doit être inclus dans toutes les requêtes suivantes sous la forme :
     `Authorization: Bearer <token>`
     """
-    user = auth_service.authenticate(body.email, body.password)
+    user = await auth_service.authenticate(body.email, body.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Email ou mot de passe incorrect.",
         )
 
-    token = auth_service.create_token(user.id)
+    token = await auth_service.create_token(user.id)
     return TokenResponse(
         access_token=token,
         expires_in=settings.TOKEN_EXPIRE_HOURS * 3600,
@@ -87,7 +87,7 @@ async def logout(
     """Révoque le token courant."""
     if authorization:
         token = authorization.split()[-1]
-        auth_service.revoke_token(token)
+        await auth_service.revoke_token(token)
     return MessageResponse(message="Déconnexion réussie.")
 
 

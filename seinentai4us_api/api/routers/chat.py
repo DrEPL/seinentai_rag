@@ -50,7 +50,7 @@ def _build_sources(docs: list) -> list:
 async def _sse_stream(
     session_id: str,
     message: str,
-    user_id: str,
+    generation_query: str,
     docs: list,
     **gen_kwargs,
 ) -> AsyncGenerator[str, None]:
@@ -68,7 +68,7 @@ async def _sse_stream(
     yield f"data: {json.dumps(init_event, ensure_ascii=False)}\n\n"
 
     try:
-        for token, done in rag_service.generate_stream(message, docs, **gen_kwargs):
+        for token, done in rag_service.generate_stream(generation_query, docs, **gen_kwargs):
             full_response.append(token)
             chunk_event = {"type": "token", "token": token}
             yield f"data: {json.dumps(chunk_event)}\n\n"
@@ -81,8 +81,8 @@ async def _sse_stream(
 
     # Sauvegarder dans l'historique
     response_text = "".join(full_response)
-    chat_session_service.add_message(session_id, "user", message)
-    chat_session_service.add_message(session_id, "assistant", response_text, sources=sources)
+    await chat_session_service.add_message(session_id, "user", message)
+    await chat_session_service.add_message(session_id, "assistant", response_text, sources=sources)
 
     # Événement final
     end_event = {
@@ -119,7 +119,9 @@ async def new_chat(
     - `sources`: liste des sources utilisées (type=start)
     """
     # 1. Créer la session
-    session_id = chat_session_service.create_session(current_user.id)
+    session_id = await chat_session_service.create_session(
+        current_user.id, title=body.message[:80]
+    )
 
     # 2. Récupérer les documents pertinents
     docs = rag_service.search(
@@ -138,7 +140,13 @@ async def new_chat(
     # 3. Streaming SSE
     if body.stream:
         return StreamingResponse(
-            _sse_stream(session_id, body.message, current_user.id, docs, **gen_kwargs),
+            _sse_stream(
+                session_id,
+                body.message,
+                body.message,
+                docs,
+                **gen_kwargs,
+            ),
             media_type="text/event-stream",
             headers={
                 "Cache-Control": "no-cache",
@@ -147,7 +155,7 @@ async def new_chat(
         )
 
     # 4. Réponse directe
-    chat_session_service.add_message(session_id, "user", body.message)
+    await chat_session_service.add_message(session_id, "user", body.message)
 
     result = rag_service.generate(query=body.message, retrieved_docs=docs, **gen_kwargs)
     if not result.get("success"):
@@ -157,7 +165,9 @@ async def new_chat(
         )
 
     sources = _build_sources(docs)
-    chat_session_service.add_message(session_id, "assistant", result["response"], sources=sources)
+    await chat_session_service.add_message(
+        session_id, "assistant", result["response"], sources=sources
+    )
 
     return ChatResponse(
         session_id=session_id,
@@ -192,7 +202,7 @@ async def continue_chat(
     - Prend en compte l'historique de la conversation pour contextualiser
     - Retourne toujours un flux SSE
     """
-    session = chat_session_service.get_session(session_id)
+    session = await chat_session_service.get_session(session_id)
     if not session:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -202,7 +212,9 @@ async def continue_chat(
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Accès refusé.")
 
     # Enrichir la requête avec le contexte conversationnel
-    conv_context = chat_session_service.build_conversation_context(session_id, max_messages=6)
+    conv_context = await chat_session_service.build_conversation_context(
+        session_id, max_messages=6
+    )
     enriched_query = f"{conv_context}\n\nNouvelle question : {body.message}" if conv_context else body.message
 
     docs = rag_service.search(
@@ -217,7 +229,13 @@ async def continue_chat(
     # 3. Streaming SSE
     if body.stream:
         return StreamingResponse(
-            _sse_stream(session_id, body.message, current_user.id, docs, **gen_kwargs),
+            _sse_stream(
+                session_id,
+                body.message,
+                enriched_query,
+                docs,
+                **gen_kwargs,
+            ),
             media_type="text/event-stream",
             headers={
                 "Cache-Control": "no-cache",
@@ -226,7 +244,7 @@ async def continue_chat(
         )
 
     # 4. Réponse directe
-    chat_session_service.add_message(session_id, "user", body.message)
+    await chat_session_service.add_message(session_id, "user", body.message)
 
     result = rag_service.generate(query=enriched_query, retrieved_docs=docs, **gen_kwargs)
     if not result.get("success"):
@@ -236,7 +254,9 @@ async def continue_chat(
         )
 
     sources = _build_sources(docs)
-    chat_session_service.add_message(session_id, "assistant", result["response"], sources=sources)
+    await chat_session_service.add_message(
+        session_id, "assistant", result["response"], sources=sources
+    )
 
     return ChatResponse(
         session_id=session_id,
@@ -260,7 +280,7 @@ async def continue_chat(
 )
 async def chat_history(current_user: UserProfile = Depends(get_current_user)):
     """Retourne la liste des sessions de chat de l'utilisateur connecté."""
-    sessions = chat_session_service.get_user_sessions(current_user.id)
+    sessions = await chat_session_service.get_user_sessions(current_user.id)
     return SessionListResponse(total=len(sessions), sessions=sessions)
 
 
@@ -274,7 +294,7 @@ async def get_session(
     current_user: UserProfile = Depends(get_current_user),
 ):
     """Retourne l'intégralité de l'historique d'une session de chat."""
-    session = chat_session_service.get_session(session_id)
+    session = await chat_session_service.get_session(session_id)
     if not session:
         raise HTTPException(status_code=404, detail="Session introuvable.")
     if session.get("user_id") != current_user.id:
@@ -285,7 +305,7 @@ async def get_session(
         ChatMessage(
             role=m["role"],
             content=m["content"],
-            timestamp=datetime.fromisoformat(m["timestamp"]),
+            timestamp=m["timestamp"],
             sources=m.get("sources"),
             metadata=m.get("metadata"),
         )
@@ -294,8 +314,8 @@ async def get_session(
 
     return ChatSession(
         session_id=session_id,
-        created_at=datetime.fromisoformat(session["created_at"]),
-        updated_at=datetime.fromisoformat(session["updated_at"]),
+        created_at=session["created_at"],
+        updated_at=session["updated_at"],
         message_count=len(messages),
         messages=messages,
     )

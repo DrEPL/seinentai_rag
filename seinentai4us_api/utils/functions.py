@@ -4,6 +4,7 @@ Fichier de fonctions utilitaires pour le traitement de documents
 
 import hashlib, logging
 from datetime import datetime
+import traceback
 from typing import Optional, Dict, Any, List
 import json, os, re
 from pathlib import Path

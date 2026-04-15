@@ -17,6 +17,7 @@ from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 
 from seinentai4us_api.api.config import settings
+from seinentai4us_api.api.db.session import close_db, init_db
 from seinentai4us_api.api.routers import auth, documents, search, chat, admin
 from seinentai4us_api.api.middleware.logging_middleware import RequestLoggingMiddleware
 
@@ -41,6 +42,11 @@ async def lifespan(app: FastAPI):
     logger.info(f"   Qdrant        : {settings.QDRANT_HOST}:{settings.QDRANT_PORT}")
     logger.info(f"   MinIO         : {settings.MINIO_ENDPOINT}")
     logger.info(f"   Ollama        : {settings.OLLAMA_BASE_URL}")
+    logger.info(
+        f"   MongoDB       : {settings.mongodb_log_label()} (db={settings.MONGODB_DB_NAME})"
+    )
+
+    await init_db()
 
     kafka_service = None
     kafka_thread = None
@@ -118,6 +124,7 @@ async def lifespan(app: FastAPI):
         except Exception:
             pass
 
+    await close_db()
     logger.info("🛑 SEINENTAI4US API — arrêt propre.")
 
 
@@ -176,11 +183,11 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 
 # ─── Routeurs ─────────────────────────────────────────────────────────────────
-app.include_router(auth.router,      prefix="/auth",      tags=["🔐 Authentification"])
-app.include_router(documents.router, prefix="/documents", tags=["📄 Documents"])
-app.include_router(search.router,    prefix="/search",    tags=["🔍 Recherche"])
-app.include_router(chat.router,      prefix="/chat",      tags=["💬 Chat"])
-app.include_router(admin.router,     prefix="",           tags=["🏥 Système"])
+app.include_router(auth.router,      prefix="/auth",      tags=["Authentification"])
+app.include_router(documents.router, prefix="/documents", tags=["Documents"])
+app.include_router(search.router,    prefix="/search",    tags=["Recherche"])
+app.include_router(chat.router,      prefix="/chat",      tags=["Chat"])
+app.include_router(admin.router,     prefix="",           tags=["Système"])
 
 
 # ─── Root ─────────────────────────────────────────────────────────────────────

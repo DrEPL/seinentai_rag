@@ -3,9 +3,10 @@ Configuration centralisée — SEINENTAI4US
 Toutes les variables d'environnement sont lues ici.
 """
 
-import os
-from typing import List
+from typing import List, Optional
 from pathlib import Path
+from urllib.parse import quote_plus
+
 from pydantic_settings import BaseSettings
 from pydantic import field_validator
 
@@ -52,6 +53,18 @@ class Settings(BaseSettings):
     DEFAULT_SEARCH_LIMIT: int = 5
     DEFAULT_SCORE_THRESHOLD: float = 0.0
 
+    # ── MongoDB ───────────────────────────────────────────────────────────────
+    # Soit une URI complète (prioritaire), soit host/port + identifiants.
+    MONGODB_URI: Optional[str] = "mongodb://admin:passer@localhost:27017/seinentai4us?authSource=admin"
+    MONGODB_HOST: str = "localhost"
+    MONGODB_PORT: int = 27017
+    MONGODB_USER: Optional[str] = 'admin'
+    MONGODB_PASSWORD: Optional[str] = 'admin'
+    MONGODB_AUTH_SOURCE: str = "admin"
+    MONGODB_DB_NAME: str = "seinentai4us"
+    CONTEXT_MAX_MESSAGES: int = 6
+    CONTEXT_MAX_CHARS: int = 8000
+
     # ── Documents (extensions supportées) ───────────────────────────────────
     SUPPORTED_DOCUMENT_EXTENSIONS: List[str] = [
         ".pdf",
@@ -74,6 +87,28 @@ class Settings(BaseSettings):
         if isinstance(v, str):
             return [origin.strip() for origin in v.split(",")]
         return v
+
+    def mongodb_connection_string(self) -> str:
+        if self.MONGODB_URI and str(self.MONGODB_URI).strip():
+            return str(self.MONGODB_URI).strip()
+        if self.MONGODB_USER:
+            user = quote_plus(self.MONGODB_USER)
+            pwd_part = ""
+            if self.MONGODB_PASSWORD is not None:
+                pwd_part = f":{quote_plus(self.MONGODB_PASSWORD)}"
+            auth = f"{user}{pwd_part}@"
+            auth_q = quote_plus(self.MONGODB_AUTH_SOURCE)
+            return (
+                f"mongodb://{auth}{self.MONGODB_HOST}:{self.MONGODB_PORT}"
+                f"/?authSource={auth_q}"
+            )
+        return f"mongodb://{self.MONGODB_HOST}:{self.MONGODB_PORT}"
+
+    def mongodb_log_label(self) -> str:
+        uri = self.mongodb_connection_string()
+        if "@" in uri:
+            return "mongodb://***@" + uri.split("@", 1)[1]
+        return uri
 
 
 settings = Settings()

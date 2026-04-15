@@ -1,0 +1,39 @@
+networks:
+  bigdata-net:
+    external: true
+services:
+  mongodb-tai:
+    image: mongo:latest
+    container_name: mongodb-tai
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: passer
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - bigdata-net
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express-tai
+    restart: always
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: passer
+      ME_CONFIG_MONGODB_SERVER: mongodb-tai
+      ME_CONFIG_BASICAUTH_ENABLED: true
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: passer
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mongodb-tai
+    networks:
+      - bigdata-net
+
+volumes:
+  mongodb_data:
+    driver: local

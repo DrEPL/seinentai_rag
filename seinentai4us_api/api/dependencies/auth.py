@@ -35,7 +35,7 @@ async def get_current_user(
         )
 
     token = parts[1]
-    user_id = auth_service.validate_token(token)
+    user_id = await auth_service.validate_token(token)
     if not user_id:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -43,7 +43,7 @@ async def get_current_user(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    user = auth_service.get_user_by_id(user_id)
+    user = await auth_service.get_user_by_id(user_id)
     if not user or not user.is_active:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -53,7 +53,7 @@ async def get_current_user(
     return user
 
 
-def get_optional_user(
+async def get_optional_user(
     authorization: Optional[str] = Header(None)
 ) -> Optional[UserProfile]:
     """Retourne l'utilisateur si authentifié, None sinon (routes publiques)."""
@@ -62,9 +62,9 @@ def get_optional_user(
     try:
         parts = authorization.split()
         if len(parts) == 2 and parts[0].lower() == "bearer":
-            user_id = auth_service.validate_token(parts[1])
+            user_id = await auth_service.validate_token(parts[1])
             if user_id:
-                return auth_service.get_user_by_id(user_id)
+                return await auth_service.get_user_by_id(user_id)
     except Exception:
         pass
     return None

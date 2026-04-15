@@ -1,5 +1,6 @@
 bs4==0.0.2
 bert-score==0.3.13
+beanie==2.1.0
 bokeh==3.4.3
 deepeval==3.8.9
 evaluate==0.4.6
@@ -15,6 +16,7 @@ langchain-ollama==1.0.1
 litellm==1.82.2
 Markdown==3.10.2
 minio==7.2.20
+pymongo>=4.14.0
 pipdeptree==2.31.0
 pypdf==6.8.0
 python-docx==1.2.0

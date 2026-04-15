@@ -29,6 +29,7 @@ from seinentai4us_api.api.models.schemas import (
     ReindexResponse,
     UserProfile,
 )
+from seinentai4us_api.api.services.document_registry_service import document_registry_service
 from seinentai4us_api.api.services.rag_service import rag_service
 from seinentai4us_api.utils.functions import normalize_filename
 
@@ -102,6 +103,15 @@ async def upload_document(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erreur MinIO : {e}")
 
+    await document_registry_service.upsert_uploaded_document(
+        filename=normalized_filename,
+        bucket=settings.MINIO_BUCKET,
+        object_key=normalized_filename,
+        size_bytes=len(content),
+        content_type=content_type,
+        uploaded_by=current_user.id,
+    )
+
     # Indexation en tâche de fond
     def _index(bucket: str, filename: str):
         success, msg = rag_service.ingest_document(bucket, filename)
@@ -132,6 +142,10 @@ async def delete_document(
     success, msg = rag_service.delete_document(filename)
     if not success:
         raise HTTPException(status_code=500, detail=msg)
+    await document_registry_service.mark_deleted(
+        filename=filename,
+        bucket=settings.MINIO_BUCKET,
+    )
     return MessageResponse(message=msg)
 
 
