@@ -107,11 +107,14 @@ class SearchRequest(BaseModel):
     score_threshold: float = Field(0.0, ge=0.0, le=1.0)
     filename_filter: Optional[str] = Field(None, description="Filtrer par nom de fichier")
     use_hybrid: bool = Field(False, description="Activer la recherche hybride (dense + sparse)")
+    use_hyde: bool = Field(False, description="Active HyDE pour enrichir la requête dense")
 
     model_config = {"json_schema_extra": {"example": {
         "query": "Quelles sont les activités du groupe des jeunes ?",
         "limit": 5,
-        "score_threshold": 0.2
+        "score_threshold": 0.2,
+        "use_hybrid": True,
+        "use_hyde": False,
     }}}
 
 
@@ -168,6 +171,8 @@ class NewChatRequest(BaseModel):
     search_limit: int = Field(5, ge=1, le=20, description="Nombre de chunks à récupérer")
     score_threshold: float = Field(0.0, ge=0.0, le=1.0)
     stream: bool = Field(False, description="Activer le streaming SSE")
+    use_hyde: bool = Field(False, description="Active HyDE pour enrichir la requête dense")
+    use_hybrid: bool = Field(False, description="Activer la recherche hybride (dense + sparse)")
 
     model_config = {"json_schema_extra": {"example": {
         "message": "Quelles sont les valeurs du groupe des jeunes ?",
@@ -209,6 +214,8 @@ class ChatHistoryRequest(BaseModel):
     message: str = Field(..., min_length=1, max_length=4000)
     temperature: Optional[float] = Field(None, ge=0.0, le=2.0)
     stream: bool = False
+    use_hyde: bool = Field(False, description="Active HyDE pour enrichir la requête dense")
+    use_hybrid: bool = Field(False, description="Activer la recherche hybride (dense + sparse)")
 
 
 class SessionListResponse(BaseModel):

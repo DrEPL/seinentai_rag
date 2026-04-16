@@ -352,6 +352,7 @@ class VectorStore:
                query_embedding: np.ndarray,
                limit: int = 20,
                score_threshold: float = 0.2,
+               use_hyde: bool = False,
                filter_condition: Optional[Dict] = None) -> List[Dict]:
         """
         Recherche dense classique

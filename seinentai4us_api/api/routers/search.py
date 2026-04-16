@@ -63,6 +63,8 @@ async def semantic_search(
     - **limit** : nombre maximum de résultats (1–50)
     - **score_threshold** : score minimal de similarité (0.0–1.0)
     - **filename_filter** : restreindre la recherche à un seul document
+    - **use_hybrid** : Activer la recherche hybride (dense + sparse)
+    - **use_hyde** : Active HyDE pour enrichir la requête dense
     """
     t0 = time.perf_counter()
     raw = rag_service.search(
@@ -71,6 +73,7 @@ async def semantic_search(
         score_threshold=body.score_threshold,
         filename_filter=body.filename_filter,
         use_hybrid=body.use_hybrid,
+        use_hyde=body.use_hyde,
     )
     elapsed = (time.perf_counter() - t0) * 1000
 
@@ -120,54 +123,54 @@ async def hybrid_search(
 
 # ─── Recherche avec re-ranking ────────────────────────────────────────────────
 
-@router.get(
-    "/rerank",
-    response_model=RerankResponse,
-    summary="Recherche avec re-ranking par score boosting",
-)
-async def search_with_rerank(
-    q: str = Query(..., description="Texte de la requête"),
-    boost_field: str = Query(..., description="Champ de métadonnée pour le boosting (ex: filename, bucket)"),
-    boost_value: str = Query(..., description="Valeur cible du champ (les résultats correspondants sont remontés)"),
-    limit: int = Query(5, ge=1, le=50),
-    score_threshold: float = Query(0.0, ge=0.0, le=1.0),
-    current_user: UserProfile = Depends(get_current_user),
-):
-    """
-    Recherche sémantique suivie d'un re-ranking par score boosting.
+# @router.get(
+#     "/rerank",
+#     response_model=RerankResponse,
+#     summary="Recherche avec re-ranking par score boosting",
+# )
+# async def search_with_rerank(
+#     q: str = Query(..., description="Texte de la requête"),
+#     boost_field: str = Query(..., description="Champ de métadonnée pour le boosting (ex: filename, bucket)"),
+#     boost_value: str = Query(..., description="Valeur cible du champ (les résultats correspondants sont remontés)"),
+#     limit: int = Query(5, ge=1, le=50),
+#     score_threshold: float = Query(0.0, ge=0.0, le=1.0),
+#     current_user: UserProfile = Depends(get_current_user),
+# ):
+#     """
+#     Recherche sémantique suivie d'un re-ranking par score boosting.
 
-    Les résultats dont le champ `boost_field` correspond à `boost_value`
-    reçoivent un facteur multiplicatif de 1.5 sur leur score de similarité,
-    les remontant en tête de liste.
+#     Les résultats dont le champ `boost_field` correspond à `boost_value`
+#     reçoivent un facteur multiplicatif de 1.5 sur leur score de similarité,
+#     les remontant en tête de liste.
 
-    **Exemple :** `boost_field=filename&boost_value=reglement.pdf`
-    """
-    t0 = time.perf_counter()
-    raw = rag_service.search_with_rerank(
-        query=q,
-        boost_field=boost_field,
-        boost_value=boost_value,
-        limit=limit,
-        score_threshold=score_threshold,
-    )
-    elapsed = (time.perf_counter() - t0) * 1000
+#     **Exemple :** `boost_field=filename&boost_value=reglement.pdf`
+#     """
+#     t0 = time.perf_counter()
+#     raw = rag_service.search_with_rerank(
+#         query=q,
+#         boost_field=boost_field,
+#         boost_value=boost_value,
+#         limit=limit,
+#         score_threshold=score_threshold,
+#     )
+#     elapsed = (time.perf_counter() - t0) * 1000
 
-    from seinentai4us_api.api.models.schemas import RerankResult
-    results = [
-        RerankResult(
-            text=r.get("text", ""),
-            filename=r.get("filename") or r.get("metadata", {}).get("filename", "inconnu"),
-            original_score=float(r.get("original_score", r.get("score", 0.0))),
-            boosted_score=float(r.get("boosted_score", r.get("score", 0.0))),
-            chunk_index=r.get("chunk_index", 0),
-        )
-        for r in raw
-    ]
+#     from seinentai4us_api.api.models.schemas import RerankResult
+#     results = [
+#         RerankResult(
+#             text=r.get("text", ""),
+#             filename=r.get("filename") or r.get("metadata", {}).get("filename", "inconnu"),
+#             original_score=float(r.get("original_score", r.get("score", 0.0))),
+#             boosted_score=float(r.get("boosted_score", r.get("score", 0.0))),
+#             chunk_index=r.get("chunk_index", 0),
+#         )
+#         for r in raw
+#     ]
 
-    return RerankResponse(
-        query=q,
-        results=results,
-        total=len(results),
-        boost_field=boost_field,
-        boost_value=boost_value,
-    )
+#     return RerankResponse(
+#         query=q,
+#         results=results,
+#         total=len(results),
+#         boost_field=boost_field,
+#         boost_value=boost_value,
+#     )

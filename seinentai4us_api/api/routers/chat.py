@@ -129,6 +129,7 @@ async def new_chat(
         limit=body.search_limit,
         score_threshold=body.score_threshold,
         use_hybrid=True,
+        use_hyde=body.use_hyde,
     )
 
     gen_kwargs = dict(
@@ -221,7 +222,8 @@ async def continue_chat(
         query=body.message,
         limit=10,
         score_threshold=0.4,
-        use_hybrid=True,
+        use_hybrid=body.use_hybrid,
+        use_hyde=body.use_hyde,
     )
 
     gen_kwargs = dict(temperature=body.temperature)

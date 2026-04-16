@@ -14,7 +14,6 @@ class HybridRetriever:
     def retrieve(self,
                 query_text: str,
                 query_embedding: np.ndarray,
-                sparse_vector: Optional[Dict] = None,
                 limit: int = 5,
                 use_hybrid: bool = True,
                 score_threshold: float = 0.2,

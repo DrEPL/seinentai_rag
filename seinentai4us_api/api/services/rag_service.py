@@ -345,6 +345,7 @@ class RAGService:
         score_threshold: float = 0.0,
         filename_filter: Optional[str] = None,
         use_hybrid: bool = False,
+        use_hyde: bool = False,
     ) -> List[Dict[str, Any]]:
         """Recherche sémantique dense."""
         try:
@@ -355,6 +356,7 @@ class RAGService:
                 limit=limit,
                 score_threshold=score_threshold,
                 use_hybrid=use_hybrid,
+                use_hyde=use_hyde,
             )
             if filename_filter:
                 results = [r for r in results if r.get("filename") == filename_filter]
