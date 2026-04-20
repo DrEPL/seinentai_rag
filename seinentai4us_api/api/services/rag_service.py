@@ -369,27 +369,27 @@ class RAGService:
         """Recherche hybride BM25 + dense."""
         return self.search(query, limit, score_threshold, use_hybrid=True)
 
-    def search_with_rerank(
-        self,
-        query: str,
-        boost_field: str,
-        boost_value: Any,
-        limit: int = 10,
-        score_threshold: float = 0.0,
-    ) -> List[Dict[str, Any]]:
-        """Recherche dense + re-ranking par score boosting sur un champ métadonnée."""
-        results = self.search(query, limit=limit * 2, score_threshold=score_threshold)
+    # def search_with_rerank(
+    #     self,
+    #     query: str,
+    #     boost_field: str,
+    #     boost_value: Any,
+    #     limit: int = 10,
+    #     score_threshold: float = 0.0,
+    # ) -> List[Dict[str, Any]]:
+    #     """Recherche dense + re-ranking par score boosting sur un champ métadonnée."""
+    #     results = self.search(query, limit=limit * 2, score_threshold=score_threshold)
 
-        BOOST_FACTOR = 1.5
-        for r in results:
-            original_score = r.get("score", 0.0)
-            meta_val = r.get("metadata", {}).get(boost_field) or r.get(boost_field)
-            boosted = original_score * BOOST_FACTOR if str(meta_val) == str(boost_value) else original_score
-            r["original_score"] = original_score
-            r["boosted_score"] = boosted
+    #     BOOST_FACTOR = 1.5
+    #     for r in results:
+    #         original_score = r.get("score", 0.0)
+    #         meta_val = r.get("metadata", {}).get(boost_field) or r.get(boost_field)
+    #         boosted = original_score * BOOST_FACTOR if str(meta_val) == str(boost_value) else original_score
+    #         r["original_score"] = original_score
+    #         r["boosted_score"] = boosted
 
-        results.sort(key=lambda x: x["boosted_score"], reverse=True)
-        return results[:limit]
+    #     results.sort(key=lambda x: x["boosted_score"], reverse=True)
+    #     return results[:limit]
 
     # ── Génération ────────────────────────────────────────────────────────────
 
