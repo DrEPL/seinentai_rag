@@ -49,10 +49,12 @@ function ChatMessage({ message, isStreaming }: ChatMessageProps) {
       {/* Avatar */}
       <div
         className={cn(
-          'flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center shadow-sm',
+          'flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center shadow-sm transition-all duration-500',
           isUser
             ? 'bg-gradient-to-br from-slate-400 to-slate-500'
-            : 'bg-gradient-to-br from-slate-700 via-slate-800 to-slate-950'
+            : 'bg-gradient-to-br from-slate-700 via-slate-800 to-slate-950',
+          // Hide AI icon while "thinking" (streaming but no content yet)
+          !isUser && isStreaming && !message.content && 'hidden'
         )}
       >
         {isUser ? (
@@ -66,7 +68,8 @@ function ChatMessage({ message, isStreaming }: ChatMessageProps) {
       <div
         className={cn(
           'max-w-[85%] md:max-w-[80%] flex flex-col relative',
-          isUser ? 'items-end' : 'items-start'
+          isUser ? 'items-end' : 'items-start',
+          !isUser && isStreaming && !message.content && 'hidden'
         )}
       >
         {/* Actions - Visible on hover */}
