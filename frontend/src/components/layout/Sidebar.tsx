@@ -35,7 +35,6 @@ interface NavItem {
 const userNav: NavItem[] = [
   { icon: MessageSquare, label: 'Chat RAG', href: ROUTES.CHAT },
   { icon: Search, label: 'Recherche', href: ROUTES.SEARCH },
-  { icon: User, label: 'Profil', href: ROUTES.PROFILE },
 ];
 
 const adminNav: NavItem[] = [
