@@ -32,7 +32,7 @@ Réponds UNIQUEMENT avec un JSON valide, sans commentaires ni texte supplémenta
 {{
     "query_type": "simple|complex|multi_hop|ambiguous|out_of_domain",
     "search_strategy": "dense|hybrid|hyde",
-    "reasoning": "Explication concise du choix de stratégie",
+    "reasoning": "Explication courte (max 2 phrases)",
     "needs_decomposition": true|false,
     "sub_queries": ["sous-requête 1", "sous-requête 2"]
 }}

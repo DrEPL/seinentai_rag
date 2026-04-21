@@ -93,6 +93,19 @@ def _parse_json_response(text: str) -> Dict[str, Any]:
         except json.JSONDecodeError:
             pass
 
+    # Tentative de réparation (JSON tronqué)
+    text_clean = text.strip()
+    if match:
+        text_clean = match.group(1).strip()
+    elif start != -1:
+        text_clean = text[start:]
+
+    for suffix in ['"}', '"]}', '}', ']', '"]']:
+        try:
+            return json.loads(text_clean + suffix)
+        except json.JSONDecodeError:
+            continue
+
     logger.warning(f"Impossible de parser le JSON LLM: {text[:200]}")
     return {}
 
@@ -102,8 +115,9 @@ def _call_llm_json(prompt: str, temperature: float = 0.1, max_tokens: int = 1024
     for attempt in range(max_retries):
         raw = _call_llm(prompt, temperature=temperature, max_tokens=max_tokens)
         if not raw:
-            logger.warning(f"LLM a retourné vide à la tentative {attempt+1}/{max_retries}")
-            time.sleep(1)
+            delay = 2 ** attempt  # Backoff exponentiel : 1s, 2s, 4s
+            logger.warning(f"LLM a retourné vide à la tentative {attempt+1}/{max_retries}. Attente de {delay}s.")
+            time.sleep(delay)
             continue
             
         parsed = _parse_json_response(raw)
