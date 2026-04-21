@@ -98,7 +98,7 @@ function ChatMessage({ message, isStreaming }: ChatMessageProps) {
                         {source.filename}
                       </span>
                       <span className="text-[10px] text-indigo-500 font-mono">
-                        {(source.score * 100).toFixed(0)}%
+                        {(source.score * 10).toFixed(2)}%
                       </span>
                     </div>
                     <p className="text-slate-500 line-clamp-2">{source.excerpt}</p>

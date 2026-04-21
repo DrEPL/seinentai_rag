@@ -1,14 +1,14 @@
 /**
  * SEINENTAI4US — Header
  */
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { Menu, Bell, LogOut, User as UserIcon, Mail, Calendar, Shield } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { toggleSidebar } from '@/store/slices/uiSlice';
 import { getInitials, formatDate } from '@/lib/utils';
 import { useAuth } from '@/hooks/useAuth';
 import Badge from '@/components/ui/Badge';
-import { AnimatePresence, motion } from 'framer-motion';
+import Popover from '@/components/ui/Popover';
 
 interface HeaderProps {
   title?: string;
@@ -18,20 +18,7 @@ export default function Header({ title }: HeaderProps) {
   const dispatch = useAppDispatch();
   const { user, logout } = useAuth();
   const interfaceMode = useAppSelector((s) => s.ui.interfaceMode);
-  
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const popoverRef = useRef<HTMLDivElement>(null);
-
-  // Close popover when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
-        setIsPopoverOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   return (
     <header className="h-[60px] bg-white/80 backdrop-blur-md border-b border-slate-100 flex items-center justify-between px-4 md:px-6 sticky top-0 z-30">
@@ -52,41 +39,38 @@ export default function Header({ title }: HeaderProps) {
         )}
       </div>
 
-      <div className="flex items-center gap-2 relative" ref={popoverRef}>
+      <div className="flex items-center gap-2">
         <button className="p-2 rounded-xl hover:bg-slate-100 transition-colors relative cursor-pointer">
           <Bell className="w-[18px] h-[18px] text-slate-500" />
           <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-indigo-500 rounded-full" />
         </button>
 
         {user && (
-          <div 
-            className="flex items-center gap-2.5 pl-2 ml-1 border-l border-slate-100 cursor-pointer hover:opacity-80 transition-opacity"
-            onClick={() => setIsPopoverOpen(!isPopoverOpen)}
+          <Popover
+            isOpen={isProfileOpen}
+            onClose={() => setIsProfileOpen(false)}
+            align="right"
+            position="bottom"
+            trigger={
+              <div 
+                className="flex items-center gap-2.5 pl-2 ml-1 border-l border-slate-100 cursor-pointer hover:opacity-80 transition-opacity"
+                onClick={() => setIsProfileOpen(!isProfileOpen)}
+              >
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center shadow-sm">
+                  <span className="text-xs font-bold text-white">
+                    {getInitials(user.full_name)}
+                  </span>
+                </div>
+                <div className="hidden sm:block">
+                  <p className="text-sm font-medium text-slate-700 leading-tight">
+                    {user.full_name}
+                  </p>
+                  <p className="text-[10px] text-slate-400 leading-tight">{user.email}</p>
+                </div>
+              </div>
+            }
           >
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center shadow-sm">
-              <span className="text-xs font-bold text-white">
-                {getInitials(user.full_name)}
-              </span>
-            </div>
-            <div className="hidden sm:block">
-              <p className="text-sm font-medium text-slate-700 leading-tight">
-                {user.full_name}
-              </p>
-              <p className="text-[10px] text-slate-400 leading-tight">{user.email}</p>
-            </div>
-          </div>
-        )}
-
-        {/* Profile Popover */}
-        <AnimatePresence>
-          {isPopoverOpen && user && (
-            <motion.div
-              initial={{ opacity: 0, y: 10, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 10, scale: 0.95 }}
-              transition={{ duration: 0.15, ease: "easeOut" }}
-              className="absolute right-0 top-[48px] w-80 bg-white rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden z-50 origin-top-right"
-            >
+            <div className="w-80">
               {/* Header */}
               <div className="p-5 border-b border-slate-50 bg-gradient-to-b from-slate-50/50 to-white">
                 <div className="flex items-center gap-4">
@@ -128,7 +112,7 @@ export default function Header({ title }: HeaderProps) {
 
                 <button
                   onClick={() => {
-                    setIsPopoverOpen(false);
+                    setIsProfileOpen(false);
                     logout();
                   }}
                   className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-red-600 text-sm font-medium hover:bg-red-50 transition-colors cursor-pointer"
@@ -137,9 +121,9 @@ export default function Header({ title }: HeaderProps) {
                   Se déconnecter
                 </button>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            </div>
+          </Popover>
+        )}
       </div>
     </header>
   );

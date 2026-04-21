@@ -16,7 +16,6 @@ interface UIState {
   interfaceMode: InterfaceMode;
   toasts: Toast[];
   activeModal: string | null;
-  ragSettingsOpen: boolean;
 }
 
 const initialState: UIState = {
@@ -24,7 +23,6 @@ const initialState: UIState = {
   interfaceMode: 'user',
   toasts: [],
   activeModal: null,
-  ragSettingsOpen: false,
 };
 
 let toastCounter = 0;
@@ -55,12 +53,6 @@ const uiSlice = createSlice({
     setActiveModal: (state, action: PayloadAction<string | null>) => {
       state.activeModal = action.payload;
     },
-    toggleRagSettings: (state) => {
-      state.ragSettingsOpen = !state.ragSettingsOpen;
-    },
-    setRagSettingsOpen: (state, action: PayloadAction<boolean>) => {
-      state.ragSettingsOpen = action.payload;
-    },
   },
 });
 
@@ -71,7 +63,5 @@ export const {
   addToast,
   removeToast,
   setActiveModal,
-  toggleRagSettings,
-  setRagSettingsOpen,
 } = uiSlice.actions;
 export default uiSlice.reducer;

@@ -3,10 +3,11 @@
  */
 import { useState, useRef, useEffect, type FormEvent, type KeyboardEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Square, Sparkles, Settings2, SendHorizonalIcon } from 'lucide-react';
+import { Square, Sparkles, Settings2, SendHorizonalIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { toggleRagSettings } from '@/store/slices/uiSlice';
+import Popover from '@/components/ui/Popover';
+import RagSettings from '@/components/chat/RagSettings';
 
 interface ChatInputProps {
   onSend: (message: string) => void;
@@ -20,6 +21,7 @@ export default function ChatInput({ onSend, isStreaming, onStop, disabled }: Cha
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const dispatch = useAppDispatch();
   const ragSettings = useAppSelector((s) => s.chat.ragSettings);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   // Auto-resize textarea
   useEffect(() => {
@@ -53,19 +55,28 @@ export default function ChatInput({ onSend, isStreaming, onStop, disabled }: Cha
       {/* RAG settings indicator */}
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center gap-2 mb-2">
-          <button
-            onClick={() => dispatch(toggleRagSettings())}
-            className={cn(
-              'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium',
-              'transition-all duration-200 cursor-pointer',
-              ragSettings.use_agent
-                ? 'bg-violet-50 text-violet-600 hover:bg-violet-100'
-                : 'bg-slate-50 text-slate-500 hover:bg-slate-100'
-            )}
+          <Popover
+            isOpen={isSettingsOpen}
+            onClose={() => setIsSettingsOpen(false)}
+            trigger={
+              <button
+                onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+                className={cn(
+                  'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium',
+                  'transition-all duration-200 cursor-pointer',
+                  ragSettings.use_agent || isSettingsOpen
+                    ? 'bg-violet-50 text-violet-600 hover:bg-violet-100'
+                    : 'bg-slate-50 text-slate-500 hover:bg-slate-100'
+                )}
+              >
+                <Settings2 className="w-3 h-3" />
+                Réglages
+              </button>
+            }
           >
-            <Settings2 className="w-3 h-3" />
-            Réglages
-          </button>
+            <RagSettings onClose={() => setIsSettingsOpen(false)} />
+          </Popover>
+
           <AnimatePresence>
             {ragSettings.use_agent && (
               <motion.span

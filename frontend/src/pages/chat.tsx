@@ -8,7 +8,6 @@ import AppLayout from '@/components/layout/AppLayout';
 import ChatMessage from '@/components/chat/ChatMessage';
 import ChatInput from '@/components/chat/ChatInput';
 import AgentActivity from '@/components/chat/AgentActivity';
-import RagSettings from '@/components/chat/RagSettings';
 import { ChatMessageSkeleton } from '@/components/ui/Skeleton';
 import { useChat } from '@/hooks/useChat';
 import { cn } from '@/lib/utils';
@@ -118,16 +117,10 @@ export default function ChatPage() {
                   />
                 ))
               )}
-
               {/* Agent activity */}
               <AgentActivity />
             </div>
           )}
-        </div>
-
-        {/* RAG Settings (floating) */}
-        <div className="relative">
-          <RagSettings />
         </div>
 
         {/* Input */}
