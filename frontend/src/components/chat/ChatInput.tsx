@@ -49,7 +49,7 @@ export default function ChatInput({ onSend, isStreaming, onStop, disabled }: Cha
   };
 
   return (
-    <div className="border-t border-slate-100 bg-white/80 backdrop-blur-md px-4 py-3">
+    <div className="border-t border-slate-200/60 bg-white/80 backdrop-blur-xl px-4 py-4 sm:py-5">
       {/* RAG settings indicator */}
       <div className="max-w-3xl mx-auto">
         <div className="flex items-center gap-2 mb-2">

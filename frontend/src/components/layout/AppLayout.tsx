@@ -24,7 +24,7 @@ export default function AppLayout({ children, title, pageTitle, fullHeight = fal
         <title>{pageTitle ? `${pageTitle} — SEINENTAI4US` : 'SEINENTAI4US'}</title>
         <meta name="description" content="SEINENTAI4US - Plateforme RAG intelligente" />
       </Head>
-      <div className="flex h-screen overflow-hidden bg-[var(--background)]">
+      <div className="flex h-[100dvh] overflow-hidden bg-[var(--background)]">
         <Sidebar />
         <div
           className={cn(
@@ -35,8 +35,8 @@ export default function AppLayout({ children, title, pageTitle, fullHeight = fal
           <Header title={title} />
           <main
             className={cn(
-              'flex-1 overflow-y-auto',
-              fullHeight ? 'flex flex-col' : 'p-4 md:p-6'
+              'flex-1',
+              fullHeight ? 'flex flex-col overflow-hidden relative' : 'p-4 md:p-6 overflow-y-auto'
             )}
           >
             {children}

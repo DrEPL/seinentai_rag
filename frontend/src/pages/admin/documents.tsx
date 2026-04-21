@@ -31,7 +31,7 @@ export default function DocumentsPage() {
     { label: 'Documents', value: documents.length, icon: FileText, color: 'text-indigo-500', bg: 'bg-indigo-50' },
     { label: 'Indexés', value: indexedCount, icon: CheckCircle, color: 'text-emerald-500', bg: 'bg-emerald-50' },
     { label: 'En attente', value: documents.length - indexedCount, icon: AlertCircle, color: 'text-amber-500', bg: 'bg-amber-50' },
-    { label: 'Stockage', value: formatFileSize(documents.reduce((a, d) => a + (d.size || 0), 0)), icon: HardDrive, color: 'text-blue-500', bg: 'bg-blue-50' },
+    { label: 'Stockage', value: formatFileSize(documents.reduce((a: number, d: any) => a + (d.size || 0), 0)), icon: HardDrive, color: 'text-blue-500', bg: 'bg-blue-50' },
   ];
 
   return (

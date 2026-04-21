@@ -42,9 +42,9 @@ export default function ChatPage() {
 
   return (
     <AppLayout pageTitle="Chat RAG" fullHeight>
-      <div className="flex-1 flex flex-col relative">
+      <div className="flex-1 flex flex-col relative overflow-hidden">
         {/* Messages area */}
-        <div ref={scrollRef} className="flex-1 overflow-y-auto no-scrollbar">
+        <div ref={scrollRef} className="flex-1 overflow-y-auto no-scrollbar scroll-smooth pb-4">
           {isEmpty ? (
             /* Empty state */
             <div className="flex-1 flex items-center justify-center min-h-full px-4">
@@ -103,7 +103,7 @@ export default function ChatPage() {
             </div>
           ) : (
             /* Messages */
-            <div className="max-w-3xl mx-auto py-6 space-y-6">
+            <div className="max-w-3xl mx-auto py-6 space-y-6 px-4">
               {loading ? (
                 <div className="space-y-6">
                   <ChatMessageSkeleton isUser />
@@ -131,11 +131,13 @@ export default function ChatPage() {
         </div>
 
         {/* Input */}
-        <ChatInput
-          onSend={sendMessage}
-          isStreaming={isStreaming}
-          onStop={stopStreaming}
-        />
+        <div className="shrink-0">
+          <ChatInput
+            onSend={sendMessage}
+            isStreaming={isStreaming}
+            onStop={stopStreaming}
+          />
+        </div>
       </div>
     </AppLayout>
   );
