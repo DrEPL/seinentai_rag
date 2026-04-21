@@ -110,13 +110,21 @@ export default function ChatPage() {
                   <ChatMessageSkeleton />
                 </div>
               ) : (
-                currentMessages.map((msg, i) => (
-                  <ChatMessage
-                    key={msg.id}
-                    message={msg}
-                    isStreaming={isStreaming && i === currentMessages.length - 1 && msg.role === 'assistant'}
-                  />
-                ))
+                currentMessages.map((msg, i) => {
+                  const isLastAssistant = i === currentMessages.length - 1 && msg.role === 'assistant';
+                  const hasContent = msg.content && msg.content.trim() !== '';
+                  const shouldShow = msg.role === 'user' || hasContent || (isStreaming && isLastAssistant);
+                  
+                  if (!shouldShow) return null;
+                  
+                  return (
+                    <ChatMessage
+                      key={msg.id}
+                      message={msg}
+                      isStreaming={isStreaming && isLastAssistant}
+                    />
+                  );
+                })
               )}
               {/* Agent activity */}
               <AgentActivity />

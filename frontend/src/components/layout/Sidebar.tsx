@@ -33,8 +33,8 @@ interface NavItem {
 }
 
 const userNav: NavItem[] = [
-  { icon: MessageSquare, label: 'Chat RAG', href: ROUTES.CHAT },
-  { icon: Search, label: 'Recherche', href: ROUTES.SEARCH },
+  // { icon: MessageSquare, label: 'Chat RAG', href: ROUTES.CHAT },
+  // { icon: Search, label: 'Recherche', href: ROUTES.SEARCH },
 ];
 
 const adminNav: NavItem[] = [
@@ -103,7 +103,7 @@ export default function Sidebar() {
             <div>
               <h2 className="text-sm font-bold text-slate-900 leading-none">SEINENTAI4US</h2>
               <span className="text-[10px] text-slate-400 uppercase tracking-wider">
-                {interfaceMode === 'admin' ? 'Admin' : 'RAG Agent'}
+                {interfaceMode === 'admin' ? 'Admin' : 'Assistant IA'}
               </span>
             </div>
           </div>
@@ -139,6 +139,7 @@ export default function Sidebar() {
         )}
 
         {/* Navigation */}
+        {interfaceMode === 'admin' && (
         <nav className="px-3 pt-4">
           <p className="px-3 mb-2 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
             Navigation
@@ -164,6 +165,7 @@ export default function Sidebar() {
             })}
           </div>
         </nav>
+        )}
 
         {/* Chat History (user mode) */}
         {interfaceMode === 'user' && (

@@ -196,6 +196,10 @@ export function useChat() {
                 case 'token': {
                   const token = event.token as string;
                   fullContent += token;
+                  
+                  // Hide agent activity when response starts
+                  dispatch(setAgentActive(false));
+                  
                   dispatch(appendStreamToken(token));
                   dispatch(
                     updateLastMessage({
@@ -216,6 +220,8 @@ export function useChat() {
                       })
                     );
                   }
+                  // Final cleanup
+                  dispatch(clearSteps());
                   break;
                 }
                 case 'error':

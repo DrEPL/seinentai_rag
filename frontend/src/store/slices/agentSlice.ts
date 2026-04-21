@@ -41,11 +41,12 @@ const agentSlice = createSlice({
   initialState,
   reducers: {
     addStep: (state, action: PayloadAction<Omit<AgentStep, 'id'>>) => {
-      stepCounter++;
-      state.steps.push({
+      const newStep = {
         ...action.payload,
-        id: `step-${stepCounter}-${Date.now()}`,
-      });
+        id: `step-${Date.now()}`,
+      };
+      // Always replace the current step to ensure only one is active at a time
+      state.steps = [newStep];
       state.isActive = true;
     },
     clearSteps: (state) => {
