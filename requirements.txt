@@ -12,7 +12,9 @@ h2==4.3.0
 kafka-python==2.3.0
 langchain==1.2.10
 langchain-community==0.4.1
+langchain-core>=0.3.0
 langchain-ollama==1.0.1
+langgraph>=0.4.0
 litellm==1.82.2
 Markdown==3.10.2
 minio==7.2.20

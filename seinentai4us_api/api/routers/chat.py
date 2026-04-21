@@ -4,6 +4,10 @@ POST /chat/new          - Nouveau chat (réponse directe ou SSE)
 POST /chat/{session_id} - Continuer un chat (SSE)
 GET  /chat/history      - Liste des sessions de l'utilisateur
 GET  /chat/sessions/{session_id} - Historique d'une session
+
+Supporte deux modes :
+- use_agent=True  → Agent RAG intelligent (LangGraph) avec raisonnement dynamique
+- use_agent=False → Pipeline RAG statique (compatibilité descendante)
 """
 
 import json
@@ -47,14 +51,22 @@ def _build_sources(docs: list) -> list:
     return sources
 
 
-async def _sse_stream(
+def _get_agentic_service():
+    """Récupère le service agentique (lazy import pour éviter les imports circulaires)."""
+    from seinentai4us_api.api.services.agentic_rag_service import get_agentic_service
+    return get_agentic_service()
+
+
+# ─── SSE Stream (Pipeline statique) ──────────────────────────────────────────
+
+async def _sse_stream_static(
     session_id: str,
     message: str,
     generation_query: str,
     docs: list,
     **gen_kwargs,
 ) -> AsyncGenerator[str, None]:
-    """Générateur SSE : envoie des événements data: token\\n\\n."""
+    """Générateur SSE pour le pipeline statique (compatibilité descendante)."""
     sources = _build_sources(docs)
     full_response = []
 
@@ -63,6 +75,7 @@ async def _sse_stream(
         "type": "start",
         "session_id": session_id,
         "sources": sources,
+        "mode": "static",
         "timestamp": datetime.utcnow().isoformat(),
     }
     yield f"data: {json.dumps(init_event, ensure_ascii=False)}\n\n"
@@ -94,6 +107,107 @@ async def _sse_stream(
     yield f"data: {json.dumps(end_event, ensure_ascii=False)}\n\n"
 
 
+# ─── SSE Stream (Agent RAG intelligent) ──────────────────────────────────────
+
+async def _sse_stream_agent(
+    session_id: str,
+    message: str,
+    conversation_context: str = "",
+) -> AsyncGenerator[str, None]:
+    """
+    Générateur SSE pour l'agent LangGraph.
+
+    Émet les événements suivants :
+    - {"type": "start", "mode": "agent", ...}
+    - {"type": "thought", "node": "...", "content": "..."}
+    - {"type": "tool_call", "tool": "...", "params": {...}, "result": "..."}
+    - {"type": "observation", "content": "..."}
+    - {"type": "synthesis_start"}
+    - {"type": "token", "token": "..."} (réponse finale en un seul bloc)
+    - {"type": "done", "sources": [...], "agent_trace": {...}}
+    - {"type": "error", "message": "..."}
+    """
+    agent_service = _get_agentic_service()
+
+    # Événement initial
+    init_event = {
+        "type": "start",
+        "session_id": session_id,
+        "mode": "agent",
+        "timestamp": datetime.utcnow().isoformat(),
+    }
+    yield f"data: {json.dumps(init_event, ensure_ascii=False)}\n\n"
+
+    full_response = ""
+    sources = []
+    agent_trace = {}
+
+    try:
+        for event in agent_service.stream(
+            query=message,
+            conversation_context=conversation_context,
+        ):
+            event_type = event.get("type", "")
+
+            if event_type == "thought":
+                yield f"data: {json.dumps(event, ensure_ascii=False)}\n\n"
+
+            elif event_type == "tool_call":
+                # Simplifier les params pour le streaming (éviter les gros payloads)
+                simplified = {
+                    "type": "tool_call",
+                    "tool": event.get("tool", ""),
+                    "params": {
+                        k: v for k, v in event.get("params", {}).items()
+                        if k != "query" or len(str(v)) < 200
+                    },
+                    "result_preview": event.get("result", "")[:300],
+                    "timestamp": event.get("timestamp", ""),
+                }
+                yield f"data: {json.dumps(simplified, ensure_ascii=False)}\n\n"
+
+            elif event_type == "observation":
+                yield f"data: {json.dumps(event, ensure_ascii=False)}\n\n"
+
+            elif event_type == "synthesis_start":
+                yield f"data: {json.dumps({'type': 'synthesis_start'})}\n\n"
+
+            elif event_type == "response":
+                full_response = event.get("content", "")
+                # Émettre la réponse comme un token unique
+                yield f"data: {json.dumps({'type': 'token', 'token': full_response})}\n\n"
+
+            elif event_type == "done":
+                sources = event.get("sources", [])
+                agent_trace = event.get("agent_trace", {})
+
+            elif event_type == "error":
+                yield f"data: {json.dumps(event, ensure_ascii=False)}\n\n"
+                return
+
+    except Exception as e:
+        logger.error(f"Agent stream error: {e}", exc_info=True)
+        yield f"data: {json.dumps({'type': 'error', 'message': str(e)})}\n\n"
+        return
+
+    # Sauvegarder dans l'historique
+    await chat_session_service.add_message(session_id, "user", message)
+    await chat_session_service.add_message(
+        session_id, "assistant", full_response, sources=sources
+    )
+
+    # Événement final
+    end_event = {
+        "type": "done",
+        "session_id": session_id,
+        "message_id": str(uuid.uuid4()),
+        "sources": sources,
+        "agent_trace": agent_trace,
+        "timestamp": datetime.utcnow().isoformat(),
+    }
+    yield f"data: {json.dumps(end_event, ensure_ascii=False)}\n\n"
+
+
 # ─── Nouveau chat ─────────────────────────────────────────────────────────────
 
 @router.post(
@@ -110,25 +224,66 @@ async def new_chat(
     """
     Crée une nouvelle session de chat et génère une réponse RAG.
 
+    - Si `use_agent=true` : utilise l'agent LangGraph intelligent
+    - Si `use_agent=false` : utilise le pipeline RAG statique
+    - Si `stream=true` : retourne un flux `text/event-stream` (SSE)
     - Si `stream=false` : retourne un objet JSON `ChatResponse`
-    - Si `stream=true`  : retourne un flux `text/event-stream` (SSE)
 
-    Chaque événement SSE est un JSON avec les champs :
-    - `type`: `"start"` | `"token"` | `"done"` | `"error"`
-    - `token`: le token généré (type=token uniquement)
-    - `sources`: liste des sources utilisées (type=start)
+    Événements SSE (mode agent) :
+    - `type`: `"start"` | `"thought"` | `"tool_call"` | `"observation"` |
+              `"synthesis_start"` | `"token"` | `"done"` | `"error"`
     """
     # 1. Créer la session
     session_id = await chat_session_service.create_session(
         current_user.id, title=body.message[:80]
     )
 
-    # 2. Récupérer les documents pertinents
+    # ── Mode Agent ────────────────────────────────────────────────────────
+    if body.use_agent:
+        if body.stream:
+            return StreamingResponse(
+                _sse_stream_agent(session_id, body.message),
+                media_type="text/event-stream",
+                headers={
+                    "Cache-Control": "no-cache",
+                    "X-Session-ID": session_id,
+                    "X-RAG-Mode": "agent",
+                },
+            )
+
+        # Réponse directe (agent)
+        agent_service = _get_agentic_service()
+        result = agent_service.run(query=body.message)
+
+        if not result.get("success"):
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail=f"Erreur agent: {result.get('error', 'Agent indisponible')}",
+            )
+
+        sources = result.get("sources", [])
+        await chat_session_service.add_message(session_id, "user", body.message)
+        await chat_session_service.add_message(
+            session_id, "assistant", result["response"], sources=sources
+        )
+
+        return ChatResponse(
+            session_id=session_id,
+            message_id=str(uuid.uuid4()),
+            response=result["response"],
+            sources=sources,
+            model=result.get("model", "agent-langgraph"),
+            generation_time=result.get("generation_time", 0.0),
+            timestamp=datetime.utcnow(),
+            agent_trace=result.get("agent_trace"),
+        )
+
+    # ── Mode Statique (compatibilité descendante) ─────────────────────────
     docs = rag_service.search(
         query=body.message,
         limit=body.search_limit,
         score_threshold=body.score_threshold,
-        use_hybrid=True,
+        use_hybrid=body.use_hybrid,
         use_hyde=body.use_hyde,
     )
 
@@ -138,10 +293,9 @@ async def new_chat(
         template=body.template,
     )
 
-    # 3. Streaming SSE
     if body.stream:
         return StreamingResponse(
-            _sse_stream(
+            _sse_stream_static(
                 session_id,
                 body.message,
                 body.message,
@@ -152,10 +306,11 @@ async def new_chat(
             headers={
                 "Cache-Control": "no-cache",
                 "X-Session-ID": session_id,
+                "X-RAG-Mode": "static",
             },
         )
 
-    # 4. Réponse directe
+    # Réponse directe (statique)
     await chat_session_service.add_message(session_id, "user", body.message)
 
     result = rag_service.generate(query=body.message, retrieved_docs=docs, **gen_kwargs)
@@ -189,7 +344,7 @@ async def new_chat(
     "/{session_id}",
     summary="Continuer un chat existant (SSE)",
     responses={
-        200: {"description": "Flux SSE (text/event-stream)"},
+        200: {"description": "Flux SSE (text/event-stream) ou réponse directe"},
     },
 )
 async def continue_chat(
@@ -201,7 +356,7 @@ async def continue_chat(
     Envoie un message dans une session existante.
 
     - Prend en compte l'historique de la conversation pour contextualiser
-    - Retourne toujours un flux SSE
+    - Supporte les modes agent et statique
     """
     session = await chat_session_service.get_session(session_id)
     if not session:
@@ -216,6 +371,55 @@ async def continue_chat(
     conv_context = await chat_session_service.build_conversation_context(
         session_id, max_messages=6
     )
+
+    # ── Mode Agent ────────────────────────────────────────────────────────
+    if body.use_agent:
+        if body.stream:
+            return StreamingResponse(
+                _sse_stream_agent(
+                    session_id,
+                    body.message,
+                    conversation_context=conv_context or "",
+                ),
+                media_type="text/event-stream",
+                headers={
+                    "Cache-Control": "no-cache",
+                    "X-Session-ID": session_id,
+                    "X-RAG-Mode": "agent",
+                },
+            )
+
+        # Réponse directe (agent)
+        agent_service = _get_agentic_service()
+        result = agent_service.run(
+            query=body.message,
+            conversation_context=conv_context or "",
+        )
+
+        if not result.get("success"):
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail=f"Erreur agent: {result.get('error', 'Agent indisponible')}",
+            )
+
+        sources = result.get("sources", [])
+        await chat_session_service.add_message(session_id, "user", body.message)
+        await chat_session_service.add_message(
+            session_id, "assistant", result["response"], sources=sources
+        )
+
+        return ChatResponse(
+            session_id=session_id,
+            message_id=str(uuid.uuid4()),
+            response=result["response"],
+            sources=sources,
+            model=result.get("model", "agent-langgraph"),
+            generation_time=result.get("generation_time", 0.0),
+            timestamp=datetime.utcnow(),
+            agent_trace=result.get("agent_trace"),
+        )
+
+    # ── Mode Statique ─────────────────────────────────────────────────────
     enriched_query = f"{conv_context}\n\nNouvelle question : {body.message}" if conv_context else body.message
 
     docs = rag_service.search(
@@ -228,10 +432,9 @@ async def continue_chat(
 
     gen_kwargs = dict(temperature=body.temperature)
     
-    # 3. Streaming SSE
     if body.stream:
         return StreamingResponse(
-            _sse_stream(
+            _sse_stream_static(
                 session_id,
                 body.message,
                 enriched_query,
@@ -242,10 +445,11 @@ async def continue_chat(
             headers={
                 "Cache-Control": "no-cache",
                 "X-Session-ID": session_id,
+                "X-RAG-Mode": "static",
             },
         )
 
-    # 4. Réponse directe
+    # Réponse directe (statique)
     await chat_session_service.add_message(session_id, "user", body.message)
 
     result = rag_service.generate(query=enriched_query, retrieved_docs=docs, **gen_kwargs)

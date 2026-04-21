@@ -32,7 +32,7 @@ class GenerationPipeline:
             system_prompt: Prompt système optionnel
         """
         print("Env: ", os.getenv('OLLAMA_MODEL_NAME'))
-        self.model_name = os.getenv('OLLAMA_MODEL_NAME', 'qwen2.5:7b')
+        self.model_name = os.getenv('OLLAMA_MODEL_NAME', 'mistral-large-3:675b-cloud')
         self.ollama_base_url = os.getenv('OLLAMA_BASE_URL', 'http://ollama:11434')
         
         self.temperature = os.getenv('DEFAULT_TEMPERATURE', 0.7)

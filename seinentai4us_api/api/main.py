@@ -71,12 +71,16 @@ async def lifespan(app: FastAPI):
     if run_main and not is_pytest:
         from seinentai4us_api.api.services.app_services import build_app_services
         from seinentai4us_api.api.services.rag_service import initialize_pipelines
+        from seinentai4us_api.api.services.agentic_rag_service import initialize_agentic_service
 
         app.state.services = build_app_services()
         initialize_pipelines(
             retriever_pipeline=app.state.services.retriever_pipeline,
             generation_pipeline=app.state.services.generation_pipeline,
         )
+
+        # Initialiser le service agentique (LangGraph)
+        initialize_agentic_service(app.state.services.retriever_pipeline)
 
         # Réutiliser les pipelines injectés côté consumer Kafka
         from services.kafka_consumer import configure_kafka_dependencies
@@ -183,11 +187,11 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 
 # ─── Routeurs ─────────────────────────────────────────────────────────────────
-app.include_router(auth.router,      prefix="/auth",      tags=["Authentification"])
-app.include_router(documents.router, prefix="/documents", tags=["Documents"])
-app.include_router(search.router,    prefix="/search",    tags=["Recherche"])
-app.include_router(chat.router,      prefix="/chat",      tags=["Chat"])
-app.include_router(admin.router,     prefix="",           tags=["Système"])
+app.include_router(auth.router,      prefix="/api/v1/auth",      tags=["Authentification"])
+app.include_router(documents.router, prefix="/api/v1/documents", tags=["Documents"])
+app.include_router(search.router,    prefix="/api/v1/search",    tags=["Recherche"])
+app.include_router(chat.router,      prefix="/api/v1/chat",      tags=["Chat"])
+app.include_router(admin.router,     prefix="/api/v1/admin",     tags=["Système"])
 
 
 # ─── Root ─────────────────────────────────────────────────────────────────────

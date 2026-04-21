@@ -173,11 +173,13 @@ class NewChatRequest(BaseModel):
     stream: bool = Field(False, description="Activer le streaming SSE")
     use_hyde: bool = Field(False, description="Active HyDE pour enrichir la requête dense")
     use_hybrid: bool = Field(False, description="Activer la recherche hybride (dense + sparse)")
+    use_agent: bool = Field(True, description="Utiliser l'agent RAG intelligent (LangGraph)")
 
     model_config = {"json_schema_extra": {"example": {
         "message": "Quelles sont les valeurs du groupe des jeunes ?",
         "temperature": 0.7,
-        "stream": False
+        "stream": False,
+        "use_agent": True
     }}}
 
 
@@ -204,9 +206,10 @@ class ChatResponse(BaseModel):
     sources: List[Dict[str, Any]]
     model: str
     generation_time: float
-    prompt_tokens: int
-    completion_tokens: int
+    prompt_tokens: int = 0
+    completion_tokens: int = 0
     timestamp: datetime
+    agent_trace: Optional[Dict[str, Any]] = Field(None, description="Trace de raisonnement de l'agent")
 
 
 class ChatHistoryRequest(BaseModel):
@@ -216,6 +219,7 @@ class ChatHistoryRequest(BaseModel):
     stream: bool = False
     use_hyde: bool = Field(False, description="Active HyDE pour enrichir la requête dense")
     use_hybrid: bool = Field(False, description="Activer la recherche hybride (dense + sparse)")
+    use_agent: bool = Field(True, description="Utiliser l'agent RAG intelligent (LangGraph)")
 
 
 class SessionListResponse(BaseModel):

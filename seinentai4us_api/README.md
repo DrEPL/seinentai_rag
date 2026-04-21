@@ -144,7 +144,7 @@ pytest seinentai4us_api/tests/test_api.py -v --cov=seinentai4us_api/api --cov-re
 
 **Utilisation du token :**
 ```bash
-curl -H "Authorization: Bearer <votre_token>" http://localhost:8000/auth/me
+curl -H "Authorization: Bearer <votre_token>" http://localhost:8000/api/v1/auth/me
 ```
 
 ---
@@ -161,16 +161,16 @@ curl -H "Authorization: Bearer <votre_token>" http://localhost:8000/auth/me
 
 ```bash
 # Upload
-curl -X POST http://localhost:8000/documents/upload \
+curl -X POST http://localhost:8000/api/v1/documents/upload \
   -H "Authorization: Bearer $TOKEN" \
   -F "file=@mon_document.pdf"
 
 # Statut
-curl http://localhost:8000/documents/mon_document.pdf/status \
+curl http://localhost:8000/api/v1/documents/mon_document.pdf/status \
   -H "Authorization: Bearer $TOKEN"
 
 # Réindexation forcée de fichiers spécifiques
-curl -X POST http://localhost:8000/documents/reindex \
+curl -X POST http://localhost:8000/api/v1/documents/reindex \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"force": true, "filenames": ["doc1.pdf", "doc2.pdf"]}'
@@ -188,17 +188,17 @@ curl -X POST http://localhost:8000/documents/reindex \
 
 ```bash
 # Recherche sémantique
-curl -X POST http://localhost:8000/search \
+curl -X POST http://localhost:8000/api/v1/search \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"query": "activités du groupe", "limit": 5, "score_threshold": 0.2}'
 
 # Recherche hybride
-curl "http://localhost:8000/search/hybrid?q=seinentai+valeurs&limit=5" \
+curl "http://localhost:8000/api/v1/search/hybrid?q=seinentai+valeurs&limit=5" \
   -H "Authorization: Bearer $TOKEN"
 
 # Re-ranking (boost sur un fichier spécifique)
-curl "http://localhost:8000/search/rerank?q=activités&boost_field=filename&boost_value=programme.pdf" \
+curl "http://localhost:8000/api/v1/search/rerank?q=activités&boost_field=filename&boost_value=programme.pdf" \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -215,13 +215,13 @@ curl "http://localhost:8000/search/rerank?q=activités&boost_field=filename&boos
 
 ```bash
 # Nouveau chat direct
-curl -X POST http://localhost:8000/chat/new \
+curl -X POST http://localhost:8000/api/v1/chat/new \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"message": "Quelles sont les valeurs du groupe ?", "stream": false}'
 
 # Nouveau chat en streaming SSE
-curl -X POST http://localhost:8000/chat/new \
+curl -X POST http://localhost:8000/api/v1/chat/new \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -H "Accept: text/event-stream" \
