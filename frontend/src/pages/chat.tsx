@@ -41,9 +41,9 @@ export default function ChatPage() {
 
   return (
     <AppLayout pageTitle="Chat RAG" fullHeight>
-      <div className="flex-1 flex flex-col relative overflow-hidden">
+      <div className="flex-1 flex flex-col relative overflow-hidden chat-bg-pattern">
         {/* Messages area */}
-        <div ref={scrollRef} className="flex-1 overflow-y-auto no-scrollbar scroll-smooth pb-4 chat-bg-pattern">
+        <div ref={scrollRef} className="flex-1 overflow-y-auto no-scrollbar scroll-smooth pb-4">
           {isEmpty ? (
             /* Empty state */
             <div className="flex-1 flex items-center justify-center min-h-full px-4">
