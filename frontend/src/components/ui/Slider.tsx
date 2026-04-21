@@ -32,7 +32,7 @@ export default function Slider({
         <div className="flex items-center justify-between mb-2">
           {label && <span className="text-sm font-medium text-slate-700">{label}</span>}
           {displayValue && (
-            <span className="text-sm font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md">
+            <span className="text-sm font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">
               {displayValue}
             </span>
           )}
@@ -50,7 +50,7 @@ export default function Slider({
             [&::-webkit-slider-thumb]:appearance-none
             [&::-webkit-slider-thumb]:w-4
             [&::-webkit-slider-thumb]:h-4
-            [&::-webkit-slider-thumb]:bg-indigo-500
+            [&::-webkit-slider-thumb]:bg-emerald-500
             [&::-webkit-slider-thumb]:rounded-full
             [&::-webkit-slider-thumb]:shadow-md
             [&::-webkit-slider-thumb]:cursor-pointer
@@ -59,13 +59,13 @@ export default function Slider({
             [&::-webkit-slider-thumb]:hover:scale-110
             [&::-moz-range-thumb]:w-4
             [&::-moz-range-thumb]:h-4
-            [&::-moz-range-thumb]:bg-indigo-500
+            [&::-moz-range-thumb]:bg-emerald-500
             [&::-moz-range-thumb]:rounded-full
             [&::-moz-range-thumb]:border-0
             [&::-moz-range-thumb]:shadow-md
             [&::-moz-range-thumb]:cursor-pointer"
           style={{
-            background: `linear-gradient(to right, #6366f1 0%, #6366f1 ${percentage}%, #e2e8f0 ${percentage}%, #e2e8f0 100%)`,
+            background: `linear-gradient(to right, #10b981 0%, #10b981 ${percentage}%, #e2e8f0 ${percentage}%, #e2e8f0 100%)`,
           }}
         />
       </div>

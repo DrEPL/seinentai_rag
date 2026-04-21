@@ -97,7 +97,7 @@ export default function Sidebar() {
         {/* Header */}
         <div className="flex items-center justify-between px-4 h-[60px] border-b border-slate-100">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
               <span className="text-sm font-bold text-white">S</span>
             </div>
             <div>
@@ -125,9 +125,9 @@ export default function Sidebar() {
               }}
               className={cn(
                 'w-full flex items-center gap-2 px-3 py-2.5 rounded-xl',
-                'text-sm font-medium text-indigo-600',
-                'border border-indigo-200 bg-indigo-50/50',
-                'hover:bg-indigo-100/70 hover:border-indigo-300',
+                'text-sm font-medium text-emerald-600',
+                'border border-emerald-200 bg-emerald-50/50',
+                'hover:bg-emerald-100/70 hover:border-emerald-300',
                 'transition-all duration-200 cursor-pointer',
                 'active:scale-[0.98]'
               )}
@@ -153,11 +153,11 @@ export default function Sidebar() {
                   className={cn(
                     'w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer',
                     isActive
-                      ? 'bg-indigo-50 text-indigo-700 shadow-sm'
+                      ? 'bg-emerald-50 text-emerald-700 shadow-sm'
                       : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                   )}
                 >
-                  <item.icon className={cn('w-[18px] h-[18px]', isActive && 'text-indigo-500')} />
+                  <item.icon className={cn('w-[18px] h-[18px]', isActive && 'text-emerald-500')} />
                   {item.label}
                 </button>
               );
@@ -187,7 +187,7 @@ export default function Sidebar() {
                     className={cn(
                       'w-full flex items-start gap-2.5 px-3 py-2 rounded-xl text-left transition-all duration-200 cursor-pointer group',
                       activeSessionId === session.session_id
-                        ? 'bg-indigo-50/80 text-indigo-700'
+                        ? 'bg-emerald-50/80 text-emerald-700'
                         : 'text-slate-600 hover:bg-slate-50'
                     )}
                   >
@@ -227,7 +227,7 @@ export default function Sidebar() {
               'w-full flex items-center gap-3 px-3 py-2.5 rounded-xl',
               'text-sm font-medium transition-all duration-200 cursor-pointer',
               interfaceMode === 'admin'
-                ? 'text-indigo-600 bg-indigo-50 hover:bg-indigo-100'
+                ? 'text-emerald-600 bg-emerald-50 hover:bg-emerald-100'
                 : 'text-slate-500 hover:bg-slate-50 hover:text-slate-700'
             )}
           >

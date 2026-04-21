@@ -20,7 +20,7 @@ export default function RagSettings({ onClose }: RagSettingsProps) {
       {/* Header */}
       <div className="flex items-center justify-between pb-2 border-b border-slate-50">
         <h3 className="text-xs font-bold text-slate-900 flex items-center gap-2">
-          <Sparkles className="w-3.5 h-3.5 text-indigo-500" />
+          <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
           Paramètres RAG
         </h3>
         {onClose && (

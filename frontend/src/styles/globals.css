@@ -1,4 +1,53 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* ... existing code ... */
+
+/* ─── Prose Chat Customization ────────────────────────────────────────────── */
+.prose-chat {
+  @apply prose prose-sm max-w-none;
+  --tw-prose-body: var(--text-secondary);
+  --tw-prose-headings: var(--text-primary);
+  --tw-prose-links: var(--primary);
+  --tw-prose-bold: var(--text-primary);
+  --tw-prose-counters: var(--text-muted);
+  --tw-prose-bullets: var(--primary-light);
+  --tw-prose-hr: var(--border-color);
+  --tw-prose-quotes: var(--text-primary);
+  --tw-prose-quote-borders: var(--primary-light);
+  --tw-prose-captions: var(--text-muted);
+  --tw-prose-code: var(--primary-dark);
+  --tw-prose-pre-code: var(--surface-alt);
+  --tw-prose-pre-bg: var(--surface-alt);
+  --tw-prose-th-borders: var(--border-color);
+  --tw-prose-td-borders: var(--border-light);
+}
+
+.prose-chat :first-child {
+  margin-top: 0;
+}
+
+.prose-chat :last-child {
+  margin-bottom: 0;
+}
+
+.prose-chat-user {
+  @apply prose prose-sm max-w-none;
+  --tw-prose-body: #1e293b;
+  --tw-prose-headings: #0f172a;
+  --tw-prose-links: #0f172a;
+  --tw-prose-bold: #0f172a;
+  --tw-prose-bullets: #94a3b8;
+  --tw-prose-counters: #94a3b8;
+}
+
+.prose-chat-user :first-child {
+  margin-top: 0;
+}
+
+.prose-chat-user :last-child {
+  margin-bottom: 0;
+}
 
 /* ═══════════════════════════════════════════════════════════════════════════════
    SEINENTAI4US — Design System (Light Theme)
@@ -35,16 +84,16 @@
 /* ─── Root Variables ────────────────────────────────────────────────────────── */
 :root {
   /* Core palette */
-  --primary: #6366f1;
-  --primary-light: #818cf8;
-  --primary-dark: #4f46e5;
-  --primary-50: #eef2ff;
-  --primary-100: #e0e7ff;
-  --primary-200: #c7d2fe;
+  --primary: #10b981;
+  --primary-light: #34d399;
+  --primary-dark: #059669;
+  --primary-50: #ecfdf5;
+  --primary-100: #d1fae5;
+  --primary-200: #a7f3d0;
 
-  --accent: #8b5cf6;
-  --accent-light: #a78bfa;
-  --accent-dark: #7c3aed;
+  --accent: #14b8a6;
+  --accent-light: #5eead4;
+  --accent-dark: #0f766e;
 
   /* Surfaces */
   --background: #f8f9fc;
@@ -57,7 +106,7 @@
   /* Borders */
   --border-color: #e2e8f0;
   --border-light: #f1f5f9;
-  --border-focus: #6366f1;
+  --border-focus: #10b981;
 
   /* Text */
   --text-primary: #0f172a;
@@ -72,8 +121,8 @@
   --warning-light: #fef3c7;
   --danger: #ef4444;
   --danger-light: #fee2e2;
-  --info: #3b82f6;
-  --info-light: #dbeafe;
+  --info: #0d9488;
+  --info-light: #ccfbf1;
 
   /* Shadows */
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
@@ -81,8 +130,8 @@
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
-  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.15);
-  --shadow-glow-lg: 0 0 40px rgba(99, 102, 241, 0.2);
+  --shadow-glow: 0 0 20px rgba(16, 185, 129, 0.15);
+  --shadow-glow-lg: 0 0 40px rgba(16, 185, 129, 0.2);
 
   /* Radii */
   --radius-sm: 6px;
@@ -179,6 +228,11 @@ a:hover {
   outline: 2px solid var(--primary);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
+}
+
+.chat-bg-pattern {
+  background-color: #f8fafc;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2310b981' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2v-4h4v-2H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════════
@@ -341,15 +395,15 @@ a:hover {
 
 /* ─── Gradient Background ───────────────────────────────────────────────────── */
 .gradient-bg {
-  background: linear-gradient(135deg, var(--primary-50) 0%, #faf5ff 50%, #eff6ff 100%);
+  background: linear-gradient(135deg, var(--primary-50) 0%, #f0fdfa 50%, #f0fdf4 100%);
 }
 
 .gradient-bg-animated {
   background: linear-gradient(
     -45deg,
     var(--primary-50),
-    #faf5ff,
-    #eff6ff,
+    #f0fdfa,
+    #f0fdf4,
     var(--primary-100)
   );
   background-size: 400% 400%;
@@ -435,7 +489,7 @@ a:hover {
   animation: fadeInUp 300ms ease-out;
 }
 .agent-step.thought { border-color: var(--info); background: var(--info-light); }
-.agent-step.tool_call { border-color: var(--accent); background: #f5f3ff; }
+.agent-step.tool_call { border-color: var(--teal-500); background: #f0fdfa; }
 .agent-step.observation { border-color: var(--warning); background: var(--warning-light); }
 .agent-step.synthesis { border-color: var(--success); background: var(--success-light); }
 .agent-step.error { border-color: var(--danger); background: var(--danger-light); }

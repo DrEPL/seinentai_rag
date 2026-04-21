@@ -95,7 +95,7 @@ export default function RegisterPage() {
           <span className="text-sm text-slate-500">Déjà inscrit ? </span>
           <Link
             href="/login"
-            className="text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
+            className="text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition-colors"
           >
             Se connecter
           </Link>

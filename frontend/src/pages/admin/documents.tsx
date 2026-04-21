@@ -28,10 +28,10 @@ export default function DocumentsPage() {
 
   const indexedCount = documents.filter((d) => d.indexed).length;
   const stats = [
-    { label: 'Documents', value: documents.length, icon: FileText, color: 'text-indigo-500', bg: 'bg-indigo-50' },
-    { label: 'Indexés', value: indexedCount, icon: CheckCircle, color: 'text-emerald-500', bg: 'bg-emerald-50' },
+    { label: 'Documents', value: documents.length, icon: FileText, color: 'text-emerald-500', bg: 'bg-emerald-50' },
+    { label: 'Indexés', value: indexedCount, icon: CheckCircle, color: 'text-teal-500', bg: 'bg-teal-50' },
     { label: 'En attente', value: documents.length - indexedCount, icon: AlertCircle, color: 'text-amber-500', bg: 'bg-amber-50' },
-    { label: 'Stockage', value: formatFileSize(documents.reduce((a: number, d: any) => a + (d.size || 0), 0)), icon: HardDrive, color: 'text-blue-500', bg: 'bg-blue-50' },
+    { label: 'Stockage', value: formatFileSize(documents.reduce((a: number, d: any) => a + (d.size || 0), 0)), icon: HardDrive, color: 'text-emerald-600', bg: 'bg-emerald-100' },
   ];
 
   return (
@@ -61,13 +61,13 @@ export default function DocumentsPage() {
 
         {/* Drop zone */}
         <div onDragOver={(e) => { e.preventDefault(); setDragActive(true); }} onDragLeave={() => setDragActive(false)} onDrop={handleDrop}
-          className={cn('border-2 border-dashed rounded-2xl transition-all duration-200 cursor-pointer', dragActive ? 'border-indigo-400 bg-indigo-50/50' : 'border-slate-200 hover:border-slate-300 bg-white', uploading && 'pointer-events-none')}
+          className={cn('border-2 border-dashed rounded-2xl transition-all duration-200 cursor-pointer', dragActive ? 'border-emerald-400 bg-emerald-50/50' : 'border-slate-200 hover:border-slate-300 bg-white', uploading && 'pointer-events-none')}
           onClick={() => !uploading && fileInputRef.current?.click()}>
           <div className="flex flex-col items-center justify-center py-10 px-4">
             {uploading ? (
-              <><div className="w-full max-w-xs mb-3"><div className="h-2 bg-slate-100 rounded-full overflow-hidden"><motion.div className="h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full" initial={{ width: 0 }} animate={{ width: `${uploadProgress}%` }} /></div></div><p className="text-sm text-indigo-600 font-medium">{uploadProgress}%</p></>
+              <><div className="w-full max-w-xs mb-3"><div className="h-2 bg-slate-100 rounded-full overflow-hidden"><motion.div className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full" initial={{ width: 0 }} animate={{ width: `${uploadProgress}%` }} /></div></div><p className="text-sm text-emerald-600 font-medium">{uploadProgress}%</p></>
             ) : (
-              <><CloudUpload className={cn('w-10 h-10 mb-3', dragActive ? 'text-indigo-500' : 'text-slate-300')} /><p className="text-sm text-slate-600 font-medium">Glissez un fichier ici</p><p className="text-xs text-slate-400 mt-1">PDF, TXT, Markdown, DOCX, CSV</p></>
+              <><CloudUpload className={cn('w-10 h-10 mb-3', dragActive ? 'text-emerald-500' : 'text-slate-300')} /><p className="text-sm text-slate-600 font-medium">Glissez un fichier ici</p><p className="text-xs text-slate-400 mt-1">PDF, TXT, Markdown, DOCX, CSV</p></>
             )}
           </div>
         </div>
@@ -77,7 +77,7 @@ export default function DocumentsPage() {
         : documents.length === 0 ? <div className="text-center py-12"><File className="w-12 h-12 text-slate-200 mx-auto mb-3" /><p className="text-slate-500">Aucun document</p></div>
         : <div className="space-y-2"><AnimatePresence mode="popLayout">{documents.map((doc, i) => (
           <motion.div key={doc.filename} layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ delay: i * 0.03 }} className="card p-4 flex items-center gap-4 hover:shadow-md transition-shadow group">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center flex-shrink-0"><FileText className="w-5 h-5 text-indigo-500" /></div>
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center flex-shrink-0"><FileText className="w-5 h-5 text-emerald-500" /></div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-slate-900 truncate">{doc.filename}</p>
               <div className="flex items-center gap-3 mt-1">

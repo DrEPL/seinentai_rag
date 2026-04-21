@@ -60,10 +60,10 @@ export default function SearchPage() {
               <button
                 type="button"
                 onClick={() => setUseHybrid(!useHybrid)}
-                className="flex items-center gap-2 text-sm text-slate-600 hover:text-indigo-600 transition-colors cursor-pointer"
+                className="flex items-center gap-2 text-sm text-slate-600 hover:text-emerald-600 transition-colors cursor-pointer"
               >
                 {useHybrid ? (
-                  <ToggleRight className="w-5 h-5 text-indigo-500" />
+                  <ToggleRight className="w-5 h-5 text-emerald-500" />
                 ) : (
                   <ToggleLeft className="w-5 h-5 text-slate-400" />
                 )}
@@ -105,8 +105,8 @@ export default function SearchPage() {
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center">
-                    <FileText className="w-4 h-4 text-indigo-500" />
+                  <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+                    <FileText className="w-4 h-4 text-emerald-500" />
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-slate-900">{result.filename}</p>
@@ -120,7 +120,7 @@ export default function SearchPage() {
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Zap className="w-3 h-3 text-amber-500" />
-                  <span className="text-sm font-bold text-indigo-600 font-mono">
+                  <span className="text-sm font-bold text-emerald-600 font-mono">
                     {(result.score * 100).toFixed(1)}%
                   </span>
                 </div>
@@ -137,7 +137,7 @@ export default function SearchPage() {
                     initial={{ width: 0 }}
                     animate={{ width: `${result.score * 100}%` }}
                     transition={{ delay: 0.3 + i * 0.05, duration: 0.5, ease: 'easeOut' }}
-                    className="h-full bg-gradient-to-r from-indigo-400 to-violet-500 rounded-full"
+                    className="h-full bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full"
                   />
                 </div>
               </div>
@@ -159,9 +159,9 @@ export default function SearchPage() {
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-indigo-50 mb-4"
+              className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-50 mb-4"
             >
-              <SearchIcon className="w-7 h-7 text-indigo-400" />
+              <SearchIcon className="w-7 h-7 text-emerald-400" />
             </motion.div>
             <p className="text-slate-500 mb-1">Explorez vos documents</p>
             <p className="text-xs text-slate-400">

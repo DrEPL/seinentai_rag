@@ -43,7 +43,7 @@ export default function ChatPage() {
     <AppLayout pageTitle="Chat RAG" fullHeight>
       <div className="flex-1 flex flex-col relative overflow-hidden">
         {/* Messages area */}
-        <div ref={scrollRef} className="flex-1 overflow-y-auto no-scrollbar scroll-smooth pb-4">
+        <div ref={scrollRef} className="flex-1 overflow-y-auto no-scrollbar scroll-smooth pb-4 chat-bg-pattern">
           {isEmpty ? (
             /* Empty state */
             <div className="flex-1 flex items-center justify-center min-h-full px-4">
@@ -52,7 +52,7 @@ export default function ChatPage() {
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ delay: 0.1, duration: 0.4 }}
-                  className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-indigo-500 to-violet-600 shadow-lg shadow-indigo-200 mb-6"
+                  className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-emerald-500 to-teal-600 shadow-lg shadow-emerald-200 mb-6"
                 >
                   <MessageSquarePlus className="w-9 h-9 text-white" />
                 </motion.div>
@@ -88,12 +88,12 @@ export default function ChatPage() {
                       className={cn(
                         'flex items-center gap-2.5 px-4 py-3 rounded-xl text-left',
                         'text-sm text-slate-600 bg-white border border-slate-200',
-                        'hover:border-indigo-200 hover:bg-indigo-50/50 hover:text-indigo-700',
+                        'hover:border-emerald-200 hover:bg-emerald-50/50 hover:text-emerald-700',
                         'transition-all duration-200 cursor-pointer',
                         'active:scale-[0.98]'
                       )}
                     >
-                      <s.icon className="w-4 h-4 flex-shrink-0 text-indigo-400" />
+                      <s.icon className="w-4 h-4 flex-shrink-0 text-emerald-500" />
                       <span className="line-clamp-1">{s.text}</span>
                     </button>
                   ))}

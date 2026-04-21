@@ -40,7 +40,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               'transition-all duration-200',
               'placeholder:text-slate-400',
               'hover:border-slate-300',
-              'focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500',
+              'focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500',
               icon && 'pl-10',
               rightIcon && 'pr-10',
               error && 'border-red-300 focus:ring-red-500/20 focus:border-red-500',

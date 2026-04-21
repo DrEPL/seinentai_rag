@@ -1,12 +1,13 @@
 /**
  * SEINENTAI4US — ChatMessage bubble
  */
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Bot, User, FileText, ChevronDown, ChevronUp } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { cn } from '@/lib/utils';
 import type { ChatMessage as ChatMessageType } from '@/store/slices/chatSlice';
-import { useState } from 'react';
 
 interface ChatMessageProps {
   message: ChatMessageType;
@@ -32,8 +33,8 @@ function ChatMessage({ message, isStreaming }: ChatMessageProps) {
         className={cn(
           'flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center shadow-sm',
           isUser
-            ? 'bg-gradient-to-br from-indigo-400 to-violet-500'
-            : 'bg-gradient-to-br from-emerald-400 to-teal-500'
+            ? 'bg-gradient-to-br from-slate-400 to-slate-500'
+            : 'bg-gradient-to-br from-slate-700 via-slate-800 to-slate-950'
         )}
       >
         {isUser ? (
@@ -46,25 +47,55 @@ function ChatMessage({ message, isStreaming }: ChatMessageProps) {
       {/* Bubble */}
       <div
         className={cn(
-          'max-w-[80%] md:max-w-[70%]',
+          'max-w-[85%] md:max-w-[80%]',
           isUser ? 'items-end' : 'items-start'
         )}
       >
         <div
           className={cn(
-            'rounded-2xl px-4 py-3 text-sm leading-relaxed',
+            'rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm',
             isUser
-              ? 'bg-gradient-to-r from-indigo-500 to-violet-500 text-white rounded-tr-md'
-              : 'bg-white border border-slate-100 text-slate-700 shadow-sm rounded-tl-md'
+              ? 'bg-slate-100 text-slate-900 border border-slate-200 rounded-tr-md'
+              : 'bg-white border border-slate-100 text-slate-700 rounded-tl-md'
           )}
         >
-          {/* Render content with line breaks */}
-          <div className="whitespace-pre-wrap break-words">
-            {message.content}
-            {isStreaming && !message.content && (
-              <span className="typing-dots inline-flex ml-1">
-                <span /><span /><span />
-              </span>
+          {/* Render content with Markdown */}
+          <div className={cn(
+            'break-words',
+            isUser ? 'prose-chat-user' : 'prose-chat'
+          )}>
+            <ReactMarkdown 
+              remarkPlugins={[remarkGfm]}
+              components={{
+                a: ({ node, ...props }) => <a target="_blank" rel="noopener noreferrer" {...props} />,
+                code: ({ node, inline, ...props }) => (
+                  inline 
+                    ? <code 
+                        className={cn(
+                          "px-1.5 py-0.5 rounded font-medium",
+                          isUser 
+                            ? "bg-slate-200/70 text-slate-800" 
+                            : "bg-slate-100 text-emerald-600"
+                        )} 
+                        {...props} 
+                      />
+                    : <code 
+                        className={cn(
+                          "block p-3 rounded-lg border overflow-x-auto my-2",
+                          isUser
+                            ? "bg-slate-200/40 border-slate-300/50 text-slate-900"
+                            : "bg-slate-50 border-slate-100 text-slate-800"
+                        )}
+                        {...props} 
+                      />
+                )
+              }}
+            >
+              {message.content || (isStreaming ? '...' : '')}
+            </ReactMarkdown>
+            
+            {isStreaming && message.content && (
+              <span className="inline-block w-2 h-4 ml-1 bg-emerald-500 animate-[typing-cursor_1s_infinite] vertical-middle" />
             )}
           </div>
         </div>
@@ -74,7 +105,7 @@ function ChatMessage({ message, isStreaming }: ChatMessageProps) {
           <div className="mt-2">
             <button
               onClick={() => setSourcesExpanded(!sourcesExpanded)}
-              className="inline-flex items-center gap-1.5 text-[11px] font-medium text-indigo-600 hover:text-indigo-700 transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 text-[11px] font-medium text-emerald-600 hover:text-emerald-700 transition-colors cursor-pointer"
             >
               <FileText className="w-3 h-3" />
               {message.sources.length} source{message.sources.length > 1 ? 's' : ''}
@@ -97,7 +128,7 @@ function ChatMessage({ message, isStreaming }: ChatMessageProps) {
                       <span className="font-medium text-slate-700 truncate">
                         {source.filename}
                       </span>
-                      <span className="text-[10px] text-indigo-500 font-mono">
+                      <span className="text-[10px] text-emerald-600 font-mono">
                         {(source.score * 10).toFixed(2)}%
                       </span>
                     </div>

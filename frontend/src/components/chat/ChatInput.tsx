@@ -65,7 +65,7 @@ export default function ChatInput({ onSend, isStreaming, onStop, disabled }: Cha
                   'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-medium',
                   'transition-all duration-200 cursor-pointer',
                   ragSettings.use_agent || isSettingsOpen
-                    ? 'bg-violet-50 text-violet-600 hover:bg-violet-100'
+                    ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100'
                     : 'bg-slate-50 text-slate-500 hover:bg-slate-100'
                 )}
               >
@@ -83,7 +83,7 @@ export default function ChatInput({ onSend, isStreaming, onStop, disabled }: Cha
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-violet-50 text-violet-600 text-[10px] font-semibold"
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-600 text-[10px] font-semibold"
               >
                 <Sparkles className="w-3 h-3" />
                 Agent IA actif
@@ -98,7 +98,7 @@ export default function ChatInput({ onSend, isStreaming, onStop, disabled }: Cha
             className={cn(
               'flex items-end gap-2 bg-white rounded-2xl border border-slate-200',
               'shadow-sm transition-all duration-200',
-              'focus-within:border-none focus-within:shadow-md focus-within:shadow-indigo-100/50'
+              'focus-within:border-none focus-within:shadow-md focus-within:shadow-emerald-100/50'
             )}
           >
             <textarea
@@ -137,7 +137,7 @@ export default function ChatInput({ onSend, isStreaming, onStop, disabled }: Cha
                   className={cn(
                     'p-2 rounded-xl transition-all duration-200 cursor-pointer',
                     message.trim()
-                      ? 'bg-gradient-to-r from-indigo-500 to-violet-500 text-white shadow-sm hover:shadow-md hover:shadow-indigo-200'
+                      ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-sm hover:shadow-md hover:shadow-emerald-200'
                       : 'bg-slate-100 text-slate-400 cursor-not-allowed'
                   )}
                 >

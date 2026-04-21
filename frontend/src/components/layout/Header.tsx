@@ -42,7 +42,7 @@ export default function Header({ title }: HeaderProps) {
       <div className="flex items-center gap-2">
         <button className="p-2 rounded-xl hover:bg-slate-100 transition-colors relative cursor-pointer">
           <Bell className="w-[18px] h-[18px] text-slate-500" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-indigo-500 rounded-full" />
+          <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-emerald-500 rounded-full" />
         </button>
 
         {user && (
@@ -56,7 +56,7 @@ export default function Header({ title }: HeaderProps) {
                 className="flex items-center gap-2.5 pl-2 ml-1 border-l border-slate-100 cursor-pointer hover:opacity-80 transition-opacity"
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
               >
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center shadow-sm">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-sm">
                   <span className="text-xs font-bold text-white">
                     {getInitials(user.full_name)}
                   </span>
@@ -75,7 +75,7 @@ export default function Header({ title }: HeaderProps) {
               <div className="p-5 border-b border-slate-50 bg-gradient-to-b from-slate-50/50 to-white">
                 <div className="flex items-center gap-4">
                   <div className="relative">
-                    <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-400 to-violet-600 flex items-center justify-center shadow-md shadow-indigo-100">
+                    <div className="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center shadow-md shadow-emerald-100">
                       <span className="text-xl font-bold text-white">
                         {getInitials(user.full_name)}
                       </span>

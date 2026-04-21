@@ -82,7 +82,7 @@ export default function LoginPage() {
           <span className="text-sm text-slate-500">Pas encore de compte ? </span>
           <Link
             href="/register"
-            className="text-sm font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
+            className="text-sm font-semibold text-emerald-600 hover:text-emerald-700 transition-colors"
           >
             Créer un compte
           </Link>

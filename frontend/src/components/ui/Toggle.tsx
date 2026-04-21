@@ -39,7 +39,7 @@ export default function Toggle({
         className={cn(
           'relative inline-flex flex-shrink-0 rounded-full transition-colors duration-200',
           trackSize,
-          checked ? 'bg-indigo-500' : 'bg-slate-200',
+          checked ? 'bg-emerald-500' : 'bg-slate-200',
           !disabled && 'group-hover:shadow-md',
           'cursor-pointer'
         )}

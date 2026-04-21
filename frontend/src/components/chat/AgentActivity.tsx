@@ -17,10 +17,10 @@ import { useAppSelector } from '@/store/hooks';
 import type { AgentStep } from '@/store/slices/agentSlice';
 
 const stepConfig: Record<AgentStep['type'], { icon: typeof Brain; label: string; color: string; bgColor: string }> = {
-  thought: { icon: Brain, label: 'Réflexion', color: 'text-violet-600', bgColor: 'bg-violet-50 border-violet-200' },
-  tool_call: { icon: Wrench, label: 'Outil', color: 'text-blue-600', bgColor: 'bg-blue-50 border-blue-200' },
+  thought: { icon: Brain, label: 'Réflexion', color: 'text-emerald-600', bgColor: 'bg-emerald-50 border-emerald-200' },
+  tool_call: { icon: Wrench, label: 'Outil', color: 'text-emerald-600', bgColor: 'bg-emerald-50 border-emerald-200' },
   observation: { icon: Eye, label: 'Observation', color: 'text-amber-600', bgColor: 'bg-amber-50 border-amber-200' },
-  synthesis_start: { icon: Sparkles, label: 'Synthèse', color: 'text-emerald-600', bgColor: 'bg-emerald-50 border-emerald-200' },
+  synthesis_start: { icon: Sparkles, label: 'Synthèse', color: 'text-slate-800', bgColor: 'bg-slate-50 border-slate-300' },
   error: { icon: AlertCircle, label: 'Erreur', color: 'text-red-600', bgColor: 'bg-red-50 border-red-200' },
 };
 
@@ -101,7 +101,7 @@ export default function AgentActivity() {
           <div className="flex items-center gap-2">
             <div className={cn(
               'w-2 h-2 rounded-full',
-              isActive ? 'bg-emerald-400 animate-pulse' : 'bg-slate-300'
+              isActive ? 'bg-slate-900 animate-pulse' : 'bg-slate-300'
             )} />
             <span className="text-xs font-semibold text-slate-700">
               Agent {mode === 'agent' ? 'Agentic' : 'Statique'}

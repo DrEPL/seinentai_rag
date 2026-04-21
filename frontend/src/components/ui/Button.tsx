@@ -18,7 +18,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    'bg-gradient-to-r from-indigo-500 to-violet-500 text-white shadow-md hover:shadow-lg hover:shadow-indigo-200 hover:from-indigo-600 hover:to-violet-600 active:scale-[0.98]',
+    'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-md hover:shadow-lg hover:shadow-emerald-200 hover:from-emerald-600 hover:to-teal-600 active:scale-[0.98]',
   secondary:
     'bg-white text-slate-700 border border-slate-200 shadow-sm hover:bg-slate-50 hover:border-slate-300 active:scale-[0.98]',
   ghost:
@@ -26,7 +26,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   danger:
     'bg-red-500 text-white shadow-sm hover:bg-red-600 hover:shadow-red-200 active:scale-[0.98]',
   outline:
-    'bg-transparent text-indigo-600 border border-indigo-200 hover:bg-indigo-50 hover:border-indigo-300 active:scale-[0.98]',
+    'bg-transparent text-emerald-600 border border-emerald-200 hover:bg-emerald-50 hover:border-emerald-300 active:scale-[0.98]',
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -42,7 +42,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         className={cn(
           'inline-flex items-center justify-center font-semibold transition-all duration-200 cursor-pointer',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2',
           'disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none',
           variantStyles[variant],
           sizeStyles[size],
