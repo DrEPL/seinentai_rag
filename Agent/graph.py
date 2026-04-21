@@ -66,6 +66,36 @@ def _call_llm(prompt: str, system: str = "", temperature: float = 0.1, max_token
         return ""
 
 
+def _call_llm_stream(prompt: str, system: str = "", temperature: float = 0.7, max_tokens: int = 2048):
+    """Appelle le LLM via Ollama en mode streaming et yield les tokens."""
+    base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+    model = os.getenv("OLLAMA_MODEL_NAME", "mistral-large-3:675b-cloud")
+
+    body = {
+        "model": model,
+        "prompt": prompt,
+        "stream": True,
+        "options": {"temperature": temperature, "num_predict": max_tokens},
+    }
+    if system:
+        body["system"] = system
+
+    try:
+        with requests.post(f"{base_url}/api/generate", json=body, stream=True, timeout=120) as resp:
+            resp.raise_for_status()
+            for line in resp.iter_lines():
+                if line:
+                    decoded = json.loads(line.decode("utf-8"))
+                    token = decoded.get("response", "")
+                    if token:
+                        yield token
+                    if decoded.get("done"):
+                        break
+    except Exception as e:
+        logger.error(f"LLM stream call failed: {e}")
+        yield ""
+
+
 def _parse_json_response(text: str) -> Dict[str, Any]:
     """Extrait le premier bloc JSON d'une réponse LLM."""
     # Tenter le parsing direct
@@ -412,12 +442,24 @@ def synthesize_response(state: AgentState) -> AgentState:
     _add_thought(state, "synthesize_response",
                  f"Synthèse avec {len(docs)} documents")
 
+    # Construire les sources
+    sources = []
+    for doc in docs:
+        meta = doc.get("metadata", {})
+        sources.append({
+            "filename": doc.get("filename") or meta.get("filename", "inconnu"),
+            "score": round(float(doc.get("score", 0)), 4),
+            "chunk_index": doc.get("chunk_index") or meta.get("chunk_index", 0),
+            "excerpt": doc.get("text", ""),
+        })
+
+    state["sources"] = sources
+
     if not docs:
         state["final_response"] = (
             "Je n'ai pas trouvé d'information pertinente dans la base de connaissances "
             "pour répondre à cette question."
         )
-        state["sources"] = []
         return state
 
     # Construire le contexte pour la synthèse
@@ -434,23 +476,9 @@ def synthesize_response(state: AgentState) -> AgentState:
     else:
         full_prompt = SYNTHESIS_PROMPT.format(query=query, context=context_str)
 
-    response = _call_llm(full_prompt, temperature=0.7, max_tokens=2048)
+    state["synthesis_prompt"] = full_prompt
 
-    # Construire les sources
-    sources = []
-    for doc in docs:
-        meta = doc.get("metadata", {})
-        sources.append({
-            "filename": doc.get("filename") or meta.get("filename", "inconnu"),
-            "score": round(float(doc.get("score", 0)), 4),
-            "chunk_index": doc.get("chunk_index") or meta.get("chunk_index", 0),
-            "excerpt": doc.get("text", ""),
-        })
-
-    state["final_response"] = response or "Erreur lors de la génération de la réponse."
-    state["sources"] = sources
-
-    logger.info(f"📝 [synthesize_response] → {len(response)} caractères")
+    logger.info(f"📝 [synthesize_response] → Prompt généré pour streaming")
     return state
 
 

@@ -172,10 +172,16 @@ async def _sse_stream_agent(
             elif event_type == "synthesis_start":
                 yield f"data: {json.dumps({'type': 'synthesis_start'})}\n\n"
 
+            elif event_type == "token":
+                token_content = event.get("content", "")
+                full_response += token_content
+                yield f"data: {json.dumps({'type': 'token', 'token': token_content})}\n\n"
+
             elif event_type == "response":
-                full_response = event.get("content", "")
-                # Émettre la réponse comme un token unique
-                yield f"data: {json.dumps({'type': 'token', 'token': full_response})}\n\n"
+                # Fallback pour le mode non-stream si jamais on reçoit la réponse en un bloc
+                if not full_response:
+                    full_response = event.get("content", "")
+                    yield f"data: {json.dumps({'type': 'token', 'token': full_response})}\n\n"
 
             elif event_type == "done":
                 sources = event.get("sources", [])

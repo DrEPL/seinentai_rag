@@ -46,6 +46,7 @@ class AgentState(TypedDict, total=False):
     tool_calls_log: List[Dict[str, Any]]  # Journal des appels aux outils
 
     # ── Sortie ────────────────────────────────────────────────────────────────
+    synthesis_prompt: str               # Prompt préparé pour la synthèse finale (streaming)
     final_response: str                 # Réponse finale synthétisée
     sources: List[Dict[str, Any]]       # Sources utilisées dans la réponse
     error: Optional[str]                # Message d'erreur éventuel

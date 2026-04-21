@@ -118,6 +118,10 @@ class AgenticRAGService:
             # Exécuter le graphe
             final_state = self.graph.invoke(initial_state)
 
+            if "synthesis_prompt" in final_state and not final_state.get("final_response"):
+                from Agent.graph import _call_llm
+                final_state["final_response"] = _call_llm(final_state["synthesis_prompt"], temperature=0.7, max_tokens=2048)
+
             generation_time = time.time() - start_time
 
             return {
@@ -222,7 +226,21 @@ class AgenticRAGService:
                         }
 
                     # Capturer la réponse finale
-                    if "final_response" in state_update and state_update["final_response"]:
+                    if "synthesis_prompt" in state_update and state_update["synthesis_prompt"]:
+                        yield {"type": "synthesis_start"}
+                        from Agent.graph import _call_llm_stream
+                        
+                        full_response = ""
+                        for token in _call_llm_stream(state_update["synthesis_prompt"], temperature=0.7, max_tokens=2048):
+                            if token:
+                                yield {"type": "token", "content": token}
+                                full_response += token
+                        
+                        # Mettre à jour state_update pour la fin
+                        state_update["final_response"] = full_response
+                        state_update["synthesis_prompt"] = "" # Ne plus le traiter
+
+                    elif "final_response" in state_update and state_update["final_response"] and not state_update.get("synthesis_prompt"):
                         yield {"type": "synthesis_start"}
                         yield {
                             "type": "response",
