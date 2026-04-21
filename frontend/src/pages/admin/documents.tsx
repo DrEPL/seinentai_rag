@@ -11,6 +11,7 @@ import Modal from '@/components/ui/Modal';
 import { DocumentCardSkeleton } from '@/components/ui/Skeleton';
 import { useDocuments } from '@/hooks/useDocuments';
 import { cn, formatFileSize, formatDate } from '@/lib/utils';
+import type { DocumentItem } from '@/store/slices/documentsSlice';
 
 export default function DocumentsPage() {
   const { documents, loading, uploading, uploadProgress, reindexing, loadDocuments, uploadDocument, deleteDocument, reindexAll } = useDocuments();
@@ -31,7 +32,7 @@ export default function DocumentsPage() {
     { label: 'Documents', value: documents.length, icon: FileText, color: 'text-emerald-500', bg: 'bg-emerald-50' },
     { label: 'Indexés', value: indexedCount, icon: CheckCircle, color: 'text-teal-500', bg: 'bg-teal-50' },
     { label: 'En attente', value: documents.length - indexedCount, icon: AlertCircle, color: 'text-amber-500', bg: 'bg-amber-50' },
-    { label: 'Stockage', value: formatFileSize(documents.reduce((a: number, d: any) => a + (d.size || 0), 0)), icon: HardDrive, color: 'text-emerald-600', bg: 'bg-emerald-100' },
+    { label: 'Stockage', value: formatFileSize(documents.reduce((acc: number, doc: DocumentItem) => acc + (doc.size || 0), 0)), icon: HardDrive, color: 'text-emerald-600', bg: 'bg-emerald-100' },
   ];
 
   return (

@@ -163,10 +163,16 @@ const chatSlice = createSlice({
       }
     },
     clearChat: (state) => {
+      state.messages = {};
       state.activeSessionId = null;
-      state.streamingContent = '';
-      state.isStreaming = false;
       state.error = null;
+    },
+    removeSession: (state, action: PayloadAction<string>) => {
+      state.sessions = state.sessions.filter(s => s.session_id !== action.payload);
+      delete state.messages[action.payload];
+      if (state.activeSessionId === action.payload) {
+        state.activeSessionId = null;
+      }
     },
   },
 });
@@ -185,5 +191,6 @@ export const {
   setChatError,
   updateRagSettings,
   clearChat,
+  removeSession,
 } = chatSlice.actions;
 export default chatSlice.reducer;

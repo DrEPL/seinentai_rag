@@ -3,13 +3,15 @@
  */
 import { memo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Bot, User, FileText, ChevronDown, ChevronUp, Copy, Check } from 'lucide-react';
+import { Bot, User, FileText, ChevronDown, ChevronUp, Copy, Check, Share2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { cn } from '@/lib/utils';
 import { useAppDispatch } from '@/store/hooks';
 import { addToast } from '@/store/slices/uiSlice';
 import { copyToClipboard } from '@/utils/exportUtils';
+import Popover from '@/components/ui/Popover';
+import SocialShareButtons from './SocialShareButtons';
 import type { ChatMessage as ChatMessageType } from '@/store/slices/chatSlice';
 
 interface ChatMessageProps {
@@ -22,6 +24,8 @@ function ChatMessage({ message, isStreaming }: ChatMessageProps) {
   const isUser = message.role === 'user';
   const [sourcesExpanded, setSourcesExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  const [isShareOpen, setIsShareOpen] = useState(false);
 
   const handleCopy = async () => {
     const success = await copyToClipboard(message.content);
@@ -68,8 +72,8 @@ function ChatMessage({ message, isStreaming }: ChatMessageProps) {
         {/* Actions - Visible on hover */}
         {!isStreaming && (
           <div className={cn(
-            "absolute -top-1 opacity-0 group-hover:opacity-100 transition-opacity z-10",
-            isUser ? "right-full mr-2" : "left-full ml-2"
+            "absolute -top-1 opacity-0 group-hover:opacity-100 transition-opacity z-10 flex gap-1",
+            isUser ? "right-full mr-2 flex-row-reverse" : "left-full ml-2"
           )}>
             <button
               onClick={handleCopy}
@@ -78,6 +82,36 @@ function ChatMessage({ message, isStreaming }: ChatMessageProps) {
             >
               {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
             </button>
+
+            <Popover
+              isOpen={isShareOpen}
+              onClose={() => setIsShareOpen(false)}
+              align={isUser ? "right" : "left"}
+              position="bottom"
+              contentClassName="min-w-[200px]"
+              trigger={
+                <button
+                  onClick={() => setIsShareOpen(!isShareOpen)}
+                  className={cn(
+                    "p-2 rounded-lg bg-white border border-slate-200 shadow-sm text-slate-400 hover:text-blue-500 hover:border-blue-100 transition-all cursor-pointer",
+                    isShareOpen && "border-blue-100 bg-blue-50/30"
+                  )}
+                  title="Partager le message"
+                >
+                  <Share2 className="w-3.5 h-3.5" />
+                </button>
+              }
+            >
+              <div className="p-1">
+                <p className="px-3 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50 mb-1">
+                  Partager le message
+                </p>
+                <SocialShareButtons 
+                  url={typeof window !== 'undefined' ? window.location.href : ''} 
+                  title={message.content.substring(0, 100)} 
+                />
+              </div>
+            </Popover>
           </div>
         )}
 

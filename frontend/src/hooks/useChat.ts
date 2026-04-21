@@ -15,6 +15,7 @@ import {
   setChatLoading,
   setSessionsLoading,
   setChatError,
+  removeSession,
 } from '@/store/slices/chatSlice';
 import { addStep, clearSteps, setAgentMode } from '@/store/slices/agentSlice';
 import { addToast } from '@/store/slices/uiSlice';
@@ -197,8 +198,8 @@ export function useChat() {
                   const token = event.token as string;
                   fullContent += token;
                   
-                  // Hide agent activity when response starts
-                  dispatch(setAgentActive(false));
+                  // Don't hide agent activity here to avoid hiding the streaming context
+                  // but we can signal it's done thinking if needed
                   
                   dispatch(appendStreamToken(token));
                   dispatch(
@@ -301,6 +302,21 @@ export function useChat() {
     dispatch(clearSteps());
   }, [dispatch]);
 
+  // ─── Delete session ───────────────────────────────────────────────────
+  const deleteSession = useCallback(async (sessionId: string) => {
+    try {
+      await chatApi.deleteSession(sessionId);
+      dispatch(removeSession(sessionId));
+      dispatch(addToast({ type: 'success', message: 'Session supprimée' }));
+      
+      if (activeSessionId === sessionId) {
+        newConversation();
+      }
+    } catch (err) {
+      dispatch(addToast({ type: 'error', message: 'Erreur suppression session' }));
+    }
+  }, [dispatch, activeSessionId, newConversation]);
+
   return {
     sessions,
     activeSessionId,
@@ -315,5 +331,6 @@ export function useChat() {
     sendMessage,
     stopStreaming,
     newConversation,
+    deleteSession,
   };
 }

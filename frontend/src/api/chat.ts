@@ -31,4 +31,5 @@ export const chatApi = {
     api.post(`/chat/${sessionId}`, data),
   getHistory: () => api.get('/chat/history'),
   getSession: (sessionId: string) => api.get(`/chat/sessions/${sessionId}`),
+  deleteSession: (sessionId: string) => api.delete(`/chat/sessions/${sessionId}`),
 };

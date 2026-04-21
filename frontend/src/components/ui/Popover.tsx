@@ -67,7 +67,7 @@ export default function Popover({
             exit={{ opacity: 0, y: position === 'top' ? 10 : -10, scale: 0.95 }}
             transition={{ duration: 0.15, ease: 'easeOut' }}
             className={cn(
-              'absolute z-50 min-w-[280px]',
+              'absolute z-50',
               alignmentClasses[align],
               positionClasses[position],
               contentClassName

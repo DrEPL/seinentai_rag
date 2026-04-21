@@ -15,7 +15,11 @@ import {
   ChevronLeft,
   Shield,
   LayoutDashboard,
+  MoreVertical,
+  Trash2,
+  Share2,
 } from 'lucide-react';
+import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { truncate, formatRelativeTime } from '@/lib/utils';
 import { ROUTES } from '@/lib/constants';
@@ -23,6 +27,8 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { switchInterface, toggleSidebar, setSidebarOpen } from '@/store/slices/uiSlice';
 import { useChat } from '@/hooks/useChat';
 import { SessionSkeleton } from '@/components/ui/Skeleton';
+import Popover from '@/components/ui/Popover';
+import SocialShareButtons from '@/components/chat/SocialShareButtons';
 
 interface NavItem {
   icon: typeof MessageSquare;
@@ -47,7 +53,17 @@ export default function Sidebar() {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const { sidebarOpen, interfaceMode } = useAppSelector((s) => s.ui);
-  const { sessions, activeSessionId, sessionsLoading, loadSessions, loadSession, newConversation } = useChat();
+  const { 
+    sessions, 
+    activeSessionId, 
+    sessionsLoading, 
+    loadSessions, 
+    loadSession, 
+    newConversation,
+    deleteSession 
+  } = useChat();
+
+  const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
 
   const navItems = interfaceMode === 'admin' ? adminNav : userNav;
 
@@ -205,7 +221,7 @@ export default function Sidebar() {
                         <div className="absolute left-0 top-3 bottom-3 w-1 bg-emerald-500 rounded-r-full" />
                       )}
                       
-                      <div className="flex items-center gap-2 w-full">
+                      <div className="flex items-center gap-2 w-full pr-6">
                         <MessageSquare className={cn(
                           'w-3.5 h-3.5 flex-shrink-0 transition-colors',
                           activeSessionId === session.session_id ? 'text-emerald-500' : 'text-slate-400 group-hover:text-slate-500'
@@ -224,6 +240,56 @@ export default function Sidebar() {
                             {session.message_count} msg
                           </span>
                         )}
+                      </div>
+
+                      {/* Session Actions Popover */}
+                      <div className="absolute right-2 top-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Popover
+                          isOpen={activeMenuId === session.session_id}
+                          onClose={() => setActiveMenuId(null)}
+                          align="right"
+                          position="bottom"
+                          contentClassName="min-w-[180px]"
+                          trigger={
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setActiveMenuId(activeMenuId === session.session_id ? null : session.session_id);
+                              }}
+                              className="p-1.5 rounded-lg hover:bg-white border border-transparent hover:border-slate-200 shadow-none hover:shadow-sm text-slate-400 hover:text-slate-600 transition-all cursor-pointer"
+                            >
+                              <MoreVertical className="w-3.5 h-3.5" />
+                            </button>
+                          }
+                        >
+                          <div className="p-1 min-w-[180px]">
+                            {/* Share section */}
+                            <div className="px-3 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50 mb-1">
+                              Partager la conversation
+                            </div>
+                            <SocialShareButtons 
+                              url={typeof window !== 'undefined' ? `${window.location.origin}${ROUTES.CHAT}?session_id=${session.session_id}` : ''} 
+                              title={`Conversation: ${session.title || 'Sans titre'}`} 
+                            />
+                            
+                            <div className="h-px bg-slate-100 my-1" />
+                            
+                            {/* Delete action */}
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                if (confirm('Supprimer cette conversation ?')) {
+                                  deleteSession(session.session_id);
+                                  setActiveMenuId(null);
+                                }
+                              }}
+                              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-red-500 hover:bg-red-50 transition-colors cursor-pointer"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                              Supprimer la session
+                            </button>
+                          </div>
+                        </Popover>
                       </div>
                     </button>
                   ))}
