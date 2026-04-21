@@ -1,0 +1,486 @@
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   SEINENTAI4US — Design System (Light Theme)
+   Premium SaaS-style design tokens
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Tailwind Theme ────────────────────────────────────────────────────────── */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-light: var(--primary-light);
+  --color-primary-dark: var(--primary-dark);
+  --color-accent: var(--accent);
+  --color-accent-light: var(--accent-light);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-surface-alt: var(--surface-alt);
+  --color-border: var(--border-color);
+  --color-border-light: var(--border-light);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-info: var(--info);
+
+  --font-heading: 'Outfit', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* ─── Root Variables ────────────────────────────────────────────────────────── */
+:root {
+  /* Core palette */
+  --primary: #6366f1;
+  --primary-light: #818cf8;
+  --primary-dark: #4f46e5;
+  --primary-50: #eef2ff;
+  --primary-100: #e0e7ff;
+  --primary-200: #c7d2fe;
+
+  --accent: #8b5cf6;
+  --accent-light: #a78bfa;
+  --accent-dark: #7c3aed;
+
+  /* Surfaces */
+  --background: #f8f9fc;
+  --foreground: #0f172a;
+  --surface: #ffffff;
+  --surface-hover: #f1f5f9;
+  --surface-alt: #f8fafc;
+  --surface-elevated: #ffffff;
+
+  /* Borders */
+  --border-color: #e2e8f0;
+  --border-light: #f1f5f9;
+  --border-focus: #6366f1;
+
+  /* Text */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --text-inverse: #ffffff;
+
+  /* Semantic */
+  --success: #10b981;
+  --success-light: #d1fae5;
+  --warning: #f59e0b;
+  --warning-light: #fef3c7;
+  --danger: #ef4444;
+  --danger-light: #fee2e2;
+  --info: #3b82f6;
+  --info-light: #dbeafe;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.15);
+  --shadow-glow-lg: 0 0 40px rgba(99, 102, 241, 0.2);
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Sidebar */
+  --sidebar-width: 280px;
+  --sidebar-collapsed: 0px;
+  --header-height: 60px;
+}
+
+/* ─── Base Reset & Typography ───────────────────────────────────────────────── */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--background);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: 2.25rem; }
+h2 { font-size: 1.75rem; }
+h3 { font-size: 1.375rem; }
+h4 { font-size: 1.125rem; }
+
+p {
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+a:hover {
+  color: var(--primary-dark);
+}
+
+/* ─── Custom Scrollbar ──────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ─── Selection ─────────────────────────────────────────────────────────────── */
+::selection {
+  background: var(--primary-200);
+  color: var(--primary-dark);
+}
+
+/* ─── Focus Ring ────────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes bounce-dot {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1); }
+}
+
+@keyframes typing-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* ─── Animation Utilities ───────────────────────────────────────────────────── */
+.animate-fade-in { animation: fadeIn var(--transition-base) ease-out; }
+.animate-fade-in-up { animation: fadeInUp var(--transition-slow) ease-out; }
+.animate-fade-in-down { animation: fadeInDown var(--transition-slow) ease-out; }
+.animate-slide-in-left { animation: slideInLeft var(--transition-slow) ease-out; }
+.animate-slide-in-right { animation: slideInRight var(--transition-slow) ease-out; }
+.animate-scale-in { animation: scaleIn var(--transition-base) ease-out; }
+.animate-pulse-soft { animation: pulse-soft 2s ease-in-out infinite; }
+.animate-spin { animation: spin 1s linear infinite; }
+.animate-float { animation: float 3s ease-in-out infinite; }
+
+/* ─── Stagger children ──────────────────────────────────────────────────────── */
+.stagger-children > * {
+  animation: fadeInUp var(--transition-slow) ease-out both;
+}
+.stagger-children > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-children > *:nth-child(2) { animation-delay: 60ms; }
+.stagger-children > *:nth-child(3) { animation-delay: 120ms; }
+.stagger-children > *:nth-child(4) { animation-delay: 180ms; }
+.stagger-children > *:nth-child(5) { animation-delay: 240ms; }
+.stagger-children > *:nth-child(6) { animation-delay: 300ms; }
+.stagger-children > *:nth-child(7) { animation-delay: 360ms; }
+.stagger-children > *:nth-child(8) { animation-delay: 420ms; }
+
+/* ═══════════════════════════════════════════════════════════════════════════════
+   COMPONENT BASE STYLES
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Glass Effect ──────────────────────────────────────────────────────────── */
+.glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+/* ─── Skeleton Loader ───────────────────────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--border-light) 25%,
+    var(--border-color) 50%,
+    var(--border-light) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-md);
+}
+
+/* ─── Typing Dots ───────────────────────────────────────────────────────────── */
+.typing-dots {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}
+.typing-dots span {
+  width: 6px;
+  height: 6px;
+  background: var(--primary);
+  border-radius: 50%;
+  animation: bounce-dot 1.4s ease-in-out infinite;
+}
+.typing-dots span:nth-child(1) { animation-delay: 0ms; }
+.typing-dots span:nth-child(2) { animation-delay: 160ms; }
+.typing-dots span:nth-child(3) { animation-delay: 320ms; }
+
+/* ─── Gradient Text ─────────────────────────────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Gradient Background ───────────────────────────────────────────────────── */
+.gradient-bg {
+  background: linear-gradient(135deg, var(--primary-50) 0%, #faf5ff 50%, #eff6ff 100%);
+}
+
+.gradient-bg-animated {
+  background: linear-gradient(
+    -45deg,
+    var(--primary-50),
+    #faf5ff,
+    #eff6ff,
+    var(--primary-100)
+  );
+  background-size: 400% 400%;
+  animation: gradient-shift 15s ease infinite;
+}
+
+/* ─── Card Styles ───────────────────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+}
+.card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-light);
+}
+
+.card-interactive {
+  cursor: pointer;
+}
+.card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ─── Badge ─────────────────────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* ─── Dot Indicator ─────────────────────────────────────────────────────────── */
+.dot-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot-indicator.ok { background: var(--success); }
+.dot-indicator.error { background: var(--danger); }
+.dot-indicator.degraded { background: var(--warning); }
+.dot-indicator.pulse {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+/* ─── Backdrop Overlay ──────────────────────────────────────────────────────── */
+.backdrop-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 40;
+  animation: fadeIn var(--transition-fast) ease-out;
+}
+
+/* ─── Chat Bubbles ──────────────────────────────────────────────────────────── */
+.chat-bubble-user {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  color: white;
+  border-radius: var(--radius-lg) var(--radius-lg) var(--radius-sm) var(--radius-lg);
+}
+
+.chat-bubble-assistant {
+  background: var(--surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg) var(--radius-lg) var(--radius-lg) var(--radius-sm);
+}
+
+/* ─── Agent Step Styles ─────────────────────────────────────────────────────── */
+.agent-step {
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  border-left: 3px solid;
+  font-size: 0.8125rem;
+  animation: fadeInUp 300ms ease-out;
+}
+.agent-step.thought { border-color: var(--info); background: var(--info-light); }
+.agent-step.tool_call { border-color: var(--accent); background: #f5f3ff; }
+.agent-step.observation { border-color: var(--warning); background: var(--warning-light); }
+.agent-step.synthesis { border-color: var(--success); background: var(--success-light); }
+.agent-step.error { border-color: var(--danger); background: var(--danger-light); }
+
+/* ─── Scrollbar hide utility ────────────────────────────────────────────────── */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ─── Toast Container ───────────────────────────────────────────────────────── */
+.toast-container {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+.toast-container > * {
+  pointer-events: all;
+}
+
+/* ─── Upload Dropzone ───────────────────────────────────────────────────────── */
+.dropzone {
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-xl);
+  padding: 3rem 2rem;
+  text-align: center;
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+.dropzone:hover,
+.dropzone.active {
+  border-color: var(--primary);
+  background: var(--primary-50);
+}
+.dropzone.active {
+  box-shadow: var(--shadow-glow);
+}
+
+/* ─── Search highlight ──────────────────────────────────────────────────────── */
+.search-highlight {
+  background: linear-gradient(135deg, var(--warning-light), #fef9c3);
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-weight: 500;
+}
