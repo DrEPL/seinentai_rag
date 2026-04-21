@@ -3,10 +3,13 @@
  */
 import { memo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Bot, User, FileText, ChevronDown, ChevronUp } from 'lucide-react';
+import { Bot, User, FileText, ChevronDown, ChevronUp, Copy, Check } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { cn } from '@/lib/utils';
+import { useAppDispatch } from '@/store/hooks';
+import { addToast } from '@/store/slices/uiSlice';
+import { copyToClipboard } from '@/utils/exportUtils';
 import type { ChatMessage as ChatMessageType } from '@/store/slices/chatSlice';
 
 interface ChatMessageProps {
@@ -15,8 +18,19 @@ interface ChatMessageProps {
 }
 
 function ChatMessage({ message, isStreaming }: ChatMessageProps) {
+  const dispatch = useAppDispatch();
   const isUser = message.role === 'user';
   const [sourcesExpanded, setSourcesExpanded] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    const success = await copyToClipboard(message.content);
+    if (success) {
+      setCopied(true);
+      dispatch(addToast({ type: 'success', message: 'Message copié !' }));
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   return (
     <motion.div
@@ -24,7 +38,7 @@ function ChatMessage({ message, isStreaming }: ChatMessageProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
       className={cn(
-        'flex gap-3 px-4 md:px-0',
+        'flex gap-3 px-4 md:px-0 group',
         isUser ? 'flex-row-reverse' : 'flex-row'
       )}
     >
@@ -44,13 +58,29 @@ function ChatMessage({ message, isStreaming }: ChatMessageProps) {
         )}
       </div>
 
-      {/* Bubble */}
+      {/* Bubble Container */}
       <div
         className={cn(
-          'max-w-[85%] md:max-w-[80%]',
+          'max-w-[85%] md:max-w-[80%] flex flex-col relative',
           isUser ? 'items-end' : 'items-start'
         )}
       >
+        {/* Actions - Visible on hover */}
+        {!isStreaming && (
+          <div className={cn(
+            "absolute -top-1 opacity-0 group-hover:opacity-100 transition-opacity z-10",
+            isUser ? "right-full mr-2" : "left-full ml-2"
+          )}>
+            <button
+              onClick={handleCopy}
+              className="p-2 rounded-lg bg-white border border-slate-200 shadow-sm text-slate-400 hover:text-emerald-600 hover:border-emerald-100 transition-all cursor-pointer"
+              title="Copier le message"
+            >
+              {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+            </button>
+          </div>
+        )}
+
         <div
           className={cn(
             'rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm',

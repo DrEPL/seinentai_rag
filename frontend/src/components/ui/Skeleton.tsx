@@ -62,11 +62,16 @@ export function DocumentCardSkeleton() {
 /** Sidebar session skeleton */
 export function SessionSkeleton() {
   return (
-    <div className="px-3 py-2 space-y-2">
+    <div className="space-y-1">
       {Array.from({ length: 5 }).map((_, i) => (
-        <div key={i} className="flex items-center gap-3 px-3 py-2.5">
-          <Skeleton variant="circular" width={20} height={20} />
-          <Skeleton width="70%" height={14} />
+        <div key={i} className="flex flex-col gap-2 px-4 py-3 rounded-xl border border-transparent">
+          <div className="flex items-center gap-2">
+            <Skeleton variant="circular" width={14} height={14} />
+            <Skeleton width="80%" height={12} />
+          </div>
+          <div className="px-5">
+            <Skeleton width="40%" height={8} />
+          </div>
         </div>
       ))}
     </div>

@@ -203,8 +203,8 @@ a:hover {
 
 /* ─── Custom Scrollbar ──────────────────────────────────────────────────────── */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
@@ -212,8 +212,23 @@ a:hover {
 ::-webkit-scrollbar-thumb {
   background: var(--border-color);
   border-radius: var(--radius-full);
+  border: 1px solid transparent;
+  background-clip: padding-box;
 }
 ::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+.modern-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.modern-scrollbar::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+.modern-scrollbar:hover::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+}
+.modern-scrollbar::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
 }
 

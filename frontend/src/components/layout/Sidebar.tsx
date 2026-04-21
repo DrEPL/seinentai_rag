@@ -90,61 +90,62 @@ export default function Sidebar() {
         transition={{ type: 'spring', stiffness: 400, damping: 35 }}
         className={cn(
           'fixed md:relative z-40 h-screen flex flex-col',
-          'w-[280px] bg-white border-r border-slate-200/80',
-          'shadow-sm md:shadow-none'
+          'w-[280px] bg-white border-r border-slate-200/60 shadow-sm md:shadow-none'
         )}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 h-[60px] border-b border-slate-100">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
+        <div className="flex items-center justify-between px-5 h-[65px] border-b border-slate-100/80">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-sm shadow-emerald-200">
               <span className="text-sm font-bold text-white">S</span>
             </div>
             <div>
-              <h2 className="text-sm font-bold text-slate-900 leading-none">SEINENTAI4US</h2>
-              <span className="text-[10px] text-slate-400 uppercase tracking-wider">
-                {interfaceMode === 'admin' ? 'Admin' : 'Assistant IA'}
+              <h2 className="text-sm font-bold text-slate-900 leading-none tracking-tight">SEINENTAI4US</h2>
+              <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-[0.1em] mt-1 block">
+                {interfaceMode === 'admin' ? 'Admin Panel' : 'Assistant IA'}
               </span>
             </div>
           </div>
           <button
             onClick={() => dispatch(toggleSidebar())}
-            className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer md:hidden"
+            className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer md:hidden text-slate-400 hover:text-slate-600"
           >
-            <ChevronLeft className="w-4 h-4 text-slate-400" />
+            <ChevronLeft className="w-4 h-4" />
           </button>
         </div>
 
         {/* New Chat Button (user mode only) */}
         {interfaceMode === 'user' && (
-          <div className="px-3 pt-3">
+          <div className="px-4 py-4">
             <button
               onClick={() => {
                 newConversation();
                 router.push(ROUTES.CHAT);
               }}
               className={cn(
-                'w-full flex items-center gap-2 px-3 py-2.5 rounded-xl',
-                'text-sm font-medium text-emerald-600',
-                'border border-emerald-200 bg-emerald-50/50',
-                'hover:bg-emerald-100/70 hover:border-emerald-300',
+                'w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl',
+                'text-sm font-semibold text-white',
+                'bg-gradient-to-r from-emerald-500 to-teal-600 shadow-sm shadow-emerald-100',
+                'hover:shadow-md hover:shadow-emerald-200/50 hover:-translate-y-0.5',
                 'transition-all duration-200 cursor-pointer',
                 'active:scale-[0.98]'
               )}
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-4 h-4 stroke-[3px]" />
               Nouvelle conversation
             </button>
           </div>
         )}
 
+        <hr className="border-slate-100/80 mx-4" />
+
         {/* Navigation */}
         {interfaceMode === 'admin' && (
-        <nav className="px-3 pt-4">
-          <p className="px-3 mb-2 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
-            Navigation
+        <nav className="px-3 pt-6">
+          <p className="px-4 mb-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+            Menu Principal
           </p>
-          <div className="space-y-0.5">
+          <div className="space-y-1">
             {navItems.map((item) => {
               const isActive = router.pathname === item.href;
               return (
@@ -152,13 +153,13 @@ export default function Sidebar() {
                   key={item.href}
                   onClick={() => router.push(item.href)}
                   className={cn(
-                    'w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer',
+                    'w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 cursor-pointer',
                     isActive
-                      ? 'bg-emerald-50 text-emerald-700 shadow-sm'
+                      ? 'bg-emerald-50 text-emerald-700 shadow-sm border border-emerald-100/50'
                       : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                   )}
                 >
-                  <item.icon className={cn('w-[18px] h-[18px]', isActive && 'text-emerald-500')} />
+                  <item.icon className={cn('w-[18px] h-[18px]', isActive ? 'text-emerald-500' : 'text-slate-400 group-hover:text-slate-600')} />
                   {item.label}
                 </button>
               );
@@ -169,43 +170,66 @@ export default function Sidebar() {
 
         {/* Chat History (user mode) */}
         {interfaceMode === 'user' && (
-          <div className="flex-1 overflow-y-auto mt-4 no-scrollbar">
-            <p className="px-6 mb-2 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+          <div className="flex-1 flex flex-col min-h-0 mt-2">
+            <p className="px-6 mb-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
               Historique
             </p>
-            {sessionsLoading ? (
-              <SessionSkeleton />
-            ) : sessions.length === 0 ? (
-              <p className="px-6 text-xs text-slate-400 italic">Aucune conversation</p>
-            ) : (
-              <div className="px-3 space-y-0.5">
-                {sessions.map((session) => (
-                  <button
-                    key={session.session_id}
-                    onClick={() => {
-                      loadSession(session.session_id);
-                      router.push(ROUTES.CHAT);
-                    }}
-                    className={cn(
-                      'w-full flex items-start gap-2.5 px-3 py-2 rounded-xl text-left transition-all duration-200 cursor-pointer group',
-                      activeSessionId === session.session_id
-                        ? 'bg-emerald-50/80 text-emerald-700'
-                        : 'text-slate-600 hover:bg-slate-50'
-                    )}
-                  >
-                    <MessageSquare className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 opacity-50" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium truncate">
-                        {truncate(session.title || 'Sans titre', 35)}
-                      </p>
-                      <p className="text-[10px] text-slate-400 mt-0.5">
-                        {formatRelativeTime(session.updated_at || session.created_at)}
-                      </p>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
+            
+            <div className="flex-1 overflow-y-auto modern-scrollbar px-3 pb-4 space-y-1">
+              {sessionsLoading ? (
+                <div className="px-3">
+                  <SessionSkeleton />
+                </div>
+              ) : sessions.length === 0 ? (
+                <div className="px-6 py-8 text-center">
+                  <p className="text-xs text-slate-400 italic">Aucune conversation</p>
+                </div>
+              ) : (
+                <div className="space-y-1">
+                  {sessions.map((session) => (
+                    <button
+                      key={session.session_id}
+                      onClick={() => {
+                        loadSession(session.session_id);
+                        router.push(ROUTES.CHAT);
+                      }}
+                      className={cn(
+                        'w-full flex flex-col items-start gap-1 px-4 py-3 rounded-xl text-left transition-all duration-200 cursor-pointer group relative',
+                        activeSessionId === session.session_id
+                          ? 'bg-emerald-50/50 text-emerald-800 border border-emerald-100/50'
+                          : 'text-slate-600 hover:bg-slate-50/80 border border-transparent hover:border-slate-100'
+                      )}
+                    >
+                      {/* Active indicator line */}
+                      {activeSessionId === session.session_id && (
+                        <div className="absolute left-0 top-3 bottom-3 w-1 bg-emerald-500 rounded-r-full" />
+                      )}
+                      
+                      <div className="flex items-center gap-2 w-full">
+                        <MessageSquare className={cn(
+                          'w-3.5 h-3.5 flex-shrink-0 transition-colors',
+                          activeSessionId === session.session_id ? 'text-emerald-500' : 'text-slate-400 group-hover:text-slate-500'
+                        )} />
+                        <p className="text-xs font-semibold truncate flex-1">
+                          {session.title || 'Sans titre'}
+                        </p>
+                      </div>
+                      
+                      <div className="flex items-center justify-between w-full mt-1 px-5">
+                        <span className="text-[10px] text-slate-400 font-medium">
+                          {formatRelativeTime(session.updated_at || session.created_at)}
+                        </span>
+                        {session.message_count > 0 && (
+                          <span className="text-[9px] text-slate-300 bg-slate-50 px-1.5 py-0.5 rounded-md border border-slate-100">
+                            {session.message_count} msg
+                          </span>
+                        )}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         )}
 

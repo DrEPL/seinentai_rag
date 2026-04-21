@@ -77,7 +77,10 @@ const chatSlice = createSlice({
   initialState,
   reducers: {
     setSessions: (state, action: PayloadAction<ChatSession[]>) => {
-      state.sessions = action.payload;
+      // Sort by updated_at DESC initially
+      state.sessions = [...action.payload].sort((a, b) => 
+        new Date(b.updated_at || b.created_at).getTime() - new Date(a.updated_at || a.created_at).getTime()
+      );
       state.sessionsLoading = false;
     },
     addSession: (state, action: PayloadAction<ChatSession>) => {
@@ -97,6 +100,19 @@ const chatSlice = createSlice({
         state.messages[sessionId] = [];
       }
       state.messages[sessionId].push(message);
+
+      // Move session to top and update timestamp
+      const sessionIndex = state.sessions.findIndex(s => s.session_id === sessionId);
+      if (sessionIndex !== -1) {
+        const session = state.sessions[sessionIndex];
+        const updatedSession = { 
+          ...session, 
+          updated_at: new Date().toISOString(),
+          message_count: session.message_count + 1
+        };
+        state.sessions.splice(sessionIndex, 1);
+        state.sessions.unshift(updatedSession);
+      }
     },
     updateLastMessage: (state, action: PayloadAction<{ sessionId: string; content: string; sources?: ChatMessage['sources'] }>) => {
       const { sessionId, content, sources } = action.payload;
@@ -107,6 +123,18 @@ const chatSlice = createSlice({
           last.content = content;
           if (sources) last.sources = sources;
         }
+      }
+
+      // Move session to top and update timestamp (especially for streaming)
+      const sessionIndex = state.sessions.findIndex(s => s.session_id === sessionId);
+      if (sessionIndex !== -1) {
+        const session = state.sessions[sessionIndex];
+        const updatedSession = { 
+          ...session, 
+          updated_at: new Date().toISOString() 
+        };
+        state.sessions.splice(sessionIndex, 1);
+        state.sessions.unshift(updatedSession);
       }
     },
     appendStreamToken: (state, action: PayloadAction<string>) => {
