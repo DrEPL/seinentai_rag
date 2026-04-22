@@ -17,6 +17,7 @@ export interface ChatMessage {
     excerpt: string;
   }>;
   metadata?: Record<string, unknown>;
+  error?: boolean;
 }
 
 export interface ChatSession {
@@ -43,6 +44,7 @@ interface ChatState {
   isStreaming: boolean;
   streamingContent: string;
   loading: boolean;
+  historyLoading: boolean;
   sessionsLoading: boolean;
   error: string | null;
   ragSettings: RagSettings;
@@ -67,6 +69,7 @@ const initialState: ChatState = {
   isStreaming: false,
   streamingContent: '',
   loading: false,
+  historyLoading: false,
   sessionsLoading: false,
   error: null,
   ragSettings: loadRagSettings(),
@@ -149,6 +152,9 @@ const chatSlice = createSlice({
     setChatLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
+    setHistoryLoading: (state, action: PayloadAction<boolean>) => {
+      state.historyLoading = action.payload;
+    },
     setSessionsLoading: (state, action: PayloadAction<boolean>) => {
       state.sessionsLoading = action.payload;
     },
@@ -188,6 +194,16 @@ const chatSlice = createSlice({
         delete state.messages[oldId];
       }
     },
+    setMessageError: (state, action: PayloadAction<{ sessionId: string; messageId: string; error: boolean }>) => {
+      const { sessionId, messageId, error } = action.payload;
+      const msgs = state.messages[sessionId];
+      if (msgs) {
+        const msg = msgs.find(m => m.id === messageId);
+        if (msg) {
+          msg.error = error;
+        }
+      }
+    },
   },
 });
 
@@ -201,11 +217,13 @@ export const {
   appendStreamToken,
   setStreaming,
   setChatLoading,
+  setHistoryLoading,
   setSessionsLoading,
   setChatError,
   updateRagSettings,
   clearChat,
   removeSession,
   replaceSessionId,
+  setMessageError,
 } = chatSlice.actions;
 export default chatSlice.reducer;

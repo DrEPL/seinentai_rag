@@ -3,7 +3,7 @@
  */
 import { memo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Bot, User, FileText, ChevronDown, ChevronUp, Copy, Check, Share2 } from 'lucide-react';
+import { Bot, User, FileText, ChevronDown, ChevronUp, Copy, Check, Share2, AlertCircle } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { cn } from '@/lib/utils';
@@ -224,13 +224,20 @@ function ChatMessage({ message, isStreaming }: ChatMessageProps) {
           </div>
         )}
 
-        {/* Timestamp */}
-        <p className={cn('text-[10px] text-slate-400 mt-1', isUser && 'text-right')}>
-          {new Date(message.timestamp).toLocaleTimeString('fr-FR', {
-            hour: '2-digit',
-            minute: '2-digit',
-          })}
-        </p>
+        <div className="flex items-center gap-2 mt-1">
+          {isUser && message.error && (
+            <div className="flex items-center gap-1 text-[10px] text-red-500 font-medium animate-pulse">
+              <AlertCircle className="w-3 h-3" />
+              <span>Échec</span>
+            </div>
+          )}
+          <p className={cn('text-[10px] text-slate-400', isUser && 'text-right flex-1')}>
+            {new Date(message.timestamp).toLocaleTimeString('fr-FR', {
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
+          </p>
+        </div>
       </div>
     </motion.div>
   );

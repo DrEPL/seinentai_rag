@@ -24,6 +24,7 @@ export default function ChatPage() {
     currentMessages,
     isStreaming,
     loading,
+    historyLoading,
     activeSessionId,
     sendMessage,
     stopStreaming,
@@ -104,7 +105,7 @@ export default function ChatPage() {
             </div>
           ) : (
             <div className="max-w-3xl mx-auto py-6 space-y-6 px-4">
-              {loading && currentMessages.length === 0 ? (
+              {historyLoading && currentMessages.length === 0 ? (
                 <div className="space-y-6">
                   <ChatMessageSkeleton isUser />
                   <ChatMessageSkeleton />
@@ -113,7 +114,8 @@ export default function ChatPage() {
                 currentMessages.map((msg, i) => {
                   const isLastAssistant = i === currentMessages.length - 1 && msg.role === 'assistant';
                   const hasContent = msg.content && msg.content.trim() !== '';
-                  const isLoadingPlaceholder = !hasContent && isLastAssistant && loading;
+                  // On ne montre un placeholder de message que si on est en train de streamer du vrai SSE
+                  const isLoadingPlaceholder = !hasContent && isLastAssistant && isStreaming;
                   const shouldShow = msg.role === 'user' || hasContent || (isStreaming && isLastAssistant) || isLoadingPlaceholder;
                   
                   if (!shouldShow) return null;
@@ -129,6 +131,29 @@ export default function ChatPage() {
               )}
               {/* Agent activity */}
               <AgentActivity />
+
+              {/* Thinking indicator for non-streaming mode */}
+              {loading && !isStreaming && (
+                <motion.div
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex gap-3 px-4 md:px-0"
+                >
+                  <div className="flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center bg-gradient-to-br from-slate-700 to-slate-900 shadow-sm">
+                    <Sparkles className="w-4 h-4 text-white animate-pulse" />
+                  </div>
+                  <div className="bg-white border border-slate-100 rounded-2xl px-4 py-3 shadow-sm rounded-tl-md">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs font-medium text-slate-500">Réflexion en cours</span>
+                      <div className="flex gap-1">
+                        <span className="w-1 h-1 bg-slate-300 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                        <span className="w-1 h-1 bg-slate-300 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                        <span className="w-1 h-1 bg-slate-300 rounded-full animate-bounce"></span>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
             </div>
           )}
         </div>

@@ -13,10 +13,12 @@ import {
   appendStreamToken,
   setStreaming,
   setChatLoading,
+  setHistoryLoading,
   setSessionsLoading,
   setChatError,
   removeSession,
   replaceSessionId,
+  setMessageError,
 } from '@/store/slices/chatSlice';
 import { addStep, clearSteps, setAgentMode } from '@/store/slices/agentSlice';
 import { addToast } from '@/store/slices/uiSlice';
@@ -26,7 +28,7 @@ import type { ChatMessage } from '@/store/slices/chatSlice';
 
 export function useChat() {
   const dispatch = useAppDispatch();
-  const { sessions, activeSessionId, messages, isStreaming, streamingContent, ragSettings, loading, sessionsLoading } =
+  const { sessions, activeSessionId, messages, isStreaming, streamingContent, ragSettings, loading, historyLoading, sessionsLoading } =
     useAppSelector((s) => s.chat);
   const abortRef = useRef<AbortController | null>(null);
 
@@ -48,7 +50,7 @@ export function useChat() {
     async (sessionId: string) => {
       dispatch(setActiveSession(sessionId));
       if (messages[sessionId]?.length) return;
-      dispatch(setChatLoading(true));
+      dispatch(setHistoryLoading(true));
       try {
         const res = await chatApi.getSession(sessionId);
         const msgs: ChatMessage[] = (res.data.messages || []).map(
@@ -62,8 +64,10 @@ export function useChat() {
           })
         );
         dispatch(setMessages({ sessionId, messages: msgs }));
-      } catch {
-        dispatch(setChatError('Erreur chargement session'));
+      } catch (err) {
+        dispatch(addToast({ type: 'error', message: 'Erreur chargement conversation' }));
+      } finally {
+        dispatch(setHistoryLoading(false));
       }
     },
     [dispatch, messages]
@@ -202,10 +206,6 @@ export function useChat() {
                 case 'token': {
                   const token = event.token as string;
                   fullContent += token;
-                  
-                  // Don't hide agent activity here to avoid hiding the streaming context
-                  // but we can signal it's done thinking if needed
-                  
                   dispatch(appendStreamToken(token));
                   dispatch(
                     updateLastMessage({
@@ -226,7 +226,6 @@ export function useChat() {
                       })
                     );
                   }
-                  // Final cleanup
                   dispatch(clearSteps());
                   break;
                 }
@@ -251,11 +250,12 @@ export function useChat() {
       } else {
         // Non-streaming mode
         dispatch(setChatLoading(true));
+
         try {
           const requestBody = isNewChat ? { ...body, session_id: undefined } : body;
           const res = isNewChat
-            ? await chatApi.newChat(requestBody as unknown as Parameters<typeof chatApi.newChat>[0])
-            : await chatApi.continueChat(activeSessionId!, requestBody as unknown as Parameters<typeof chatApi.continueChat>[1]);
+            ? await chatApi.newChat(requestBody as any)
+            : await chatApi.continueChat(activeSessionId!, requestBody as any);
 
           const data = res.data;
           const sid = data.session_id;
@@ -274,6 +274,11 @@ export function useChat() {
           );
         } catch (err) {
           dispatch(addToast({ type: 'error', message: (err as Error).message }));
+          dispatch(setMessageError({ 
+            sessionId: currentSessionId, 
+            messageId: userMsg.id, 
+            error: true 
+          }));
           dispatch(
             updateLastMessage({
               sessionId: currentSessionId,
@@ -323,6 +328,7 @@ export function useChat() {
     streamingContent,
     ragSettings,
     loading,
+    historyLoading,
     sessionsLoading,
     loadSessions,
     loadSession,
