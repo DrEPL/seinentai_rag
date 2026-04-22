@@ -174,6 +174,20 @@ const chatSlice = createSlice({
         state.activeSessionId = null;
       }
     },
+    replaceSessionId: (state, action: PayloadAction<{ oldId: string; newId: string }>) => {
+      const { oldId, newId } = action.payload;
+      const session = state.sessions.find(s => s.session_id === oldId);
+      if (session) {
+        session.session_id = newId;
+      }
+      if (state.activeSessionId === oldId) {
+        state.activeSessionId = newId;
+      }
+      if (state.messages[oldId]) {
+        state.messages[newId] = state.messages[oldId];
+        delete state.messages[oldId];
+      }
+    },
   },
 });
 
@@ -192,5 +206,6 @@ export const {
   updateRagSettings,
   clearChat,
   removeSession,
+  replaceSessionId,
 } = chatSlice.actions;
 export default chatSlice.reducer;

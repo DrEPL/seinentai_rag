@@ -16,6 +16,7 @@ import {
   setSessionsLoading,
   setChatError,
   removeSession,
+  replaceSessionId,
 } from '@/store/slices/chatSlice';
 import { addStep, clearSteps, setAgentMode } from '@/store/slices/agentSlice';
 import { addToast } from '@/store/slices/uiSlice';
@@ -99,24 +100,39 @@ export function useChat() {
         body.session_id = activeSessionId;
       }
 
+      // Generate temp ID for optimistic updates
+      let currentSessionId = activeSessionId || `temp-${Date.now()}`;
+
+      // Create optimistic session if new
+      if (isNewChat) {
+        dispatch(
+          addSession({
+            session_id: currentSessionId,
+            title: text.slice(0, 80),
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+            message_count: 0,
+          })
+        );
+        dispatch(setActiveSession(currentSessionId));
+      }
+
+      // Add user message optimistically
+      dispatch(addMessage({ sessionId: currentSessionId, message: userMsg }));
+
+      // Create placeholder assistant message
+      const assistantMsg: ChatMessage = {
+        id: `assistant-${Date.now()}`,
+        role: 'assistant',
+        content: '',
+        timestamp: new Date().toISOString(),
+      };
+      dispatch(addMessage({ sessionId: currentSessionId, message: assistantMsg }));
+
       // If streaming
       if (ragSettings.stream) {
-        // Add user message optimistically
-        if (activeSessionId) {
-          dispatch(addMessage({ sessionId: activeSessionId, message: userMsg }));
-        }
-
         dispatch(setStreaming(true));
 
-        // Create placeholder assistant message
-        const assistantMsg: ChatMessage = {
-          id: `assistant-${Date.now()}`,
-          role: 'assistant',
-          content: '',
-          timestamp: new Date().toISOString(),
-        };
-
-        let currentSessionId = activeSessionId || '';
         let fullContent = '';
 
         const abortController = new AbortController();
@@ -132,24 +148,13 @@ export function useChat() {
               switch (type) {
                 case 'start': {
                   const sid = event.session_id as string;
-                  currentSessionId = sid;
                   const mode = (event.mode as string) || 'static';
                   dispatch(setAgentMode(mode as 'agent' | 'static'));
 
-                  if (isNewChat) {
-                    dispatch(
-                      addSession({
-                        session_id: sid,
-                        title: text.slice(0, 80),
-                        created_at: new Date().toISOString(),
-                        updated_at: new Date().toISOString(),
-                        message_count: 0,
-                      })
-                    );
-                    dispatch(setActiveSession(sid));
-                    dispatch(addMessage({ sessionId: sid, message: userMsg }));
+                  if (isNewChat && sid && sid !== currentSessionId) {
+                    dispatch(replaceSessionId({ oldId: currentSessionId, newId: sid }));
+                    currentSessionId = sid;
                   }
-                  dispatch(addMessage({ sessionId: sid, message: assistantMsg }));
                   break;
                 }
                 case 'thought':
@@ -247,41 +252,34 @@ export function useChat() {
         // Non-streaming mode
         dispatch(setChatLoading(true));
         try {
+          const requestBody = isNewChat ? { ...body, session_id: undefined } : body;
           const res = isNewChat
-            ? await chatApi.newChat(body as unknown as Parameters<typeof chatApi.newChat>[0])
-            : await chatApi.continueChat(activeSessionId!, body as unknown as Parameters<typeof chatApi.continueChat>[1]);
+            ? await chatApi.newChat(requestBody as unknown as Parameters<typeof chatApi.newChat>[0])
+            : await chatApi.continueChat(activeSessionId!, requestBody as unknown as Parameters<typeof chatApi.continueChat>[1]);
 
           const data = res.data;
           const sid = data.session_id;
 
-          if (isNewChat) {
-            dispatch(
-              addSession({
-                session_id: sid,
-                title: text.slice(0, 80),
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-                message_count: 2,
-              })
-            );
-            dispatch(setActiveSession(sid));
+          if (isNewChat && sid && sid !== currentSessionId) {
+            dispatch(replaceSessionId({ oldId: currentSessionId, newId: sid }));
+            currentSessionId = sid;
           }
 
-          dispatch(addMessage({ sessionId: sid, message: userMsg }));
           dispatch(
-            addMessage({
-              sessionId: sid,
-              message: {
-                id: data.message_id || `assistant-${Date.now()}`,
-                role: 'assistant',
-                content: data.response,
-                timestamp: data.timestamp || new Date().toISOString(),
-                sources: data.sources,
-              },
+            updateLastMessage({
+              sessionId: currentSessionId,
+              content: data.response,
+              sources: data.sources,
             })
           );
         } catch (err) {
           dispatch(addToast({ type: 'error', message: (err as Error).message }));
+          dispatch(
+            updateLastMessage({
+              sessionId: currentSessionId,
+              content: "❌ Une erreur s'est produite lors de la génération de la réponse.",
+            })
+          );
         } finally {
           dispatch(setChatLoading(false));
         }

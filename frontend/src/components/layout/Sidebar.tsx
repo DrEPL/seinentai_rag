@@ -203,14 +203,23 @@ export default function Sidebar() {
               ) : (
                 <div className="space-y-1">
                   {sessions.map((session) => (
-                    <button
+                    <div
                       key={session.session_id}
+                      role="button"
+                      tabIndex={0}
                       onClick={() => {
                         loadSession(session.session_id);
                         router.push(ROUTES.CHAT);
                       }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          loadSession(session.session_id);
+                          router.push(ROUTES.CHAT);
+                        }
+                      }}
                       className={cn(
-                        'w-full flex flex-col items-start gap-1 px-4 py-3 rounded-xl text-left transition-all duration-200 cursor-pointer group relative',
+                        'w-full flex flex-col items-start gap-1 px-4 py-3 rounded-xl text-left transition-all duration-200 cursor-pointer group relative outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-inset',
                         activeSessionId === session.session_id
                           ? 'bg-emerald-50/50 text-emerald-800 border border-emerald-100/50'
                           : 'text-slate-600 hover:bg-slate-50/80 border border-transparent hover:border-slate-100'
@@ -291,7 +300,7 @@ export default function Sidebar() {
                           </div>
                         </Popover>
                       </div>
-                    </button>
+                    </div>
                   ))}
                 </div>
               )}

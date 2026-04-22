@@ -104,7 +104,7 @@ export default function ChatPage() {
             </div>
           ) : (
             <div className="max-w-3xl mx-auto py-6 space-y-6 px-4">
-              {loading ? (
+              {loading && currentMessages.length === 0 ? (
                 <div className="space-y-6">
                   <ChatMessageSkeleton isUser />
                   <ChatMessageSkeleton />
@@ -113,7 +113,8 @@ export default function ChatPage() {
                 currentMessages.map((msg, i) => {
                   const isLastAssistant = i === currentMessages.length - 1 && msg.role === 'assistant';
                   const hasContent = msg.content && msg.content.trim() !== '';
-                  const shouldShow = msg.role === 'user' || hasContent || (isStreaming && isLastAssistant);
+                  const isLoadingPlaceholder = !hasContent && isLastAssistant && loading;
+                  const shouldShow = msg.role === 'user' || hasContent || (isStreaming && isLastAssistant) || isLoadingPlaceholder;
                   
                   if (!shouldShow) return null;
                   
@@ -121,7 +122,7 @@ export default function ChatPage() {
                     <ChatMessage
                       key={msg.id}
                       message={msg}
-                      isStreaming={isStreaming && isLastAssistant}
+                      isStreaming={(isStreaming && isLastAssistant) || isLoadingPlaceholder}
                     />
                   );
                 })
