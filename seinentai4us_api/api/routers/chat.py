@@ -5,9 +5,10 @@ POST /chat/{session_id} - Continuer un chat (SSE)
 GET  /chat/history      - Liste des sessions de l'utilisateur
 GET  /chat/sessions/{session_id} - Historique d'une session
 
-Supporte deux modes :
-- use_agent=True  → Agent RAG intelligent (LangGraph) avec raisonnement dynamique
-- use_agent=False → Pipeline RAG statique (compatibilité descendante)
+Supporte trois modes (routage intelligent) :
+- mode "direct"  → Réponse LLM directe (small talk, hors domaine, clarification)
+- mode "agent"   → Agent RAG intelligent (LangGraph) avec raisonnement dynamique
+- mode "static"  → Pipeline RAG statique (compatibilité descendante)
 """
 
 import json
@@ -30,6 +31,7 @@ from seinentai4us_api.api.models.schemas import (
 )
 from seinentai4us_api.api.services.chat_service import chat_session_service
 from seinentai4us_api.api.services.rag_service import rag_service
+from seinentai4us_api.api.services.intent_router import get_intent_router
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -48,8 +50,8 @@ def _build_sources(docs: list) -> list:
             "title": meta.get("title") or d.get("filename") or meta.get("filename") or f"Document {i+1}",
             "score": round(float(d.get("score", 0)), 4),
             "chunk_index": d.get("chunk_index") or meta.get("chunk_index", 0),
-            "content": text,  # Nouveau champ pour le frontend (AgentActivity / ChatMessage)
-            "excerpt": text,  # Ancien champ pour compatibilité backend
+            "content": text,
+            "excerpt": text,
             "url": meta.get("url"),
         })
     return sources
@@ -60,8 +62,87 @@ def _get_agentic_service():
     from seinentai4us_api.api.services.agentic_rag_service import get_agentic_service
     return get_agentic_service()
 
+# ─── SSE Stream (Réponse directe — sans RAG) ─────────────────────────────────
+
+async def _sse_stream_direct(
+    session_id: str,
+    message: str,
+    intent_result,
+) -> AsyncGenerator[str, None]:
+    """
+    Générateur SSE pour les réponses directes (small_talk, out_of_domain, ambiguous).
+    Ne déclenche pas le pipeline RAG.
+    """
+    from Agent.prompts import DIRECT_RESPONSE_SYSTEM_PROMPT
+
+    # Événement initial
+    init_event = {
+        "type": "start",
+        "session_id": session_id,
+        "mode": "direct",
+        "intent": intent_result.intent,
+        "timestamp": datetime.utcnow().isoformat(),
+    }
+    yield f"data: {json.dumps(init_event, ensure_ascii=False)}\n\n"
+
+    # Thought : classification d'intention
+    yield f"data: {json.dumps({'type': 'thought', 'node': 'intent_router', 'content': f'Intent: {intent_result.intent} (confiance: {intent_result.confidence:.0%}) — {intent_result.reasoning}', 'timestamp': datetime.utcnow().isoformat()}, ensure_ascii=False)}\n\n"
+
+    # Synthèse start
+    yield f"data: {json.dumps({'type': 'synthesis_start', 'timestamp': datetime.utcnow().isoformat()})}\n\n"
+
+    full_response = []
+
+    # Si le classificateur a déjà fourni une réponse directe, la streamer
+    if intent_result.direct_response:
+        response_text = intent_result.direct_response
+        # Simuler un streaming token par token (mots)
+        words = response_text.split(" ")
+        for i, word in enumerate(words):
+            token = word if i == 0 else f" {word}"
+            full_response.append(token)
+            yield f"data: {json.dumps({'type': 'token', 'token': token})}\n\n"
+    elif intent_result.follow_up_question:
+        # Ambiguous : streamer la question de clarification
+        response_text = intent_result.follow_up_question
+        words = response_text.split(" ")
+        for i, word in enumerate(words):
+            token = word if i == 0 else f" {word}"
+            full_response.append(token)
+            yield f"data: {json.dumps({'type': 'token', 'token': token})}\n\n"
+    else:
+        # Fallback : générer via LLM en streaming
+        intent_router = get_intent_router()
+        prompt = f"L'utilisateur dit : \"{message}\"\nRéponds de manière naturelle et chaleureuse."
+        for token in intent_router._call_llm_stream(
+            prompt, system=DIRECT_RESPONSE_SYSTEM_PROMPT, temperature=0.7, max_tokens=512
+        ):
+            if token:
+                full_response.append(token)
+                yield f"data: {json.dumps({'type': 'token', 'token': token})}\n\n"
+
+    # Sauvegarder dans l'historique
+    response_text = "".join(full_response)
+    await chat_session_service.add_message(session_id, "user", message)
+    await chat_session_service.add_message(
+        session_id, "assistant", response_text,
+        metadata={"intent": intent_result.intent, "mode": "direct"},
+    )
+
+    # Événement final
+    end_event = {
+        "type": "done",
+        "session_id": session_id,
+        "message_id": str(uuid.uuid4()),
+        "sources": [],
+        "intent": intent_result.intent,
+        "timestamp": datetime.utcnow().isoformat(),
+    }
+    yield f"data: {json.dumps(end_event, ensure_ascii=False)}\n\n"
+
 
 # ─── SSE Stream (Pipeline statique) ──────────────────────────────────────────
+
 
 async def _sse_stream_static(
     session_id: str,
@@ -258,6 +339,60 @@ async def new_chat(
         current_user.id, title=body.message[:80]
     )
 
+    # ── Classification d'intention (Intent Router) ────────────────────────
+    try:
+        intent_router = get_intent_router()
+        intent_result = intent_router.classify(
+            message=body.message,
+            conversation_context="",  # Pas de contexte pour un nouveau chat
+        )
+        logger.info(
+            f"🧠 [new_chat] Intent: {intent_result.intent} "
+            f"(confidence={intent_result.confidence:.2f}, "
+            f"time={intent_result.classification_time*1000:.0f}ms)"
+        )
+    except Exception as e:
+        logger.warning(f"🧠 Intent classification failed, fallback to RAG: {e}")
+        intent_result = None
+
+    # ── Mode Direct (small_talk / out_of_domain / ambiguous) ──────────────
+    if intent_result and intent_result.is_direct:
+        if body.stream:
+            return StreamingResponse(
+                _sse_stream_direct(session_id, body.message, intent_result),
+                media_type="text/event-stream",
+                headers={
+                    "Cache-Control": "no-cache",
+                    "X-Session-ID": session_id,
+                    "X-RAG-Mode": "direct",
+                },
+            )
+
+        # Réponse directe (non-streaming)
+        response_text = intent_result.direct_response or intent_result.follow_up_question or ""
+        if not response_text:
+            # Fallback : générer via LLM
+            from Agent.prompts import DIRECT_RESPONSE_SYSTEM_PROMPT
+            prompt = f"L'utilisateur dit : \"{body.message}\"\nRéponds de manière naturelle et chaleureuse."
+            tokens = list(intent_router._call_llm_stream(prompt, system=DIRECT_RESPONSE_SYSTEM_PROMPT, max_tokens=512))
+            response_text = "".join(tokens)
+
+        await chat_session_service.add_message(session_id, "user", body.message)
+        await chat_session_service.add_message(
+            session_id, "assistant", response_text,
+            metadata={"intent": intent_result.intent, "mode": "direct"},
+        )
+
+        return ChatResponse(
+            session_id=session_id,
+            message_id=str(uuid.uuid4()),
+            response=response_text,
+            sources=[],
+            model="direct-response",
+            generation_time=intent_result.classification_time,
+            timestamp=datetime.utcnow(),
+        )
+
     # ── Mode Agent ────────────────────────────────────────────────────────
     if body.use_agent:
         if body.stream:
@@ -391,6 +526,59 @@ async def continue_chat(
     conv_context = await chat_session_service.build_conversation_context(
         session_id, max_messages=6
     )
+
+    # ── Classification d'intention (Intent Router) ────────────────────────
+    try:
+        intent_router = get_intent_router()
+        intent_result = intent_router.classify(
+            message=body.message,
+            conversation_context=conv_context or "",
+        )
+        logger.info(
+            f"🧠 [continue_chat] Intent: {intent_result.intent} "
+            f"(confidence={intent_result.confidence:.2f}, "
+            f"time={intent_result.classification_time*1000:.0f}ms)"
+        )
+    except Exception as e:
+        logger.warning(f"🧠 Intent classification failed, fallback to RAG: {e}")
+        intent_result = None
+
+    # ── Mode Direct (small_talk / out_of_domain / ambiguous) ──────────────
+    if intent_result and intent_result.is_direct:
+        if body.stream:
+            return StreamingResponse(
+                _sse_stream_direct(session_id, body.message, intent_result),
+                media_type="text/event-stream",
+                headers={
+                    "Cache-Control": "no-cache",
+                    "X-Session-ID": session_id,
+                    "X-RAG-Mode": "direct",
+                },
+            )
+
+        # Réponse directe (non-streaming)
+        response_text = intent_result.direct_response or intent_result.follow_up_question or ""
+        if not response_text:
+            from Agent.prompts import DIRECT_RESPONSE_SYSTEM_PROMPT
+            prompt = f"L'utilisateur dit : \"{body.message}\"\nRéponds de manière naturelle et chaleureuse."
+            tokens = list(intent_router._call_llm_stream(prompt, system=DIRECT_RESPONSE_SYSTEM_PROMPT, max_tokens=512))
+            response_text = "".join(tokens)
+
+        await chat_session_service.add_message(session_id, "user", body.message)
+        await chat_session_service.add_message(
+            session_id, "assistant", response_text,
+            metadata={"intent": intent_result.intent, "mode": "direct"},
+        )
+
+        return ChatResponse(
+            session_id=session_id,
+            message_id=str(uuid.uuid4()),
+            response=response_text,
+            sources=[],
+            model="direct-response",
+            generation_time=intent_result.classification_time,
+            timestamp=datetime.utcnow(),
+        )
 
     # ── Mode Agent ────────────────────────────────────────────────────────
     if body.use_agent:
