@@ -37,6 +37,7 @@ const authSlice = createSlice({
       state.token = action.payload.token;
       state.isAuthenticated = true;
       state.error = null;
+      state.loading = false;
       if (typeof window !== 'undefined') {
         localStorage.setItem(AUTH_TOKEN_KEY, action.payload.token);
       }
@@ -59,7 +60,9 @@ const authSlice = createSlice({
     },
     setAuthError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
-      state.loading = false;
+      if (action.payload) {
+        state.loading = false;
+      }
     },
   },
 });

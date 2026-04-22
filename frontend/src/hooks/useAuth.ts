@@ -17,8 +17,6 @@ export function useAuth() {
   const login = useCallback(
     async (email: string, password: string) => {
       dispatch(setAuthLoading(true));
-      console.log("loading ",loading);
-      
       dispatch(setAuthError(null));
       try {
         const res = await authApi.login({ email, password });

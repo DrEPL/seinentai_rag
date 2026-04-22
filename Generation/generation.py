@@ -35,7 +35,7 @@ class GenerationPipeline:
         self.model_name = os.getenv('OLLAMA_MODEL_NAME', 'mistral-large-3:675b-cloud')
         self.ollama_base_url = os.getenv('OLLAMA_BASE_URL', 'http://ollama:11434')
         
-        self.temperature = os.getenv('DEFAULT_TEMPERATURE', 0.7)
+        self.temperature = os.getenv('DEFAULT_TEMPERATURE', 0.6)
         self.max_tokens = os.getenv('DEFAULT_MAX_TOKENS', 2048)
         self.template_name = os.getenv('DEFAULT_TEMPLATE', 'default')
         self.system_prompt = system_prompt or get_default_system_prompt()

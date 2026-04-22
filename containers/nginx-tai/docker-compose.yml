@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  nginx-tai:
+    image: nginx:alpine
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    restart: always

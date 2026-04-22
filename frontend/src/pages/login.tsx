@@ -75,7 +75,7 @@ export default function LoginPage() {
           className="w-full"
           icon={loading ? <RefreshCw className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
         >
-          Se connecter {loading ? 'Connexion en cours...' : loading}
+          {loading ? 'Connexion en cours...' : 'Se connecter'}
         </Button>
 
         <div className="text-center">

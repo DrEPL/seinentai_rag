@@ -12,6 +12,7 @@ interface SliderProps {
   label?: string;
   displayValue?: string;
   className?: string;
+  labelClassName?: string;
 }
 
 export default function Slider({
@@ -23,6 +24,7 @@ export default function Slider({
   label,
   displayValue,
   className,
+  labelClassName,
 }: SliderProps) {
   const percentage = ((value - min) / (max - min)) * 100;
 
@@ -30,7 +32,11 @@ export default function Slider({
     <div className={cn('w-full', className)}>
       {(label || displayValue) && (
         <div className="flex items-center justify-between mb-2">
-          {label && <span className="text-sm font-medium text-slate-700">{label}</span>}
+          {label && (
+            <span className={cn("text-sm font-medium text-slate-700", labelClassName)}>
+              {label}
+            </span>
+          )}
           {displayValue && (
             <span className="text-sm font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">
               {displayValue}

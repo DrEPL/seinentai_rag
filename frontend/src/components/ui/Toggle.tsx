@@ -10,6 +10,8 @@ interface ToggleProps {
   description?: string;
   disabled?: boolean;
   size?: 'sm' | 'md';
+  className?: string;
+  labelClassName?: string;
 }
 
 export default function Toggle({
@@ -19,6 +21,8 @@ export default function Toggle({
   description,
   disabled = false,
   size = 'md',
+  className,
+  labelClassName,
 }: ToggleProps) {
   const trackSize = size === 'sm' ? 'w-8 h-[18px]' : 'w-10 h-[22px]';
   const thumbSize = size === 'sm' ? 'w-3.5 h-3.5' : 'w-4.5 h-4.5';
@@ -28,7 +32,8 @@ export default function Toggle({
     <label
       className={cn(
         'flex items-center gap-3 cursor-pointer select-none group',
-        disabled && 'opacity-50 cursor-not-allowed'
+        disabled && 'opacity-50 cursor-not-allowed',
+        className
       )}
     >
       <button
@@ -54,7 +59,11 @@ export default function Toggle({
       </button>
       {(label || description) && (
         <div className="flex flex-col">
-          {label && <span className="text-sm font-medium text-slate-700">{label}</span>}
+          {label && (
+            <span className={cn("text-sm font-medium text-slate-700", labelClassName)}>
+              {label}
+            </span>
+          )}
           {description && <span className="text-xs text-slate-500">{description}</span>}
         </div>
       )}

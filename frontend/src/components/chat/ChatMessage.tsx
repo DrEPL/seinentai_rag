@@ -135,27 +135,44 @@ function ChatMessage({ message, isStreaming }: ChatMessageProps) {
               remarkPlugins={[remarkGfm]}
               components={{
                 a: ({ node, ...props }) => <a target="_blank" rel="noopener noreferrer" {...props} />,
-                code: ({ node, inline, ...props }) => (
-                  inline 
-                    ? <code 
+                code: ({ node, className, children, ...props }: any) => {
+                  const match = /language-(\w+)/.exec(className || '');
+                  const isInline = !match;
+                  
+                  // Extract node and other non-HTML props to avoid spreading them to <code>
+                  const { node: _, ...rest } = props;
+
+                  if (isInline) {
+                    return (
+                      <code 
                         className={cn(
                           "px-1.5 py-0.5 rounded font-medium",
                           isUser 
                             ? "bg-slate-200/70 text-slate-800" 
                             : "bg-slate-100 text-emerald-600"
                         )} 
-                        {...props} 
-                      />
-                    : <code 
-                        className={cn(
-                          "block p-3 rounded-lg border overflow-x-auto my-2",
-                          isUser
-                            ? "bg-slate-200/40 border-slate-300/50 text-slate-900"
-                            : "bg-slate-50 border-slate-100 text-slate-800"
-                        )}
-                        {...props} 
-                      />
-                )
+                        {...rest}
+                      >
+                        {children}
+                      </code>
+                    );
+                  }
+
+                  return (
+                    <code 
+                      className={cn(
+                        "block p-3 rounded-lg border overflow-x-auto my-2",
+                        className,
+                        isUser
+                          ? "bg-slate-200/40 border-slate-300/50 text-slate-900"
+                          : "bg-slate-50 border-slate-100 text-slate-800"
+                      )}
+                      {...rest}
+                    >
+                      {children}
+                    </code>
+                  );
+                }
               }}
             >
               {message.content || (isStreaming ? '...' : '')}

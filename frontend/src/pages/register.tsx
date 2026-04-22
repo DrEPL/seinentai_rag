@@ -88,7 +88,7 @@ export default function RegisterPage() {
           className="w-full"
           icon={<ArrowRight className="w-4 h-4" />}
         >
-          Créer mon compte
+          {loading ? "Création en cours..." : "Créer mon compte"}
         </Button>
 
         <div className="text-center">

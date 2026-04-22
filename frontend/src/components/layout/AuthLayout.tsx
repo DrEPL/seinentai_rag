@@ -15,7 +15,7 @@ export default function AuthLayout({ children, title, subtitle }: AuthLayoutProp
   return (
     <>
       <Head>
-        <title>{title} — SEINENTAI4US</title>
+        <title>{`${title} — SEINENTAI4US`}</title>
         <meta name="description" content="SEINENTAI4US - Plateforme RAG intelligente" />
       </Head>
       <div className="min-h-screen gradient-bg-animated flex items-center justify-center p-4">
