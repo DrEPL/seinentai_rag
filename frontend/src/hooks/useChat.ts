@@ -297,7 +297,10 @@ export function useChat() {
   const stopStreaming = useCallback(() => {
     abortRef.current?.abort();
     dispatch(setStreaming(false));
+    dispatch(clearSteps());
   }, [dispatch]);
+
+  // ─── Load sessions ─────────────────────────────────────────────────────
 
   // ─── New conversation ─────────────────────────────────────────────────
   const newConversation = useCallback(() => {
