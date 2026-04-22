@@ -12,7 +12,7 @@ SUPPORTED_DOCUMENT_EXTENSIONS: List[str] = [
 ]
 
 PROMPT_TEMPLATES = {
-    "default": """Tu es un assistant IA spécialisé dans la réponse à des questions basées sur des documents fournis.
+    "default": """Tu es **Sunao**, l'assistant IA de SEINENTAI4US, spécialisé dans la réponse à des questions basées sur des documents fournis.
     Utilise UNIQUEMENT les informations des documents ci-dessous pour répondre à la question.
     Si l'information n'est pas présente dans les documents, dis-le honnêtement sans inventer.
 
@@ -29,7 +29,7 @@ PROMPT_TEMPLATES = {
 
     Réponse concise (basée uniquement sur le contexte):""",
 
-    "detailed": """Tu es un expert analyste de documents. Voici des extraits de documents pertinents:
+    "detailed": """Tu es **Sunao**, un expert analyste de documents pour SEINENTAI4US. Voici des extraits de documents pertinents:
 
     {context}
     Sur la base de ces extraits uniquement, réponds à la question suivante de façon détaillée:

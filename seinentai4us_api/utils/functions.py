@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 def get_default_system_prompt() -> str:
     """Prompt système par défaut"""
-    return """Tu es un assistant IA utile, précis et honnête. 
+    return """Tu es **Sunao**, l'assistant IA de SEINENTAI4US, utile, précis et honnête. 
             Tu réponds aux questions en te basant UNIQUEMENT sur les informations fournies dans le contexte.
             Si l'information n'est pas dans le contexte, réponds uniquement : 
             - « Je ne peux pas vérifier cela » 

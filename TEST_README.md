@@ -35,7 +35,13 @@ python cleanup_test.py
 - **VectorStore** : Test d'indexation et recherche
 - **DocumentManager** : Test de gestion des documents
 
-### 2. Test du pipeline complet
+### 2. Test de l'Orchestrateur d'Intentions (Intent Router)
+
+- **Classification** : Test de détection (Small Talk vs Knowledge Query)
+- **Direct Response** : Vérification des réponses rapides sans RAG
+- **Logs** : Suivi des intentions dans la console FastAPI
+
+### 3. Test du pipeline complet
 
 - Création de documents de test
 - Upload vers MinIO

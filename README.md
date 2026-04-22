@@ -6,24 +6,28 @@
 
 ## 🎯 Vue d'ensemble
 
-SEINENTAI RAG est un système de question-réponse intelligent qui combine retrieval documentaire et génération par LLM. Contrairement aux pipelines RAG statiques, il utilise un **agent autonome** capable de :
+SEINENTAI RAG est un système de question-réponse intelligent qui combine orchestration d'intentions, retrieval documentaire et génération par LLM. Contrairement aux pipelines RAG classiques, il intègre une **couche d'orchestration intelligente** capable de :
 
-- **Analyser** chaque requête (type, complexité, domaine)
-- **Choisir dynamiquement** la stratégie de recherche optimale
-- **Décomposer** les questions complexes en sous-requêtes
-- **Évaluer la qualité** du contexte récupéré et **itérer** si nécessaire
-- **Streamer ses pensées** en temps réel via SSE
+- **Router les intentions** : Distingue le "Small Talk" (salutations, remerciements) des questions de connaissance.
+- **Répondre instantanément** : Gère les interactions sociales sans activer la recherche vectorielle (latence < 500ms).
+- **Analyser** chaque requête (type, complexité, domaine) via un agent autonome.
+- **Choisir dynamiquement** la stratégie de recherche optimale (Dense, Hybrid, HyDE).
+- **Évaluer la qualité** du contexte et **itérer** si nécessaire.
+- **Streamer son raisonnement** en temps réel via SSE.
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                   SEINENTAI RAG AGENT                   │
-│                                                         │
-│  Query ──▶ Analyze ──▶ Route ──▶ Search ──▶ Rerank     │
-│                                      │                  │
-│           ◀── Fallback ◀── Evaluate ◀┘                  │
-│                                 │                       │
-│                          Synthesize ──▶ Response         │
-└─────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────┐
+│                     SEINENTAI RAG ECOSYSTEM                   │
+│                                                               │
+│  Query ──▶ [ Intent Router ] ──┬──▶ Direct Social Response    │
+│                │               │     (Fast Path: ~500ms)      │
+│                │               │                              │
+│                ▼               └──▶ [ Agentic RAG Graph ]     │
+│          Knowledge Query             (Deep Path: Multi-step)  │
+│                │                               │              │
+│                └───────▶ [ Static RAG ] ◀──────┘              │
+│                           (Fallback Path)                     │
+└───────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -58,6 +62,17 @@ L'agent choisit automatiquement parmi 3 stratégies :
 
 ---
 
+## 🧠 Orchestration d'intentions (Intent Router)
+
+Le système intègre une couche d'intelligence conversationnelle en amont du pipeline RAG pour optimiser les ressources et améliorer la fluidité :
+
+1. **Détection d'intention** : Classification ultra-rapide (regex + LLM) pour identifier si le message est social (`small_talk`), une question de connaissance (`knowledge_query`), une demande ambiguë (`ambiguous`) ou hors domaine (`out_of_domain`).
+2. **Fast Response Path** : Si l'intention est `small_talk`, **Sunao** répond directement avec sa personnalité chaleureuse, sans activer la recherche vectorielle (latence réduite de 90%).
+3. **Deep Search Path** : Si l'intention nécessite des connaissances, le pipeline RAG agentique est activé avec le contexte complet.
+4. **Fallback Intégré** : En cas de doute, le système bascule automatiquement vers le RAG pour garantir une réponse précise.
+
+---
+
 ## 📁 Structure du projet
 
 ```
@@ -88,12 +103,13 @@ seinentai_rag/
 │   │   ├── main.py                 # Point d'entrée & lifespan
 │   │   ├── config.py               # Configuration centralisée
 │   │   ├── routers/
-│   │   │   ├── chat.py             # Endpoints /chat (agent + statique)
+│   │   │   ├── chat.py             # Endpoints /chat (Orchestration, Agent & Statique)
 │   │   │   ├── documents.py        # Endpoints /documents
 │   │   │   └── search.py           # Endpoints /search
 │   │   ├── models/
 │   │   │   └── schemas.py          # Schémas Pydantic
 │   │   └── services/
+│   │       ├── intent_router.py    # 🧠 Orchestration d'intentions
 │   │       ├── agentic_rag_service.py  # Service agent (run + stream)
 │   │       ├── rag_service.py          # Service RAG statique
 │   │       └── app_services.py         # Initialisation des services
@@ -259,12 +275,12 @@ Quand `stream=true` et `use_agent=true`, l'API retourne un flux `text/event-stre
 
 | Type | Description | Contenu |
 |---|---|---|
-| `start` | Début de la requête | `session_id`, `mode: "agent"` |
+| `start` | Début de la requête | `session_id`, `mode: "agent" | "direct"` |
 | `thought` | Raisonnement de l'agent | `node`, `content` |
 | `tool_call` | Appel d'un outil de recherche | `tool`, `params`, `result_preview` |
 | `observation` | Résultat d'évaluation qualité | Score, suffisance, feedback |
 | `synthesis_start` | Début de la génération | — |
-| `token` | Réponse générée | Texte de la réponse |
+| `token` | Réponse générée | Texte de la réponse (RAG ou Direct) |
 | `done` | Fin de la requête | `sources`, `agent_trace` |
 | `error` | Erreur | `message` |
 
