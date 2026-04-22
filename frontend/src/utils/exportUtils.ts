@@ -4,6 +4,8 @@
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { type ChatMessage } from '@/store/slices/chatSlice';
+import { format } from 'date-fns';
+import { fr } from 'date-fns/locale';
 
 /**
  * Exports a conversation to PDF
@@ -23,7 +25,7 @@ export const exportConversationToPDF = (messages: ChatMessage[], title: string =
     doc.setFontSize(12);
     doc.setTextColor(100, 116, 139); // slate-500
     doc.text(`Conversation : ${title}`, 14, yPos);
-    doc.text(`Date : ${new Date().toLocaleDateString('fr-FR')}`, pageWidth - 14, yPos, { align: 'right' });
+    doc.text(`Date : ${format(new Date(), 'dd/MM/yyyy', { locale: fr })}`, pageWidth - 14, yPos, { align: 'right' });
     yPos += 15;
 
     // Divider

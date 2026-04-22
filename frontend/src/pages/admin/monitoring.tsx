@@ -8,7 +8,7 @@ import AppLayout from '@/components/layout/AppLayout';
 import Button from '@/components/ui/Button';
 import Badge from '@/components/ui/Badge';
 import { adminApi } from '@/api/admin';
-import { cn } from '@/lib/utils';
+import { cn, formatTime } from '@/lib/utils';
 
 interface HealthData {
   status: string;
@@ -64,7 +64,7 @@ export default function MonitoringPage() {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              {lastChecked && <span className="text-[11px] text-slate-400">Vérifié à {lastChecked.toLocaleTimeString('fr-FR')}</span>}
+              {lastChecked && <span className="text-[11px] text-slate-400">Vérifié à {formatTime(lastChecked)}</span>}
               <Button variant="outline" size="sm" loading={loading} icon={<RefreshCw className="w-3.5 h-3.5" />} onClick={checkHealth}>
                 Rafraîchir
               </Button>

@@ -545,3 +545,26 @@ async def get_session(
         message_count=len(messages),
         messages=messages,
     )
+
+
+@router.delete(
+    "/sessions/{session_id}",
+    summary="Supprime une session (soft delete)",
+)
+async def delete_session(
+    session_id: str,
+    current_user: UserProfile = Depends(get_current_user),
+):
+    """Marque une session comme supprimée (soft delete)."""
+    # Vérifier l'existence et l'appartenance
+    session = await chat_session_service.get_session(session_id)
+    if not session:
+        raise HTTPException(status_code=404, detail="Session introuvable.")
+    if session.get("user_id") != current_user.id:
+        raise HTTPException(status_code=403, detail="Accès refusé.")
+
+    success = await chat_session_service.delete_session(session_id)
+    if not success:
+        raise HTTPException(status_code=500, detail="Échec de la suppression.")
+
+    return {"status": "success", "message": "Session supprimée avec succès."}

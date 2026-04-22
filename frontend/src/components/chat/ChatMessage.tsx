@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { Bot, User, FileText, ChevronDown, ChevronUp, Copy, Check, Share2, AlertCircle } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { cn } from '@/lib/utils';
+import { cn, formatTime } from '@/lib/utils';
 import { useAppDispatch } from '@/store/hooks';
 import { addToast } from '@/store/slices/uiSlice';
 import { copyToClipboard } from '@/utils/exportUtils';
@@ -232,10 +232,7 @@ function ChatMessage({ message, isStreaming }: ChatMessageProps) {
             </div>
           )}
           <p className={cn('text-[10px] text-slate-400', isUser && 'text-right flex-1')}>
-            {new Date(message.timestamp).toLocaleTimeString('fr-FR', {
-              hour: '2-digit',
-              minute: '2-digit',
-            })}
+            {formatTime(message.timestamp)}
           </p>
         </div>
       </div>

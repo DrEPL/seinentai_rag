@@ -37,6 +37,8 @@ class ConversationDocument(Document):
     updated_at: datetime = Field(default_factory=datetime.utcnow)
     last_message_at: datetime = Field(default_factory=datetime.utcnow)
     archived: bool = False
+    is_deleted: bool = False
+    deleted_at: Optional[datetime] = None
 
     class Settings:
         name = "conversations"

@@ -28,7 +28,8 @@ class ChatSessionService:
 
     async def get_session(self, session_id: str) -> Optional[Dict[str, Any]]:
         conv = await ConversationDocument.find_one(
-            ConversationDocument.conversation_id == session_id
+            ConversationDocument.conversation_id == session_id,
+            ConversationDocument.is_deleted == False
         )
         if not conv:
             return None
@@ -64,7 +65,8 @@ class ChatSessionService:
         metadata: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         conv = await ConversationDocument.find_one(
-            ConversationDocument.conversation_id == session_id
+            ConversationDocument.conversation_id == session_id,
+            ConversationDocument.is_deleted == False
         )
         if not conv:
             raise ValueError(f"Session introuvable : {session_id}")
@@ -115,7 +117,8 @@ class ChatSessionService:
 
     async def get_user_sessions(self, user_id: str) -> List[Dict[str, Any]]:
         sessions = await ConversationDocument.find(
-            ConversationDocument.user_id == user_id
+            ConversationDocument.user_id == user_id,
+            ConversationDocument.is_deleted == False
         ).sort(-ConversationDocument.updated_at).to_list()
 
         results: List[Dict[str, Any]] = []
@@ -136,15 +139,15 @@ class ChatSessionService:
 
     async def delete_session(self, session_id: str) -> bool:
         conv = await ConversationDocument.find_one(
-            ConversationDocument.conversation_id == session_id
+            ConversationDocument.conversation_id == session_id,
+            ConversationDocument.is_deleted == False
         )
         if not conv:
             return False
 
-        await MessageDocument.find(
-            MessageDocument.conversation_id == session_id
-        ).delete()
-        await conv.delete()
+        conv.is_deleted = True
+        conv.deleted_at = datetime.utcnow()
+        await conv.save()
         return True
 
     async def build_conversation_context(
