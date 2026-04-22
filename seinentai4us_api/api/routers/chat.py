@@ -39,14 +39,18 @@ router = APIRouter()
 
 def _build_sources(docs: list) -> list:
     sources = []
-    for d in docs:
+    for i, d in enumerate(docs):
         meta = d.get("metadata", {})
+        text = d.get("text", "")
         sources.append({
+            "id": str(i),
             "filename": d.get("filename") or meta.get("filename", "inconnu"),
+            "title": meta.get("title") or d.get("filename") or meta.get("filename") or f"Document {i+1}",
             "score": round(float(d.get("score", 0)), 4),
             "chunk_index": d.get("chunk_index") or meta.get("chunk_index", 0),
-            "excerpt": d.get("text", "") if d.get("text") else "",
-            # "excerpt": (d.get("text", "")[:200] + "…") if d.get("text") else "",
+            "content": text,  # Nouveau champ pour le frontend (AgentActivity / ChatMessage)
+            "excerpt": text,  # Ancien champ pour compatibilité backend
+            "url": meta.get("url"),
         })
     return sources
 
@@ -74,11 +78,20 @@ async def _sse_stream_static(
     init_event = {
         "type": "start",
         "session_id": session_id,
-        "sources": sources,
         "mode": "static",
         "timestamp": datetime.utcnow().isoformat(),
     }
     yield f"data: {json.dumps(init_event, ensure_ascii=False)}\n\n"
+
+    # 1. Thought
+    yield f"data: {json.dumps({'type': 'thought', 'content': 'Recherche de documents pertinents...', 'timestamp': datetime.utcnow().isoformat()}, ensure_ascii=False)}\n\n"
+    
+    # 2. Observation (Analyse)
+    best_score = docs[0].get("score", 0) if docs else 0
+    yield f"data: {json.dumps({'type': 'observation', 'content': f'{len(docs)} documents trouvés', 'score': float(best_score), 'timestamp': datetime.utcnow().isoformat()}, ensure_ascii=False)}\n\n"
+
+    # 3. Synthesis Start
+    yield f"data: {json.dumps({'type': 'synthesis_start', 'timestamp': datetime.utcnow().isoformat()}, ensure_ascii=False)}\n\n"
 
     try:
         for token, done in rag_service.generate_stream(generation_query, docs, **gen_kwargs):
@@ -102,6 +115,7 @@ async def _sse_stream_static(
         "type": "done",
         "session_id": session_id,
         "message_id": str(uuid.uuid4()),
+        "sources": sources,
         "timestamp": datetime.utcnow().isoformat(),
     }
     yield f"data: {json.dumps(end_event, ensure_ascii=False)}\n\n"
