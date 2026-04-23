@@ -1,11 +1,12 @@
 /**
  * SEINENTAI4US — App Layout (Sidebar + Header + Content)
  */
-import { type ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import Head from 'next/head';
 import Sidebar from './Sidebar';
 import Header from './Header';
-import { useAppSelector } from '@/store/hooks';
+import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { setSidebarOpen } from '@/store/slices/uiSlice';
 import { cn } from '@/lib/utils';
 
 interface AppLayoutProps {
@@ -16,6 +17,7 @@ interface AppLayoutProps {
 }
 
 export default function AppLayout({ children, title, pageTitle, fullHeight = false }: AppLayoutProps) {
+  const dispatch = useAppDispatch();
   const sidebarOpen = useAppSelector((s) => s.ui.sidebarOpen);
 
   return (

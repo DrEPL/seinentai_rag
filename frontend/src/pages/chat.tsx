@@ -44,7 +44,8 @@ export default function ChatPage() {
     <AppLayout pageTitle="Chat RAG" fullHeight>
       <div className="flex-1 flex flex-col pb-8 relative overflow-hidden chat-bg-pattern">
         {/* Messages area */}
-        <div 
+        <div
+          id="tour-chat-main"
           ref={scrollRef} 
           className="flex-1 overflow-y-auto no-scrollbar scroll-smooth pb-32 pt-4"
         >

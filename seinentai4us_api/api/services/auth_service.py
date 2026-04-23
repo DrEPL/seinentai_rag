@@ -6,7 +6,7 @@ import logging
 import secrets
 import uuid
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Literal, Optional
 
 from seinentai4us_api.api.config import settings
 from seinentai4us_api.api.db.models import AuthTokenDocument, UserDocument
@@ -30,6 +30,9 @@ def _to_user_profile(user: UserDocument) -> UserProfile:
         full_name=user.full_name,
         created_at=user.created_at,
         is_active=user.is_active,
+        login_count=user.login_count,
+        tutorial_state=user.tutorial_state,
+        last_login_at=user.last_login_at,
     )
 
 
@@ -46,6 +49,9 @@ class AuthService:
             full_name=full_name,
             created_at=datetime.utcnow(),
             is_active=True,
+            login_count=0,
+            tutorial_state="never_seen",
+            last_login_at=None,
         )
         await user.insert()
         logger.info("Nouvel utilisateur enregistre: %s", email)
@@ -57,6 +63,17 @@ class AuthService:
             return None
         if user.password_hash != _hash_password(password):
             return None
+
+        # ─── Incrémenter le compteur de connexions ──────────────────────────
+        user.login_count = (user.login_count or 0) + 1
+        user.last_login_at = datetime.utcnow()
+        await user.save()
+        logger.info(
+            "Connexion #%d pour user_id=%s (tutorial_state=%s)",
+            user.login_count,
+            user.user_id,
+            user.tutorial_state,
+        )
         return _to_user_profile(user)
 
     async def get_user_by_id(self, user_id: str) -> Optional[UserProfile]:
@@ -91,6 +108,24 @@ class AuthService:
             return False
         await token_doc.delete()
         return True
+
+    async def update_tutorial_state(
+        self,
+        user_id: str,
+        state: Literal["seen", "dismissed"],
+    ) -> Optional[UserProfile]:
+        """Met à jour l'état du tutoriel pour un utilisateur donné."""
+        user = await UserDocument.find_one(UserDocument.user_id == user_id)
+        if not user:
+            return None
+        user.tutorial_state = state
+        await user.save()
+        logger.info(
+            "Tutorial state mis à jour: user_id=%s → %s",
+            user_id,
+            state,
+        )
+        return _to_user_profile(user)
 
 
 auth_service = AuthService()

@@ -5,7 +5,7 @@ Tous les schémas de requête / réponse sont définis ici.
 
 from __future__ import annotations
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Literal, Optional
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
 
@@ -48,6 +48,15 @@ class UserProfile(BaseModel):
     full_name: str
     created_at: datetime
     is_active: bool = True
+    # ─── Onboarding ──────────────────────────────────────────────────────────
+    login_count: int = 0
+    tutorial_state: Literal["never_seen", "seen", "dismissed"] = "never_seen"
+    last_login_at: Optional[datetime] = None
+
+
+class UpdateTutorialStateRequest(BaseModel):
+    """Corps de la requête PATCH /auth/tutorial-state"""
+    state: Literal["seen", "dismissed"]
 
 
 class MessageResponse(BaseModel):

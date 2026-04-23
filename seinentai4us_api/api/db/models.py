@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Literal, Optional
 
 from beanie import Document, Indexed
 from pydantic import EmailStr, Field
@@ -14,6 +14,13 @@ class UserDocument(Document):
     full_name: str
     created_at: datetime = Field(default_factory=datetime.utcnow)
     is_active: bool = True
+    # ─── Onboarding ──────────────────────────────────────────────────────────
+    login_count: int = Field(default=0, description="Nombre de connexions de l'utilisateur")
+    tutorial_state: Literal["never_seen", "seen", "dismissed"] = Field(
+        default="never_seen",
+        description="État du tutoriel : never_seen | seen | dismissed"
+    )
+    last_login_at: Optional[datetime] = Field(default=None)
 
     class Settings:
         name = "users"

@@ -1,6 +1,7 @@
 """
 Router Authentification — SEINENTAI4US
 POST /auth/register | POST /auth/login | POST /auth/logout | GET /auth/me
+PATCH /auth/tutorial-state
 """
 
 import logging
@@ -16,6 +17,7 @@ from seinentai4us_api.api.models.schemas import (
     MessageResponse,
     RegisterRequest,
     TokenResponse,
+    UpdateTutorialStateRequest,
     UserProfile,
 )
 from seinentai4us_api.api.services.auth_service import auth_service
@@ -59,6 +61,9 @@ async def login(body: LoginRequest):
 
     Ce token doit être inclus dans toutes les requêtes suivantes sous la forme :
     `Authorization: Bearer <token>`
+
+    Le champ `user.login_count` indique le numéro de connexion courant.
+    Le champ `user.tutorial_state` permet au frontend de décider si le tutoriel doit s'afficher.
     """
     user = await auth_service.authenticate(body.email, body.password)
     if not user:
@@ -99,3 +104,33 @@ async def logout(
 async def me(current_user: UserProfile = Depends(get_current_user)):
     """Retourne les informations de l'utilisateur authentifié."""
     return current_user
+
+
+@router.patch(
+    "/tutorial-state",
+    response_model=UserProfile,
+    summary="Mettre à jour l'état du tutoriel d'onboarding",
+)
+async def update_tutorial_state(
+    body: UpdateTutorialStateRequest,
+    current_user: UserProfile = Depends(get_current_user),
+):
+    """
+    Met à jour l'état du tutoriel pour l'utilisateur connecté.
+
+    - **seen** : l'utilisateur a vu le tutoriel mais peut le revoir (reporter)
+    - **dismissed** : l'utilisateur ne souhaite plus voir le tutoriel automatiquement
+    """
+    updated_user = await auth_service.update_tutorial_state(current_user.id, body.state)
+    if updated_user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Utilisateur introuvable.",
+        )
+    logger.info(
+        "Tutorial state mis à jour pour %s : %s → %s",
+        current_user.email,
+        current_user.tutorial_state,
+        body.state,
+    )
+    return updated_user

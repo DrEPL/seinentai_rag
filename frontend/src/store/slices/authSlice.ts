@@ -3,6 +3,7 @@
  */
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { AUTH_TOKEN_KEY } from '@/lib/constants';
+import type { TutorialState } from '@/api/auth';
 
 export interface UserProfile {
   id: string;
@@ -10,6 +11,10 @@ export interface UserProfile {
   full_name: string;
   created_at: string;
   is_active: boolean;
+  // ─── Onboarding ──────────────────────────────────────────────────────────
+  login_count: number;
+  tutorial_state: TutorialState;
+  last_login_at: string | null;
 }
 
 interface AuthState {
@@ -46,6 +51,12 @@ const authSlice = createSlice({
       state.user = action.payload;
       state.isAuthenticated = true;
     },
+    /** Met à jour localement l'état du tutoriel après un appel API réussi */
+    updateTutorialState: (state, action: PayloadAction<TutorialState>) => {
+      if (state.user) {
+        state.user.tutorial_state = action.payload;
+      }
+    },
     logout: (state) => {
       state.user = null;
       state.token = null;
@@ -67,5 +78,12 @@ const authSlice = createSlice({
   },
 });
 
-export const { setCredentials, setUser, logout, setAuthLoading, setAuthError } = authSlice.actions;
+export const {
+  setCredentials,
+  setUser,
+  updateTutorialState,
+  logout,
+  setAuthLoading,
+  setAuthError,
+} = authSlice.actions;
 export default authSlice.reducer;

@@ -51,8 +51,8 @@ export default function ChatInput({ onSend, isStreaming, onStop, disabled }: Cha
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 pb-6 pt-2">
-      <div className={cn(
+    <div  className="w-full max-w-4xl mx-auto px-4 pb-6 pt-2">
+      <div id="tour-chat-input" className={cn(
         "relative rounded-[32px] border border-white/40 bg-white/70 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] p-2 transition-all duration-300",
         isStreaming ? "border-emerald-400/50" : "focus-within:border-emerald-400/50 focus-within:shadow-[0_20px_60px_rgba(16,185,129,0.15)]"
       )}>
@@ -63,6 +63,7 @@ export default function ChatInput({ onSend, isStreaming, onStop, disabled }: Cha
             onClose={() => setIsSettingsOpen(false)}
             trigger={
               <button
+                id="tour-rag-options-trigger"
                 onClick={() => setIsSettingsOpen(!isSettingsOpen)}
                 className={cn(
                   'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all duration-200 cursor-pointer',

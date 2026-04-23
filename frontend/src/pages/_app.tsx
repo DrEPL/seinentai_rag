@@ -1,5 +1,5 @@
 /**
- * SEINENTAI4US — _app.tsx (Redux Provider + Auth Guard + Toasts)
+ * SEINENTAI4US — _app.tsx (Redux Provider + Auth Guard + Toasts + Onboarding)
  */
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
@@ -11,6 +11,30 @@ import { useAppSelector } from '@/store/hooks';
 import { PUBLIC_ROUTES, AUTH_TOKEN_KEY } from '@/lib/constants';
 import ToastContainer from '@/components/ui/Toast';
 import { useAuth } from '@/hooks/useAuth';
+import { useTutorial } from '@/hooks/useTutorial';
+import OnboardingTutorial from '@/components/onboarding/OnboardingTutorial';
+
+function TutorialGate() {
+  const { isAuthenticated, user } = useAppSelector((s) => s.auth);
+  const { shouldShowTutorial, handleOpenAuto, isOpen } = useTutorial();
+  const [triggered, setTriggered] = useState(false);
+
+  useEffect(() => {
+    // Déclencher une seule fois par session, après que l'utilisateur est chargé
+    if (isAuthenticated && user && !triggered && !isOpen) {
+      if (shouldShowTutorial()) {
+        handleOpenAuto();
+      }
+      setTriggered(true);
+    }
+    // Reset si l'utilisateur se déconnecte (pour la prochaine session)
+    if (!isAuthenticated) {
+      setTriggered(false);
+    }
+  }, [isAuthenticated, user, triggered, isOpen, shouldShowTutorial, handleOpenAuto]);
+
+  return <OnboardingTutorial />;
+}
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -59,6 +83,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <Component {...pageProps} />
       </AuthGuard>
       <ToastContainer />
+      <TutorialGate />
     </Provider>
   );
 }

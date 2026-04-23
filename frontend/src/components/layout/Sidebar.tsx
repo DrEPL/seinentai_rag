@@ -100,13 +100,12 @@ export default function Sidebar() {
       </AnimatePresence>
 
       {/* Sidebar */}
-      <motion.aside
-        initial={false}
-        animate={{ x: sidebarOpen ? 0 : -280 }}
-        transition={{ type: 'spring', stiffness: 400, damping: 35 }}
+      <aside
         className={cn(
           'fixed md:relative z-40 h-screen flex flex-col',
-          'w-[280px] bg-white border-r border-slate-200/60 shadow-sm md:shadow-none'
+          'w-[280px] bg-white border-r border-slate-200/60 shadow-sm md:shadow-none',
+          'transition-transform duration-300 ease-out',
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         )}
       >
         {/* Header */}
@@ -186,7 +185,7 @@ export default function Sidebar() {
 
         {/* Chat History (user mode) */}
         {interfaceMode === 'user' && (
-          <div className="flex-1 flex flex-col min-h-0 mt-2">
+          <div id="tour-sidebar-history" className="flex-1 flex flex-col min-h-0 mt-2">
             <p className="px-6 mb-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
               Historique
             </p>
@@ -345,7 +344,7 @@ export default function Sidebar() {
             )}
           </button>
         </div>
-      </motion.aside>
+      </aside>
     </>
   );
 }

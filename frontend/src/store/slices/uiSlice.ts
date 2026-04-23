@@ -19,7 +19,7 @@ interface UIState {
 }
 
 const initialState: UIState = {
-  sidebarOpen: true,
+  sidebarOpen: false,
   interfaceMode: 'user',
   toasts: [],
   activeModal: null,

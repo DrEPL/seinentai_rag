@@ -8,6 +8,7 @@ import agentReducer from './slices/agentSlice';
 import documentsReducer from './slices/documentsSlice';
 import searchReducer from './slices/searchSlice';
 import uiReducer from './slices/uiSlice';
+import tutorialReducer from './slices/tutorialSlice';
 
 export const store = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
     documents: documentsReducer,
     search: searchReducer,
     ui: uiReducer,
+    tutorial: tutorialReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

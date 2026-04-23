@@ -14,6 +14,8 @@ export interface RegisterPayload {
   full_name: string;
 }
 
+export type TutorialState = 'never_seen' | 'seen' | 'dismissed';
+
 export interface TokenResponse {
   access_token: string;
   token_type: string;
@@ -24,6 +26,9 @@ export interface TokenResponse {
     full_name: string;
     created_at: string;
     is_active: boolean;
+    login_count: number;
+    tutorial_state: TutorialState;
+    last_login_at: string | null;
   };
 }
 
@@ -32,4 +37,7 @@ export const authApi = {
   register: (data: RegisterPayload) => api.post('/auth/register', data),
   logout: () => api.post('/auth/logout'),
   getMe: () => api.get('/auth/me'),
+  /** Met à jour l'état du tutoriel d'onboarding */
+  updateTutorialState: (state: 'seen' | 'dismissed') =>
+    api.patch('/auth/tutorial-state', { state }),
 };
