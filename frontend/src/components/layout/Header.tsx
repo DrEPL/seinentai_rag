@@ -133,7 +133,7 @@ export default function Header({ title }: HeaderProps) {
                     setIsProfileOpen(false);
                     logout();
                   }}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-red-600 text-sm font-medium hover:bg-red-50 transition-colors cursor-pointer"
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 text-sm font-medium hover:text-rose-600 hover:bg-rose-50/50 transition-colors cursor-pointer"
                 >
                   <LogOut className="w-4 h-4" />
                   Se déconnecter

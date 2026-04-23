@@ -4,21 +4,28 @@
  */
 import { useEffect, useCallback, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { ChevronLeft, ChevronRight, X, Check, Loader2, Sparkles } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Check, Loader2, Sparkles, MessageCircle, BookOpen, Eye, FileText, ArrowUpCircle, CornerDownLeft, Target, BrainCircuit, Activity, RefreshCw, Search, SlidersHorizontal, MousePointerClick, Menu, Lightbulb, Play, MessageSquarePlus, Hand, Settings, Rocket, LucideIcon } from 'lucide-react';
+import confetti from 'canvas-confetti';
 import { useTutorial } from '@/hooks/useTutorial';
 import { useAppDispatch } from '@/store/hooks';
 import { nextStep, prevStep, setStep } from '@/store/slices/tutorialSlice';
 
 type StepPosition = 'top' | 'bottom' | 'left' | 'right';
 
+interface TourDetail {
+  icon: LucideIcon;
+  text: string;
+}
+
 interface TourStep {
   id: string;
   title: string;
+  titleIcon?: LucideIcon;
   subtitle: string;
   target: string;
   mobileTarget?: string;
   content: string;
-  details: string[];
+  details: TourDetail[];
   position: StepPosition;
 }
 
@@ -26,103 +33,96 @@ const STEPS: TourStep[] = [
   {
     id: 'welcome',
     title: 'Bienvenue sur SEINENTAI4US',
-    subtitle: "Présentation rapide de l'app",
+    titleIcon: Hand,
+    subtitle: "Je suis Sunao, votre assistant IA basé sur les enseignements de Sukyo Mahikari.",
     target: '#tour-app-header',
     mobileTarget: '#tour-app-header',
-    content:
-      "Cette application t'accompagne pour explorer rapidement les contenus, poser des questions naturelles et obtenir des réponses fiables avec contexte.",
+    content: "Posez vos questions et je vous fournirai les réponses basées sur les enseignements de Sukyo Mahikari.",
     details: [
-      'Interface conçue pour une prise en main immédiate.',
-      'Chaque étape de ce guide te montre exactement où agir.',
-      'Tu peux quitter et relancer le tutoriel à tout moment.',
+      { icon: MessageCircle, text: 'Dialoguez naturellement avec moi comme vous le feriez avec un ami' },
+      { icon: BookOpen, text: 'Réponses basées sur les enseignements de Sukyo Mahikari' },
     ],
     position: 'bottom',
   },
   {
     id: 'main_function',
-    title: 'Fonction principale',
-    subtitle: 'Comprendre le rôle du système',
+    title: 'Votre espace de travail',
+    subtitle: 'La zone de discussion',
     target: '#tour-chat-main',
     mobileTarget: '#tour-chat-main',
-    content:
-      'Le cœur de la plateforme est un chat intelligent basé sur vos documents : il recherche, croise les passages pertinents et formule une réponse exploitable.',
+    content: "C'est ici que nos échanges s'affichent. L'interface est conçue pour être claire et lisible, vous permettant de vous concentrer sur l'essentiel.",
     details: [
-      'Tu poses une question métier en langage naturel.',
-      'Le système retrouve les meilleurs extraits puis produit une synthèse.',
-      "L'objectif : gagner du temps sans perdre la qualité des références.",
+      { icon: Eye, text: 'Suivez le fil de la réflexion' },
+      { icon: FileText, text: 'Consultez les sources utilisées' },
     ],
     position: 'right',
   },
   {
     id: 'interaction',
-    title: 'Interaction',
-    subtitle: 'Comment poser une question',
+    title: 'Posez votre question',
+    subtitle: 'La barre de saisie',
     target: '#tour-chat-input',
     mobileTarget: '#tour-chat-input',
-    content:
-      'Écris ta question dans la zone de saisie, puis envoie. Utilise des formulations précises pour obtenir des réponses plus utiles et plus ciblées.',
+    content: "Utilisez cet espace pour m'interroger. Je peux résumer un long document, extraire des données précises ou rédiger une synthèse.",
     details: [
-      'Entrée pour envoyer, Shift + Entrée pour aller à la ligne.',
-      'Tu peux poser des questions de suivi dans la même conversation.',
-      'Plus la question est claire, plus la réponse sera actionnable.',
+      { icon: ArrowUpCircle, text: 'Appuyez sur ⇧ (Shift) + ⏎ (Entrée) pour aller à la ligne' },
+      { icon: CornerDownLeft, text: 'Appuyez sur ⏎ (Entrée) pour envoyer' },
+      { icon: Target, text: 'Plus votre question est précise, plus ma réponse sera pertinente' },
     ],
     position: 'top',
   },
   {
     id: 'advanced_options',
-    title: 'Options avancées',
-    subtitle: 'Réglages expert du moteur',
+    title: 'Mode Expert',
+    titleIcon: Settings,
+    subtitle: 'Ajustez les paramètres',
     target: '#tour-rag-options-trigger',
     mobileTarget: '#tour-rag-options-trigger',
-    content:
-      "Ces options permettent d'ajuster le comportement de l'assistant selon ton besoin de vitesse, de profondeur et de couverture documentaire.",
+    content: "Un clic ici vous ouvre des options avancées pour affiner mes recherches et adapter mes réponses à vos exigences.",
     details: [
-      'Mode réflexion approfondie : raisonnement plus poussé pour les cas complexes.',
-      'Streaming : affiche la réponse en temps réel token par token.',
-      'HyDE : génère une hypothèse intermédiaire pour enrichir la recherche.',
-      'Recherche hybride : combine sémantique + lexicale pour mieux couvrir les documents.',
-      'Température : faible = stable/factuel, élevée = plus créatif.',
-      'Résultats : nombre de documents récupérés avant génération finale.',
+      { icon: BrainCircuit, text: 'Mode Réflexion (précision maximale), mais plus lent.' },
+      { icon: Activity, text: 'Mode Streaming: voir la réponse se construire mot après mot.' },
+      { icon: RefreshCw, text: 'Mode HyDE : reformule votre question pour améliorer la pertinence.' },
+      { icon: Search, text: 'Recherche Hybride (exhaustivité)' },
+      { icon: SlidersHorizontal, text: 'Température : niveau de créativité de la réponse (plus bas = plus prévisible)' }
     ],
     position: 'bottom',
   },
   {
     id: 'history_sidebar',
-    title: 'Historique',
-    subtitle: 'Retrouver les conversations',
+    title: 'Retrouvez tout',
+    subtitle: 'Historique des échanges',
     target: '#tour-sidebar-history',
     mobileTarget: '#tour-sidebar-toggle',
-    content:
-      "L'historique te permet de reprendre une discussion, comparer les réponses précédentes et conserver le contexte de travail.",
+    content: "Ne perdez jamais une information. Toutes vos précédentes recherches sont sauvegardées et classées ici.",
     details: [
-      'Clique une conversation pour reprendre exactement où tu en étais.',
-      'Utile pour conserver la trace des décisions et analyses.',
-      "En mobile, le menu permet d'accéder rapidement à cet historique.",
+      { icon: MousePointerClick, text: 'Cliquez sur une conversation pour la rouvrir' },
+      { icon: Menu, text: 'Sur mobile, utilisez le menu' },
     ],
     position: 'right',
   },
   {
     id: 'conclusion',
-    title: 'Tu es prêt(e)',
-    subtitle: 'Conclusion',
+    title: 'À vous de jouer !',
+    titleIcon: Rocket,
+    subtitle: 'Le tour est terminé',
     target: '#tour-chat-input',
     mobileTarget: '#tour-chat-input',
-    content:
-      'Excellent, tu as les bases pour utiliser la plateforme efficacement. Lance une première question concrète pour démarrer.',
+    content: "Vous avez les clés en main. Essayez par vous-même avec une première question simple !",
     details: [
-      'Commence simple, puis affine avec les options avancées.',
-      "Appuie-toi sur l'historique pour capitaliser sur tes échanges.",
-      'Ce guide reste disponible via "Revoir le tutoriel".',
+      { icon: Lightbulb, text: 'Astuce : Soyez le plus précis possible' },
+      { icon: Play, text: 'Commencez simple puis affinez avec les options avancées' },
+      { icon: MessageSquarePlus, text: 'Pour débuter, posez une question simple comme "Quel est le sens de la vie ?"' },
     ],
     position: 'top',
   },
 ];
 
 const TOTAL = STEPS.length;
-const PADDING = 10;
-const GAP = 14;
-const TOOLTIP_WIDTH = 320;
-const TOOLTIP_HEIGHT_ESTIMATE = 220;
+const PADDING = 16;
+const GAP = 16;
+const TOOLTIP_WIDTH = 360;
+const TOOLTIP_HEIGHT_ESTIMATE = 260;
 const TARGET_WAIT_MS = 4000;
 
 function clamp(n: number, min: number, max: number) {
@@ -140,6 +140,8 @@ export default function OnboardingTutorial() {
   const [targetMissing, setTargetMissing] = useState(false);
   const [tooltipHeight, setTooltipHeight] = useState(TOOLTIP_HEIGHT_ESTIMATE);
   const [isMobileViewport, setIsMobileViewport] = useState(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const effectiveIsOpen = isOpen || manualOpenFallback;
 
   const isFirst = currentStep === 0;
@@ -234,7 +236,7 @@ export default function OnboardingTutorial() {
         handleDefer();
       }
     },
-    [effectiveIsOpen, handleDefer]
+    [isOpen, handleDefer]
   );
 
   useEffect(() => {
@@ -266,6 +268,29 @@ export default function OnboardingTutorial() {
     window.addEventListener('seinentai:tutorial-open-manual', onManualOpen);
     return () => window.removeEventListener('seinentai:tutorial-open-manual', onManualOpen);
   }, [dispatch]);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const minSwipeDistance = 50;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe && !isLast) {
+      dispatch(nextStep());
+    } else if (isRightSwipe && !isFirst) {
+      dispatch(prevStep());
+    }
+  };
 
   const tooltipStyle = useMemo(() => {
     if (!targetRect) {
@@ -380,11 +405,11 @@ export default function OnboardingTutorial() {
       {spotlightStyle && (
         <>
           <div
-            className="fixed pointer-events-none border-2 border-emerald-500/95 shadow-[0_0_0_9999px_rgba(2,6,23,0.66)] transition-all duration-200 ease-out"
+            className="fixed pointer-events-none border-2 border-emerald-500/90 shadow-[0_0_0_9999px_rgba(15,23,42,0.7)] transition-all duration-300 ease-out"
             style={spotlightStyle}
           />
           <div
-            className="fixed pointer-events-none border-2 border-emerald-400/50 animate-pulse"
+            className="fixed pointer-events-none border-[3px] border-emerald-400/50 animate-pulse transition-all duration-300 ease-out"
             style={spotlightStyle}
           />
         </>
@@ -392,112 +417,143 @@ export default function OnboardingTutorial() {
 
       <div
         ref={tooltipRef}
-        className="fixed z-[10001] w-[min(380px,calc(100vw-20px))] rounded-2xl border border-slate-200/90 bg-linear-to-b from-white/99 to-slate-50/98 p-3.5 shadow-[0_24px_46px_-14px_rgba(15,23,42,0.4),0_2px_8px_rgba(15,23,42,0.06),inset_0_1px_0_rgba(255,255,255,0.8)] transition-[top,left,transform] duration-220 ease-out max-md:w-[min(380px,calc(100vw-16px))] max-md:max-h-[calc(100dvh-24px)] max-md:overflow-y-auto"
+        className="fixed z-[10001] w-[min(400px,calc(100vw-32px))] rounded-[20px] md:rounded-3xl border border-white/60 bg-white/95 backdrop-blur-2xl p-4 sm:p-5 md:p-6 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.2),0_0_20px_rgba(0,0,0,0.05)] transition-[top,left,transform] duration-300 ease-out max-md:max-h-[calc(100dvh-32px)] max-md:overflow-y-auto"
         style={tooltipStyle}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
       >
-        <div className="mb-2.5">
-          <div className="flex items-start justify-between gap-2">
+        <div className="mb-3 md:mb-4">
+          <div className="flex items-start justify-between gap-2 md:gap-3">
             <div>
-              <p className="text-[11px] uppercase tracking-widest text-emerald-500 font-bold">
-                Etape {currentStep + 1} / {TOTAL}
+              <span className="mb-1.5 md:mb-2 inline-flex items-center gap-1.5 rounded-full border border-emerald-200/60 bg-emerald-50 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-emerald-600">
+                <Sparkles className="h-3 w-3" />
+                Étape {currentStep + 1} sur {TOTAL}
+              </span>
+              <h3 className="text-lg md:text-xl font-bold text-slate-900 leading-tight flex items-center gap-2">
+                {step.title}
+                {step.titleIcon && <step.titleIcon className="h-4 w-4 md:h-5 md:w-5 text-emerald-500" />}
+              </h3>
+              <p className="text-[12px] md:text-sm font-medium text-slate-500 mt-0.5 md:mt-1 leading-snug">
+                {step.subtitle}
               </p>
-              <h3 className="text-base font-bold text-slate-900">{step.title}</h3>
-              <p className="text-[12px] text-slate-500 mt-0.5">{step.subtitle}</p>
             </div>
             <button
               onClick={() => {
                 setManualOpenFallback(false);
                 handleDefer();
               }}
-              className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-400 transition-colors hover:bg-slate-200 hover:text-slate-600 cursor-pointer"
               aria-label="Quitter le tutoriel"
             >
-              <X className="w-4 h-4" />
+              <X className="h-4 w-4" />
             </button>
-          </div>
-          <div className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-teal-700">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Guide interactif contextuel</span>
           </div>
         </div>
 
         {isWaitingTarget ? (
-          <p className="text-xs text-slate-500 flex items-center gap-2">
-            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-            Recherche de l&apos;élément cible...
-          </p>
+          <div className="flex flex-col items-center justify-center py-6">
+            <Loader2 className="h-6 w-6 animate-spin text-emerald-500" />
+            <p className="mt-2 text-xs text-slate-500">Recherche en cours...</p>
+          </div>
         ) : (
           <>
-            <p className="text-sm text-slate-600 leading-relaxed">{step.content}</p>
-            <ul className="mt-2.5 grid list-none gap-1.5 p-0">
-              {(isMobileViewport ? step.details.slice(0, 2) : step.details).map((detail) => (
-                <li
-                  key={detail}
-                  className="rounded-[10px] border border-slate-200 bg-white px-2.5 py-2 text-xs leading-[1.4] text-slate-600"
-                >
-                  {detail}
-                </li>
-              ))}
-            </ul>
+            <p className="text-[13px] md:text-[14px] leading-snug md:leading-relaxed text-slate-600">
+              {step.content}
+            </p>
+            {step.details.length > 0 && (
+              <ul className="mt-3 md:mt-4 grid list-none gap-2 p-0">
+                {(isMobileViewport && step.details.length > 2 ? step.details.slice(0, 2) : step.details).map((detail, idx) => (
+                  <li key={idx} className="flex items-start gap-2 md:gap-2.5 text-[12px] md:text-[13px] text-slate-600">
+                    <detail.icon className="mt-0.5 h-3.5 w-3.5 md:h-4 md:w-4 shrink-0 text-emerald-500" />
+                    <span className="leading-snug">{detail.text}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </>
         )}
 
         {targetMissing && (
-          <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-2">
-            <p className="text-[11px] text-amber-700">
+          <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3">
+            <p className="text-[12px] font-medium text-amber-700">
               Élément non détecté sur cet écran. Vous pouvez passer cette étape.
             </p>
           </div>
         )}
 
-        <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-slate-200">
-          <div
-            className="h-full rounded-full bg-linear-to-r from-emerald-500 to-teal-500 transition-[width] duration-260 ease-out"
-            style={{ width: `${((currentStep + 1) / TOTAL) * 100}%` }}
-          />
+        <div className="mt-4 md:mt-6 flex w-full items-center justify-center gap-2.5">
+          {Array.from({ length: TOTAL }).map((_, index) => {
+            const isActive = index === currentStep;
+            const isPast = index < currentStep;
+            return (
+              <button
+                key={index}
+                onClick={() => dispatch(setStep(index))}
+                className={`h-2 rounded-full transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] cursor-pointer ${
+                  isActive 
+                    ? 'w-10 bg-gradient-to-r from-emerald-400 to-teal-500 shadow-[0_0_10px_rgba(20,184,166,0.3)]' 
+                    : isPast 
+                    ? 'w-2.5 bg-emerald-200 hover:bg-emerald-300 hover:w-4' 
+                    : 'w-2.5 bg-slate-200 hover:bg-slate-300 hover:w-4'
+                }`}
+                aria-label={`Aller à l'étape ${index + 1}`}
+                aria-current={isActive ? 'step' : undefined}
+              />
+            );
+          })}
         </div>
 
-        <div className="mt-4 flex items-center justify-between gap-2">
+        <div className="mt-5 md:mt-6 flex items-center justify-between gap-2 md:gap-3">
           <button
             onClick={() => dispatch(prevStep())}
             disabled={isFirst}
-            className="inline-flex items-center gap-1 px-3 py-2 rounded-lg text-xs font-semibold text-slate-500 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+            className="inline-flex h-9 md:h-10 items-center justify-center gap-1 md:gap-1.5 rounded-xl px-3 md:px-4 text-[12px] md:text-[13px] font-semibold text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-800 disabled:pointer-events-none disabled:opacity-40 cursor-pointer"
           >
-            <ChevronLeft className="w-3.5 h-3.5" />
-            Précédent
+            <ChevronLeft className="h-4 w-4" />
+            <span className="hidden sm:inline">Précédent</span>
           </button>
 
           <button
             onClick={() => {
               if (isLast) {
+                confetti({
+                  particleCount: 150,
+                  spread: 70,
+                  origin: { y: 0.6 },
+                  colors: ['#10b981', '#14b8a6', '#0f766e', '#facc15'],
+                  zIndex: 10005
+                });
                 setManualOpenFallback(false);
                 handleFinish();
-              }
-              else dispatch(nextStep());
+              } else dispatch(nextStep());
             }}
-            className="inline-flex items-center gap-1 px-4 py-2 rounded-lg text-xs font-semibold text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 transition-all cursor-pointer"
+            className="inline-flex h-9 md:h-10 items-center justify-center gap-1 md:gap-1.5 rounded-xl bg-slate-900 px-4 md:px-5 text-[12px] md:text-[13px] font-semibold text-white shadow-md transition-all hover:bg-slate-800 hover:shadow-lg hover:scale-[1.02] cursor-pointer"
           >
             {isLast ? 'Terminer' : 'Suivant'}
-            {isLast ? <Check className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+            {isLast ? <Check className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
           </button>
         </div>
 
-        <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between">
+        <div className="mt-3 md:mt-5 flex items-center justify-center gap-3 md:gap-4 border-t border-slate-100 pt-3 md:pt-4">
           <button
             onClick={handleDefer}
             onClickCapture={() => setManualOpenFallback(false)}
-            className="inline-flex min-h-7 cursor-pointer items-center justify-center gap-1.5 rounded-[9px] border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-[11px] font-bold tracking-[0.01em] text-slate-600 transition-all duration-150 hover:-translate-y-px hover:border-slate-300 hover:bg-slate-100 hover:text-slate-700 active:translate-y-0 max-md:min-h-[30px] max-md:px-2 max-md:text-[10.5px]"
+            className="text-[12px] font-medium text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
           >
-            Quitter
+            Passer le tutoriel
           </button>
           {!isManual && (
-            <button
-              onClick={handleDismiss}
-              onClickCapture={() => setManualOpenFallback(false)}
-              className="inline-flex min-h-7 cursor-pointer items-center justify-center gap-1.5 rounded-[9px] border border-rose-200 bg-linear-to-b from-rose-50 to-rose-100 px-2.5 py-1.5 text-[11px] font-bold tracking-[0.01em] text-rose-700 transition-all duration-150 hover:-translate-y-px hover:border-rose-300 hover:from-rose-100 hover:to-rose-200 hover:text-rose-800 active:translate-y-0 max-md:min-h-[30px] max-md:px-2 max-md:text-[10.5px]"
-            >
-              Ne plus afficher
-            </button>
+            <>
+              <span className="h-3 w-px bg-slate-200" />
+              <button
+                onClick={handleDismiss}
+                onClickCapture={() => setManualOpenFallback(false)}
+                className="text-[12px] font-medium text-slate-400 hover:text-rose-500 transition-colors cursor-pointer"
+              >
+                Ne plus afficher
+              </button>
+            </>
           )}
         </div>
       </div>

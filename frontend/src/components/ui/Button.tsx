@@ -24,7 +24,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   ghost:
     'bg-transparent text-slate-600 hover:bg-slate-100 hover:text-slate-900',
   danger:
-    'bg-red-500 text-white shadow-sm hover:bg-red-600 hover:shadow-red-200 active:scale-[0.98]',
+    'bg-rose-500 text-white shadow-sm hover:bg-rose-600 hover:shadow-rose-200 active:scale-[0.98]',
   outline:
     'bg-transparent text-emerald-600 border border-emerald-200 hover:bg-emerald-50 hover:border-emerald-300 active:scale-[0.98]',
 };

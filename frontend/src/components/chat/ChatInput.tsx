@@ -102,7 +102,7 @@ export default function ChatInput({ onSend, isStreaming, onStop, disabled }: Cha
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Posez votre question à Seinentai..."
+            placeholder="Posez votre question à Sunao..."
             rows={1}
             disabled={disabled}
             className={cn(

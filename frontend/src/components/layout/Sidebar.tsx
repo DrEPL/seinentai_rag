@@ -318,7 +318,7 @@ export default function Sidebar() {
         )}
 
         {/* Footer — Interface Switch */}
-        <div className="p-3 border-t border-slate-100">
+        <div className="p-3 border-t border-slate-100 flex flex-col gap-2">
           <button
             onClick={() =>
               dispatch(switchInterface(interfaceMode === 'user' ? 'admin' : 'user'))
@@ -343,6 +343,19 @@ export default function Sidebar() {
               </>
             )}
           </button>
+
+          <div className="mt-1 text-center">
+            <a 
+              href="https://drepl.cg" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-block text-[10px] leading-tight text-slate-400 hover:text-slate-500 transition-colors"
+            >
+              Développé par <span className="font-semibold text-emerald-500">@anne_en_cours</span>
+              <br />
+              Dr EPL tous droits réservés.
+            </a>
+          </div>
         </div>
       </aside>
     </>
