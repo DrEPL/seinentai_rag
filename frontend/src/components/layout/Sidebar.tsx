@@ -344,16 +344,21 @@ export default function Sidebar() {
             )}
           </button>
 
-          <div className="mt-1 text-center">
+          <div className="mt-2 flex items-center justify-center pb-1">
             <a 
               href="https://drepl.cg" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="inline-block text-[10px] leading-tight text-slate-400 hover:text-slate-500 transition-colors"
+              className="group flex flex-col items-center text-center"
             >
-              Développé par <span className="font-semibold text-emerald-500">@anne_en_cours</span>
-              <br />
-              Dr EPL tous droits réservés.
+              <div className="text-[10px] text-slate-400 group-hover:text-slate-500 transition-colors">
+                Conçu & Développé par <span className="font-semibold text-emerald-500 group-hover:text-emerald-600">Dr EPL</span>
+              </div>
+              <div className="flex items-center gap-1.5 mt-0.5 text-[9px] font-medium text-slate-400/80 group-hover:text-slate-400 transition-colors">
+                <span>© {new Date().getFullYear()}</span>
+                <span className="w-1 h-1 rounded-full bg-slate-300 group-hover:bg-emerald-300 transition-colors" />
+                <span className="uppercase tracking-widest">Tous droits réservés</span>
+              </div>
             </a>
           </div>
         </div>
