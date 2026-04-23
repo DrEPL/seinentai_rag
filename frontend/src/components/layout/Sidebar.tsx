@@ -117,7 +117,7 @@ export default function Sidebar() {
             <div>
               <h2 className="text-sm font-bold text-slate-900 leading-none tracking-tight">SEINENTAI4US</h2>
               <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-[0.1em] mt-1 block">
-                {interfaceMode === 'admin' ? 'Admin Panel' : 'Assistant IA'}
+                {interfaceMode === 'admin' ? 'Admin Panel' : 'Sunao assistant IA'}
               </span>
             </div>
           </div>

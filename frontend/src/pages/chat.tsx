@@ -3,7 +3,7 @@
  */
 import { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { MessageSquarePlus, Sparkles, Search, FileText, Zap } from 'lucide-react';
+import { MessageSquarePlus, Sparkles, Search, SkullIcon, BanIcon, UserStar, Smile } from 'lucide-react';
 import AppLayout from '@/components/layout/AppLayout';
 import ChatMessage from '@/components/chat/ChatMessage';
 import ChatInput from '@/components/chat/ChatInput';
@@ -13,10 +13,12 @@ import { useChat } from '@/hooks/useChat';
 import { cn } from '@/lib/utils';
 
 const suggestions = [
-  { icon: Search, text: 'Rechercher un concept dans mes documents' },
-  { icon: FileText, text: 'Résumer un document spécifique' },
-  { icon: Zap, text: 'Comparer des informations entre documents' },
-  { icon: Sparkles, text: 'Expliquer un sujet complexe' },
+  { icon: Search, text: 'Quel est le sens de la vie ?' },
+  { icon: UserStar, text: 'Qui est Sosai pour les jeunes ?' },
+  { icon: Smile, text: 'Comment être heureux ?' },
+  { icon: Sparkles, text: 'C\'est quoi le but de l\'humanité ?' },
+  { icon: SkullIcon, text: "Il y a quoi après la mort ?" },
+  { icon: BanIcon, text: "Le sexe avant le mariage est il un péché ?" },
 ];
 
 export default function ChatPage() {
@@ -51,7 +53,7 @@ export default function ChatPage() {
         >
           {isEmpty ? (
             <div className="flex-1 flex items-center justify-center min-h-full px-4">
-              <div className="text-center max-w-md">
+              <div className="text-center max-w-3xl">
                 <motion.div
                   initial={{ scale: 0.8, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
@@ -75,7 +77,7 @@ export default function ChatPage() {
                   transition={{ delay: 0.3 }}
                   className="text-slate-500 mb-8"
                 >
-                  Comment puis-je vous aider ? Posez votre question sur vos documents.
+                  Comment puis-je vous aider ? Posez votre question je répondrais en me basant sur les enseignements.
                 </motion.p>
 
                 {/* Suggestions */}
