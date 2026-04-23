@@ -39,6 +39,7 @@ export function useAuth() {
       dispatch(setAuthError(null));
       try {
         await authApi.register({ email, password, full_name: fullName });
+        dispatch(setAuthLoading(false));
         dispatch(addToast({ type: 'success', message: 'Compte créé ! Connectez-vous.' }));
         router.push(ROUTES.LOGIN);
       } catch (err) {

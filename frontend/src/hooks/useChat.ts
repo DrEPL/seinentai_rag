@@ -76,7 +76,7 @@ export function useChat() {
   // ─── Send message (streaming SSE) ─────────────────────────────────────
   const sendMessage = useCallback(
     async (text: string) => {
-      if (!text.trim() || isStreaming) return;
+      if (!text.trim() || isStreaming || loading) return;
 
       const userMsg: ChatMessage = {
         id: `user-${Date.now()}`,
@@ -88,7 +88,7 @@ export function useChat() {
       // Clear agent steps
       dispatch(clearSteps());
 
-      const isNewChat = !activeSessionId;
+      const isNewChat = !activeSessionId || activeSessionId.startsWith('temp-');
       const endpoint = isNewChat ? '/chat/new' : `/chat/${activeSessionId}`;
       const body: Record<string, unknown> = {
         message: text,

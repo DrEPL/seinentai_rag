@@ -200,11 +200,7 @@ uvicorn seinentai4us_api.api.main:app --reload --host 0.0.0.0 --port 8000
 ### Production
 
 ```bash
-uvicorn seinentai4us_api.api.main:app \
-    --host 0.0.0.0 \
-    --port 8000 \
-    --workers 4 \
-    --log-level info
+uvicorn seinentai4us_api.api.main:app --host 0.0.0.0 --port 8000 --workers 4 --log-level info
 ```
 
 L'API est accessible sur `http://localhost:8000`. Documentation interactive : `http://localhost:8000/docs`.

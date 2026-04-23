@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
 
 const suggestions = [
   { icon: Search, text: 'Quel est le sens de la vie ?' },
-  { icon: UserStar, text: 'Qui est Sosai pour les jeunes ?' },
+  { icon: UserStar, text: 'Qui est Sukuinushisama ?' },
   { icon: Smile, text: 'Comment être heureux ?' },
   { icon: Sparkles, text: 'C\'est quoi le but de l\'humanité ?' },
   { icon: SkullIcon, text: "Il y a quoi après la mort ?" },
