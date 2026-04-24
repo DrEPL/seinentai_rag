@@ -18,29 +18,34 @@ interface SocialShareButtonsProps {
 }
 
 export default function SocialShareButtons({ url, title, className }: SocialShareButtonsProps) {
-  const iconSize = 32;
-  const borderRadius = 8;
+  const iconSize = 40;
 
   return (
-    <div className={cn("flex items-center gap-3 p-2", className)}>
-      <TwitterShareButton url={url} title={title}>
-        <div className="group flex flex-col items-center gap-1">
-          <TwitterIcon size={iconSize} round={false} borderRadius={borderRadius} />
-          <span className="text-[10px] font-medium text-slate-500 group-hover:text-blue-400">Twitter</span>
+    <div className={cn("flex justify-around items-center gap-2 p-1", className)}>
+      <TwitterShareButton url={url} title={title} className="focus:outline-none outline-none">
+        <div className="group flex flex-col items-center gap-2 transition-all duration-300 hover:-translate-y-1">
+          <div className="rounded-full shadow-sm group-hover:shadow-md transition-all duration-300 overflow-hidden ring-2 ring-transparent group-hover:ring-blue-100">
+            <TwitterIcon size={iconSize} round={true} />
+          </div>
+          <span className="text-[10px] font-medium text-slate-400 group-hover:text-blue-500 transition-colors">Twitter</span>
         </div>
       </TwitterShareButton>
 
-      <LinkedinShareButton url={url} title={title}>
-        <div className="group flex flex-col items-center gap-1">
-          <LinkedinIcon size={iconSize} round={false} borderRadius={borderRadius} />
-          <span className="text-[10px] font-medium text-slate-500 group-hover:text-blue-700">LinkedIn</span>
+      <LinkedinShareButton url={url} title={title} className="focus:outline-none outline-none">
+        <div className="group flex flex-col items-center gap-2 transition-all duration-300 hover:-translate-y-1">
+          <div className="rounded-full shadow-sm group-hover:shadow-md transition-all duration-300 overflow-hidden ring-2 ring-transparent group-hover:ring-blue-200">
+            <LinkedinIcon size={iconSize} round={true} />
+          </div>
+          <span className="text-[10px] font-medium text-slate-400 group-hover:text-blue-700 transition-colors">LinkedIn</span>
         </div>
       </LinkedinShareButton>
 
-      <WhatsappShareButton url={url} title={title} separator=" :: ">
-        <div className="group flex flex-col items-center gap-1">
-          <WhatsappIcon size={iconSize} round={false} borderRadius={borderRadius} />
-          <span className="text-[10px] font-medium text-slate-500 group-hover:text-green-500">WhatsApp</span>
+      <WhatsappShareButton url={url} title={title} separator=" :: " className="focus:outline-none outline-none">
+        <div className="group flex flex-col items-center gap-2 transition-all duration-300 hover:-translate-y-1">
+          <div className="rounded-full shadow-sm group-hover:shadow-md transition-all duration-300 overflow-hidden ring-2 ring-transparent group-hover:ring-green-100">
+            <WhatsappIcon size={iconSize} round={true} />
+          </div>
+          <span className="text-[10px] font-medium text-slate-400 group-hover:text-green-500 transition-colors">WhatsApp</span>
         </div>
       </WhatsappShareButton>
     </div>
