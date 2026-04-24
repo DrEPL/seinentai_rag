@@ -1,7 +1,7 @@
 /**
  * SEINENTAI4US — Register page
  */
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Mail, Lock, User, ArrowRight, Eye, EyeOff } from 'lucide-react';
@@ -9,13 +9,20 @@ import AuthLayout from '@/components/layout/AuthLayout';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import { useAuth } from '@/hooks/useAuth';
+import { useAppDispatch } from '@/store/hooks';
+import { setAuthError } from '@/store/slices/authSlice';
 
 export default function RegisterPage() {
+  const dispatch = useAppDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const { register, loading, error } = useAuth();
+
+  useEffect(() => {
+    dispatch(setAuthError(null));
+  }, [dispatch]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();

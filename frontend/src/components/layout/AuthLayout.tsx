@@ -16,7 +16,7 @@ export default function AuthLayout({ children, title, subtitle }: AuthLayoutProp
     <>
       <Head>
         <title>{`${title} — SEINENTAI4US`}</title>
-        <meta name="description" content="SEINENTAI4US - Plateforme RAG intelligente" />
+        <meta name="description" content="SEINENTAI4US - Plateforme d'assistance basée sur les enseignements de Sukyo Mahikari." />
       </Head>
       <div className="min-h-screen gradient-bg-animated flex items-center justify-center p-4">
         {/* Decorative elements */}
@@ -55,7 +55,7 @@ export default function AuthLayout({ children, title, subtitle }: AuthLayoutProp
 
           {/* Footer */}
           <p className="text-center text-xs text-slate-400 mt-6">
-            SEINENTAI4US © {new Date().getFullYear()} — Plateforme RAG intelligente
+            SEINENTAI4US © {new Date().getFullYear()} - Plateforme d'assistance basée sur les enseignements de Sukyo Mahikari.
           </p>
         </motion.div>
       </div>

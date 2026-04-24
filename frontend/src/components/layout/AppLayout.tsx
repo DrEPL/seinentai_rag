@@ -24,7 +24,7 @@ export default function AppLayout({ children, title, pageTitle, fullHeight = fal
     <>
       <Head>
         <title>{pageTitle ? `${pageTitle} — SEINENTAI4US` : 'SEINENTAI4US'}</title>
-        <meta name="description" content="SEINENTAI4US - Plateforme RAG intelligente" />
+        <meta name="description" content="SEINENTAI4US - Plateforme d'assistance basée sur les enseignements de Sukyo Mahikari." />
       </Head>
       <div className="flex h-[100dvh] overflow-hidden bg-[var(--background)]">
         <Sidebar />

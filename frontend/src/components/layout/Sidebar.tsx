@@ -351,13 +351,13 @@ export default function Sidebar() {
               rel="noopener noreferrer"
               className="group flex flex-col items-center text-center"
             >
-              <div className="text-[10px] text-slate-400 group-hover:text-slate-500 transition-colors">
+              <div className="text-[11px] text-slate-400 group-hover:text-slate-500 transition-colors">
                 Conçu & Développé par <span className="font-semibold text-emerald-500 group-hover:text-emerald-600">Dr EPL</span>
               </div>
-              <div className="flex items-center gap-1.5 mt-0.5 text-[9px] font-medium text-slate-400/80 group-hover:text-slate-400 transition-colors">
+              <div className="flex items-center gap-1.5 mt-0.5 text-[11px] font-medium text-slate-400/80 group-hover:text-slate-400 transition-colors">
                 <span>© {new Date().getFullYear()}</span>
                 <span className="w-1 h-1 rounded-full bg-slate-300 group-hover:bg-emerald-300 transition-colors" />
-                <span className="uppercase tracking-widest">Tous droits réservés</span>
+                <span className="tracking-widest">Tous droits réservés</span>
               </div>
             </a>
           </div>
