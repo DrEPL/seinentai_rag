@@ -2,7 +2,7 @@
  * SEINENTAI4US — ChatMessage bubble
  */
 import { memo, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Bot, User, FileText, ChevronDown, ChevronUp, Copy, Check, Share2, AlertCircle } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -67,56 +67,12 @@ function ChatMessage({ message, isStreaming }: ChatMessageProps) {
       {/* Bubble Container */}
       <div
         className={cn(
-          'max-w-[85%] md:max-w-[80%] flex flex-col relative',
+          'max-w-[80%] md:max-w-[75%] flex flex-col relative',
           isUser ? 'items-end' : 'items-start',
           !isUser && isStreaming && !message.content && 'hidden'
         )}
       >
-        {/* Actions - Visible on hover */}
-        {!isStreaming && (
-          <div className={cn(
-            "absolute -top-1 opacity-0 group-hover:opacity-100 transition-opacity z-10 flex gap-1",
-            isUser ? "right-full mr-2 flex-row-reverse" : "left-full ml-2"
-          )}>
-            <button
-              onClick={handleCopy}
-              className="p-2 rounded-lg bg-white border border-slate-200 shadow-sm text-slate-400 hover:text-emerald-600 hover:border-emerald-100 transition-all cursor-pointer"
-              title="Copier le message"
-            >
-              {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-            </button>
 
-            <Popover
-              isOpen={isShareOpen}
-              onClose={() => setIsShareOpen(false)}
-              align={isUser ? "right" : "left"}
-              position="bottom"
-              contentClassName="min-w-[200px]"
-              trigger={
-                <button
-                  onClick={() => setIsShareOpen(!isShareOpen)}
-                  className={cn(
-                    "p-2 rounded-lg bg-white border border-slate-200 shadow-sm text-slate-400 hover:text-blue-500 hover:border-blue-100 transition-all cursor-pointer",
-                    isShareOpen && "border-blue-100 bg-blue-50/30"
-                  )}
-                  title="Partager le message"
-                >
-                  <Share2 className="w-3.5 h-3.5" />
-                </button>
-              }
-            >
-              <div className="p-1">
-                <p className="px-3 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-50 mb-1">
-                  Partager le message
-                </p>
-                <SocialShareButtons 
-                  url={typeof window !== 'undefined' ? window.location.href : ''} 
-                  title={message.content.substring(0, 100)} 
-                />
-              </div>
-            </Popover>
-          </div>
-        )}
 
         <div
           className={cn(
@@ -184,57 +140,125 @@ function ChatMessage({ message, isStreaming }: ChatMessageProps) {
           </div>
         </div>
 
-        {/* Sources */}
-        {message.sources && message.sources.length > 0 && (
-          <div className="mt-2">
-            <button
-              onClick={() => setSourcesExpanded(!sourcesExpanded)}
-              className="inline-flex items-center gap-1.5 text-[11px] font-medium text-emerald-600 hover:text-emerald-700 transition-colors cursor-pointer"
-            >
-              <FileText className="w-3 h-3" />
-              {message.sources.length} source{message.sources.length > 1 ? 's' : ''}
-              {sourcesExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-            </button>
+        {/* Actions, Sources & Time Row */}
+        <div className={cn(
+          "flex items-start justify-between gap-4 mt-1 w-full",
+          isUser ? "flex-row-reverse" : "flex-row"
+        )}>
+          <div className={cn("flex-1 min-w-0 flex flex-col", isUser ? "items-end" : "items-start")}>
+            {!isUser && message.sources && message.sources.length > 0 && (
+              <div className="flex flex-col items-start w-full min-w-0">
+                <button
+                  onClick={() => setSourcesExpanded(!sourcesExpanded)}
+                  className="inline-flex items-center gap-1.5 text-[11px] font-medium text-emerald-600 hover:text-emerald-700 transition-colors cursor-pointer flex-shrink-0"
+                >
+                  <FileText className="w-3 h-3" />
+                  {message.sources.length} source{message.sources.length > 1 ? 's' : ''}
+                  {sourcesExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                </button>
 
-            {sourcesExpanded && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                className="mt-2 space-y-1.5"
-              >
-                {message.sources.map((source, idx) => (
-                  <div
-                    key={idx}
-                    className="px-3 py-2 rounded-lg bg-slate-50 border border-slate-100 text-xs"
-                  >
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-medium text-slate-700 truncate">
-                        {source.filename}
-                      </span>
-                      <span className="text-[10px] text-emerald-600 font-mono">
-                        {(source.score * 10).toFixed(2)}%
-                      </span>
-                    </div>
-                    <p className="text-slate-500 line-clamp-2">{source.excerpt}</p>
+                <AnimatePresence>
+                  {sourcesExpanded && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="mt-2 space-y-1.5 overflow-hidden w-full min-w-0"
+                    >
+                      {message.sources.map((source, idx) => (
+                        <div
+                          key={idx}
+                          className="px-3 py-2 rounded-lg bg-slate-50 border border-slate-100 text-xs w-full max-w-full overflow-hidden"
+                        >
+                          <div className="flex items-center justify-between mb-1 min-w-0 gap-2">
+                            <span className="font-medium text-slate-700 truncate min-w-0">
+                              {source.filename}
+                            </span>
+                            <span className="text-[10px] text-emerald-600 font-mono flex-shrink-0">
+                              {(source.score * 10).toFixed(2)}%
+                            </span>
+                          </div>
+                          <p className="text-slate-500 line-clamp-2">{source.excerpt}</p>
+                        </div>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
+
+            {/* Time for User (where sources would be) */}
+            {isUser && (
+              <div className="flex items-center gap-2 mt-0.5">
+                {message.error && (
+                  <div className="flex items-center gap-1 text-[10px] text-red-500 font-medium animate-pulse">
+                    <AlertCircle className="w-3 h-3" />
+                    <span>Échec</span>
                   </div>
-                ))}
-              </motion.div>
+                )}
+                <p className="text-[10px] text-slate-400">
+                  {formatTime(message.timestamp)}
+                </p>
+              </div>
             )}
           </div>
-        )}
 
-        <div className="flex items-center gap-2 mt-1">
-          {isUser && message.error && (
-            <div className="flex items-center gap-1 text-[10px] text-red-500 font-medium animate-pulse">
-              <AlertCircle className="w-3 h-3" />
-              <span>Échec</span>
+          {!isStreaming && (
+            <div className={cn(
+              "flex items-center gap-1 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 mt-0.5",
+              isUser ? "flex-row-reverse" : "flex-row"
+            )}>
+              <button
+                onClick={handleCopy}
+                className="p-1 rounded-md text-slate-400 hover:text-emerald-600 hover:bg-slate-100 transition-colors cursor-pointer"
+                title="Copier le message"
+              >
+                {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+              </button>
+
+              <Popover
+                isOpen={isShareOpen}
+                onClose={() => setIsShareOpen(false)}
+                align={isUser ? "left" : "right"}
+                position="top"
+                contentClassName="min-w-[220px]"
+                trigger={
+                  <button
+                    onClick={() => setIsShareOpen(!isShareOpen)}
+                    className={cn(
+                      "p-1 rounded-md text-slate-400 hover:text-blue-500 hover:bg-slate-100 transition-colors cursor-pointer",
+                      isShareOpen && "text-blue-500 bg-blue-50"
+                    )}
+                    title="Partager le message"
+                  >
+                    <Share2 className="w-3.5 h-3.5" />
+                  </button>
+                }
+              >
+                <div className="p-3 bg-white/95 backdrop-blur-xl">
+                  <div className="flex items-center justify-between border-b border-slate-100/80 pb-2 mb-3">
+                    <span className="text-[11px] font-bold uppercase tracking-widest bg-black bg-clip-text text-transparent">
+                      Partager via
+                    </span>
+                  </div>
+                  <SocialShareButtons 
+                    url={typeof window !== 'undefined' ? window.location.href : ''} 
+                    title={message.content.substring(0, 100)} 
+                  />
+                </div>
+              </Popover>
             </div>
           )}
-          <p className={cn('text-[10px] text-slate-400', isUser && 'text-right flex-1')}>
-            {formatTime(message.timestamp)}
-          </p>
         </div>
+
+        {/* Time for Bot (below sources) */}
+        {!isUser && (
+          <div className="flex items-center gap-2 mt-1 w-full flex-row">
+            <p className="text-[10px] text-slate-400">
+              {formatTime(message.timestamp)}
+            </p>
+          </div>
+        )}
       </div>
     </motion.div>
   );
