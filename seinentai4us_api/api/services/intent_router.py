@@ -25,10 +25,79 @@ from pathlib import Path
 
 from Agent.prompts import INTENT_CLASSIFIER_PROMPT, DIRECT_RESPONSE_SYSTEM_PROMPT
 
-_ENV_PATH = Path(__file__).resolve().parents[2] / ".env"
+_ENV_PATH = Path(__file__).resolve().parents[3] / ".env"
 load_dotenv(str(_ENV_PATH))
 
 logger = logging.getLogger(__name__)
+
+
+# ── Friendly errors ───────────────────────────────────────────────────────────
+
+class LLMUnavailableError(Exception):
+    """Erreur LLM avec un message utilisateur non-technique."""
+
+    def __init__(self, user_message: str, technical_detail: str = ""):
+        super().__init__(user_message)
+        self.user_message = user_message
+        self.technical_detail = technical_detail
+
+
+def _friendly_llm_error(
+    *,
+    status_code: Optional[int] = None,
+    response_body: str = "",
+    exception: Optional[BaseException] = None,
+) -> LLMUnavailableError:
+    """Traduit une erreur technique LLM en message utilisateur clair (FR)."""
+    technical = (response_body or (str(exception) if exception else "")).strip()
+
+    if status_code == 403 and "subscription" in response_body.lower():
+        msg = (
+            "L'assistant n'est pas accessible avec votre abonnement actuel. "
+            "Merci de contacter l'administrateur."
+        )
+    elif status_code == 403:
+        msg = (
+            "L'assistant n'est pas autorisé à répondre pour le moment. "
+            "Merci de réessayer plus tard."
+        )
+    elif status_code == 401:
+        msg = (
+            "L'assistant n'a pas pu s'authentifier auprès du service de génération. "
+            "Merci de contacter l'administrateur."
+        )
+    elif status_code == 404:
+        msg = (
+            "Le modèle de génération est introuvable. "
+            "Merci de contacter l'administrateur."
+        )
+    elif status_code == 429:
+        msg = (
+            "L'assistant est très sollicité actuellement. "
+            "Merci de patienter quelques instants avant de réessayer."
+        )
+    elif status_code and 500 <= status_code < 600:
+        msg = (
+            "Le service de génération rencontre une difficulté temporaire. "
+            "Merci de réessayer dans un instant."
+        )
+    elif isinstance(exception, requests.exceptions.Timeout):
+        msg = (
+            "L'assistant met trop de temps à répondre. "
+            "Merci de réessayer dans un instant."
+        )
+    elif isinstance(exception, requests.exceptions.ConnectionError):
+        msg = (
+            "L'assistant est momentanément injoignable. "
+            "Merci de réessayer dans quelques instants."
+        )
+    else:
+        msg = (
+            "Une difficulté est survenue lors de la génération de la réponse. "
+            "Merci de réessayer dans un instant."
+        )
+
+    return LLMUnavailableError(msg, technical_detail=technical)
 
 
 # ── Data classes ──────────────────────────────────────────────────────────────
@@ -219,13 +288,13 @@ class IntentRouter:
         max_tokens: int = 512,
         max_retries: int = 2,
     ) -> Dict[str, Any]:
-        """Appelle le LLM et parse la réponse en JSON."""
+        """Appelle le LLM et parse la réponse en JSON.
+
+        Propage LLMUnavailableError si le LLM est indisponible (403, timeout, etc.).
+        Retourne un fallback uniquement en cas d'échec de parsing JSON après retries.
+        """
         for attempt in range(max_retries):
             raw = self._call_llm(prompt, temperature=temperature, max_tokens=max_tokens)
-            if not raw:
-                time.sleep(1)
-                continue
-
             parsed = self._parse_json(raw)
             if parsed:
                 return parsed
@@ -233,11 +302,11 @@ class IntentRouter:
             logger.warning(f"🧠 Échec parsing JSON (tentative {attempt+1}/{max_retries})")
             time.sleep(0.5)
 
-        logger.error("🧠 Toutes les tentatives de classification ont échoué")
+        logger.error("🧠 Parsing JSON impossible après %d tentatives", max_retries)
         return {"intent": "knowledge_query", "confidence": 0.3, "reasoning": "Fallback (parsing échoué)"}
 
     def _call_llm(self, prompt: str, temperature: float = 0.1, max_tokens: int = 512) -> str:
-        """Appelle Ollama et retourne le texte brut."""
+        """Appelle Ollama et retourne le texte brut. Lève LLMUnavailableError en cas d'échec."""
         body = {
             "model": self.model,
             "prompt": prompt,
@@ -247,16 +316,17 @@ class IntentRouter:
 
         try:
             resp = requests.post(f"{self.base_url}/api/generate", json=body, timeout=60)
-            if resp.status_code != 200:
-                logger.error(f"🧠 LLM error {resp.status_code}: {resp.text[:200]}")
-                return ""
-            return resp.json().get("response", "").strip()
-        except Exception as e:
+        except requests.RequestException as e:
             logger.error(f"🧠 LLM call failed: {e}")
-            return ""
+            raise _friendly_llm_error(exception=e) from e
+
+        if resp.status_code != 200:
+            logger.error(f"🧠 LLM error {resp.status_code}: {resp.text[:200]}")
+            raise _friendly_llm_error(status_code=resp.status_code, response_body=resp.text)
+        return resp.json().get("response", "").strip()
 
     def _call_llm_stream(self, prompt: str, system: str = "", temperature: float = 0.7, max_tokens: int = 1024):
-        """Appelle Ollama en mode streaming et yield les tokens."""
+        """Appelle Ollama en mode streaming et yield les tokens. Lève LLMUnavailableError en cas d'échec."""
         body = {
             "model": self.model,
             "prompt": prompt,
@@ -267,8 +337,22 @@ class IntentRouter:
             body["system"] = system
 
         try:
-            with requests.post(f"{self.base_url}/api/generate", json=body, stream=True, timeout=120) as resp:
-                resp.raise_for_status()
+            resp = requests.post(f"{self.base_url}/api/generate", json=body, stream=True, timeout=120)
+        except requests.RequestException as e:
+            logger.error(f"🧠 LLM stream call failed: {e}")
+            raise _friendly_llm_error(exception=e) from e
+
+        with resp:
+            if resp.status_code != 200:
+                body_text = ""
+                try:
+                    body_text = resp.text[:500]
+                except Exception:
+                    pass
+                logger.error(f"🧠 LLM stream error {resp.status_code}: {body_text[:200]}")
+                raise _friendly_llm_error(status_code=resp.status_code, response_body=body_text)
+
+            try:
                 for line in resp.iter_lines():
                     if line:
                         decoded = json.loads(line.decode("utf-8"))
@@ -277,9 +361,9 @@ class IntentRouter:
                             yield token
                         if decoded.get("done"):
                             break
-        except Exception as e:
-            logger.error(f"🧠 LLM stream call failed: {e}")
-            yield ""
+            except requests.RequestException as e:
+                logger.error(f"🧠 LLM stream interrupted: {e}")
+                raise _friendly_llm_error(exception=e) from e
 
     @staticmethod
     def _parse_json(text: str) -> Dict[str, Any]:

@@ -416,9 +416,16 @@ class RAGService:
         )
 
     def generate_stream(self, query: str, retrieved_docs: List[Dict[str, Any]], **kwargs):
-        """Génère un flux SSE via Ollama en mode streaming direct."""
+        """Génère un flux SSE via Ollama en mode streaming direct.
+
+        Lève LLMUnavailableError si Ollama est inaccessible (403, timeout, etc.).
+        """
         import requests
         from seinentai4us_api.utils.functions import build_prompt, format_context
+        from seinentai4us_api.api.services.intent_router import (
+            LLMUnavailableError,
+            _friendly_llm_error,
+        )
 
         generator = _get_generator()
         context = format_context(retrieved_docs)
@@ -435,21 +442,37 @@ class RAGService:
             },
         }
 
-        with requests.post(
-            f"{settings.OLLAMA_BASE_URL}/api/generate",
-            json=request_body,
-            stream=True,
-            timeout=180,
-        ) as resp:
+        try:
+            resp = requests.post(
+                f"{settings.OLLAMA_BASE_URL}/api/generate",
+                json=request_body,
+                stream=True,
+                timeout=180,
+            )
+        except requests.RequestException as e:
+            raise _friendly_llm_error(exception=e) from e
+
+        with resp:
+            if resp.status_code != 200:
+                body_text = ""
+                try:
+                    body_text = resp.text[:500]
+                except Exception:
+                    pass
+                raise _friendly_llm_error(status_code=resp.status_code, response_body=body_text)
+
             import json as _json
-            for line in resp.iter_lines():
-                if line:
-                    chunk = _json.loads(line)
-                    token = chunk.get("response", "")
-                    done = chunk.get("done", False)
-                    yield token, done
-                    if done:
-                        break
+            try:
+                for line in resp.iter_lines():
+                    if line:
+                        chunk = _json.loads(line)
+                        token = chunk.get("response", "")
+                        done = chunk.get("done", False)
+                        yield token, done
+                        if done:
+                            break
+            except requests.RequestException as e:
+                raise _friendly_llm_error(exception=e) from e
 
     # ── Utilitaires privées ───────────────────────────────────────────────────
 

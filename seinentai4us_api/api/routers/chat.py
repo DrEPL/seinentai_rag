@@ -31,7 +31,31 @@ from seinentai4us_api.api.models.schemas import (
 )
 from seinentai4us_api.api.services.chat_service import chat_session_service
 from seinentai4us_api.api.services.rag_service import rag_service
-from seinentai4us_api.api.services.intent_router import get_intent_router
+from seinentai4us_api.api.services.intent_router import (
+    LLMUnavailableError,
+    get_intent_router,
+)
+
+# Message utilisateur générique si une erreur arrive en dehors d'un cas traité.
+_GENERIC_USER_ERROR = (
+    "Une difficulté est survenue lors de la génération de la réponse. "
+    "Merci de réessayer dans un instant."
+)
+
+
+def _sanitize_agent_error(raw: str) -> str:
+    """Empêche un message technique (HTTP 4xx, JSON, stacktrace) d'arriver à l'UI."""
+    if not raw:
+        return _GENERIC_USER_ERROR
+    lowered = raw.lower()
+    technical_markers = (
+        "traceback", "exception", "http ", "status", "forbidden", "unauthorized",
+        "subscription", "ollama", "localhost", "127.0.0.1", "stream", "json",
+        "{", "}", "\n",
+    )
+    if any(marker in lowered for marker in technical_markers):
+        return _GENERIC_USER_ERROR
+    return raw
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -114,12 +138,24 @@ async def _sse_stream_direct(
         # Fallback : générer via LLM en streaming
         intent_router = get_intent_router()
         prompt = f"L'utilisateur dit : \"{message}\"\nRéponds de manière naturelle et chaleureuse."
-        for token in intent_router._call_llm_stream(
-            prompt, system=DIRECT_RESPONSE_SYSTEM_PROMPT, temperature=0.7, max_tokens=512
-        ):
-            if token:
-                full_response.append(token)
-                yield f"data: {json.dumps({'type': 'token', 'token': token})}\n\n"
+        try:
+            for token in intent_router._call_llm_stream(
+                prompt, system=DIRECT_RESPONSE_SYSTEM_PROMPT, temperature=0.7, max_tokens=512
+            ):
+                if token:
+                    full_response.append(token)
+                    yield f"data: {json.dumps({'type': 'token', 'token': token})}\n\n"
+        except LLMUnavailableError as e:
+            logger.error(
+                "🧠 LLM unavailable during direct stream: %s",
+                e.technical_detail or e.user_message,
+            )
+            yield f"data: {json.dumps({'type': 'error', 'message': e.user_message}, ensure_ascii=False)}\n\n"
+            return
+        except Exception as e:  # pragma: no cover — filet de sécurité
+            logger.exception("🧠 Unexpected error during direct stream")
+            yield f"data: {json.dumps({'type': 'error', 'message': _GENERIC_USER_ERROR}, ensure_ascii=False)}\n\n"
+            return
 
     # Sauvegarder dans l'historique
     response_text = "".join(full_response)
@@ -181,9 +217,16 @@ async def _sse_stream_static(
             yield f"data: {json.dumps(chunk_event)}\n\n"
             if done:
                 break
-    except Exception as e:
-        error_event = {"type": "error", "message": str(e)}
-        yield f"data: {json.dumps(error_event)}\n\n"
+    except LLMUnavailableError as e:
+        logger.error(
+            "🧠 LLM unavailable during static stream: %s",
+            e.technical_detail or e.user_message,
+        )
+        yield f"data: {json.dumps({'type': 'error', 'message': e.user_message}, ensure_ascii=False)}\n\n"
+        return
+    except Exception:
+        logger.exception("🧠 Unexpected error during static stream")
+        yield f"data: {json.dumps({'type': 'error', 'message': _GENERIC_USER_ERROR}, ensure_ascii=False)}\n\n"
         return
 
     # Sauvegarder dans l'historique
@@ -283,12 +326,22 @@ async def _sse_stream_agent(
                 agent_trace = event.get("agent_trace", {})
 
             elif event_type == "error":
-                yield f"data: {json.dumps(event, ensure_ascii=False)}\n\n"
+                # Sanitise le message d'erreur sortant de l'agent (peut être technique)
+                raw_msg = event.get("message", "") or str(event.get("error", ""))
+                safe_event = {"type": "error", "message": _sanitize_agent_error(raw_msg)}
+                yield f"data: {json.dumps(safe_event, ensure_ascii=False)}\n\n"
                 return
 
-    except Exception as e:
-        logger.error(f"Agent stream error: {e}", exc_info=True)
-        yield f"data: {json.dumps({'type': 'error', 'message': str(e)})}\n\n"
+    except LLMUnavailableError as e:
+        logger.error(
+            "🧠 LLM unavailable during agent stream: %s",
+            e.technical_detail or e.user_message,
+        )
+        yield f"data: {json.dumps({'type': 'error', 'message': e.user_message}, ensure_ascii=False)}\n\n"
+        return
+    except Exception:
+        logger.exception("Agent stream error")
+        yield f"data: {json.dumps({'type': 'error', 'message': _GENERIC_USER_ERROR}, ensure_ascii=False)}\n\n"
         return
 
     # Sauvegarder dans l'historique

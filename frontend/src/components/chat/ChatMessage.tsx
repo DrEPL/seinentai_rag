@@ -79,9 +79,17 @@ function ChatMessage({ message, isStreaming }: ChatMessageProps) {
             'rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm',
             isUser
               ? 'bg-slate-100 text-slate-900 border border-slate-200 rounded-tr-md'
-              : 'bg-white border border-slate-100 text-slate-700 rounded-tl-md'
+              : message.error
+                ? 'bg-red-50 border border-red-200 text-red-800 rounded-tl-md'
+                : 'bg-white border border-slate-100 text-slate-700 rounded-tl-md'
           )}
         >
+          {!isUser && message.error && (
+            <div className="flex items-center gap-1.5 mb-1 text-red-600 font-medium text-[11px] uppercase tracking-wide">
+              <AlertCircle className="w-3.5 h-3.5" />
+              <span>Une erreur est survenue</span>
+            </div>
+          )}
           {/* Render content with Markdown */}
           <div className={cn(
             'break-words',

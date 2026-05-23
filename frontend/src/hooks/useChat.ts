@@ -26,6 +26,32 @@ import { chatApi } from '@/api/chat';
 import { fetchSSE } from '@/api/axios';
 import type { ChatMessage } from '@/store/slices/chatSlice';
 
+const GENERIC_FRIENDLY_ERROR =
+  "Une difficulté est survenue lors de la génération de la réponse. Merci de réessayer dans un instant.";
+
+function friendlyErrorMessage(err: unknown): string {
+  // Erreur Axios : utilise le `detail` renvoyé par l'API si présent.
+  const anyErr = err as { response?: { data?: { detail?: string; message?: string } }; message?: string };
+  const detail = anyErr?.response?.data?.detail || anyErr?.response?.data?.message;
+  if (detail && typeof detail === 'string') return detail;
+
+  const msg = anyErr?.message || String(err ?? '');
+  if (!msg) return GENERIC_FRIENDLY_ERROR;
+
+  const lower = msg.toLowerCase();
+  if (lower.includes('network') || lower.includes('failed to fetch')) {
+    return "Connexion au serveur impossible. Vérifiez votre connexion puis réessayez.";
+  }
+  if (lower.includes('timeout')) {
+    return "L'assistant met trop de temps à répondre. Merci de réessayer dans un instant.";
+  }
+  // Évite d'exposer des messages techniques bruts à l'utilisateur.
+  if (/[<{\[]|stack|error:|http \d{3}/i.test(msg)) {
+    return GENERIC_FRIENDLY_ERROR;
+  }
+  return msg;
+}
+
 export function useChat() {
   const dispatch = useAppDispatch();
   const { sessions, activeSessionId, messages, isStreaming, streamingContent, ragSettings, loading, historyLoading, sessionsLoading } =
@@ -229,19 +255,48 @@ export function useChat() {
                   dispatch(clearSteps());
                   break;
                 }
-                case 'error':
-                  dispatch(addToast({ type: 'error', message: (event.message as string) || 'Erreur streaming' }));
+                case 'error': {
+                  const friendlyMessage =
+                    (event.message as string) ||
+                    "Une difficulté est survenue lors de la génération de la réponse. Merci de réessayer dans un instant.";
+                  fullContent = friendlyMessage;
+                  dispatch(
+                    updateLastMessage({
+                      sessionId: currentSessionId,
+                      content: friendlyMessage,
+                    })
+                  );
+                  dispatch(
+                    setMessageError({
+                      sessionId: currentSessionId,
+                      messageId: assistantMsg.id,
+                      error: true,
+                    })
+                  );
+                  dispatch(addToast({ type: 'error', message: friendlyMessage }));
+                  dispatch(clearSteps());
                   break;
+                }
               }
             },
             (error) => {
-              dispatch(addToast({ type: 'error', message: error.message }));
+              const friendly = friendlyErrorMessage(error);
+              fullContent = friendly;
+              dispatch(updateLastMessage({ sessionId: currentSessionId, content: friendly }));
+              dispatch(setMessageError({ sessionId: currentSessionId, messageId: assistantMsg.id, error: true }));
+              dispatch(addToast({ type: 'error', message: friendly }));
             },
             abortController.signal
           );
         } catch (err) {
           if ((err as Error).name !== 'AbortError') {
-            dispatch(addToast({ type: 'error', message: (err as Error).message }));
+            const friendly = friendlyErrorMessage(err);
+            // Si on n'a pas reçu de tokens, écrit l'erreur dans la bulle
+            if (!fullContent) {
+              dispatch(updateLastMessage({ sessionId: currentSessionId, content: friendly }));
+              dispatch(setMessageError({ sessionId: currentSessionId, messageId: assistantMsg.id, error: true }));
+            }
+            dispatch(addToast({ type: 'error', message: friendly }));
           }
         } finally {
           dispatch(setStreaming(false));
@@ -273,16 +328,17 @@ export function useChat() {
             })
           );
         } catch (err) {
-          dispatch(addToast({ type: 'error', message: (err as Error).message }));
-          dispatch(setMessageError({ 
-            sessionId: currentSessionId, 
-            messageId: userMsg.id, 
-            error: true 
+          const friendly = friendlyErrorMessage(err);
+          dispatch(addToast({ type: 'error', message: friendly }));
+          dispatch(setMessageError({
+            sessionId: currentSessionId,
+            messageId: assistantMsg.id,
+            error: true,
           }));
           dispatch(
             updateLastMessage({
               sessionId: currentSessionId,
-              content: "❌ Une erreur s'est produite lors de la génération de la réponse.",
+              content: friendly,
             })
           );
         } finally {
